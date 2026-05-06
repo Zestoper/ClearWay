@@ -1,0 +1,1259 @@
+/* ── Page ─────────────────────────────────────────────── */
+.booking-page {
+  min-height: 100vh;
+  background: #f8fafc;
+  padding-top: 64px;
+}
+
+/* ── Top search summary bar ───────────────────────────── */
+.booking-topbar {
+  background: #1e3a8a;
+  padding: 0 32px;
+}
+
+.booking-topbar-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.booking-route {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+}
+
+.booking-route svg {
+  width: 18px;
+  height: 18px;
+  opacity: 0.7;
+}
+
+.route-city {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.route-meta {
+  font-size: 13px;
+  color: #93c5fd;
+  margin-left: 4px;
+}
+
+
+
+.route-edit-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.route-edit-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.route-edit-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ── Body layout ──────────────────────────────────────── */
+.booking-body {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 32px 64px;
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+}
+
+/* ── Filter panel ─────────────────────────────────────── */
+.filter-panel {
+  width: 280px;
+  flex-shrink: 0;
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  padding: 24px;
+  position: sticky;
+  top: 96px;
+}
+
+.filter-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 20px;
+}
+
+.filter-section {
+  margin-bottom: 24px;
+}
+
+.filter-section h4 {
+  font-size: 12px;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 12px;
+}
+
+.filter-date-input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1e293b;
+  background: #fff;
+  outline: none;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: border .15s;
+}
+.filter-date-input:hover,
+.filter-date-input:focus { border-color: #1d4ed8; }
+
+.filter-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #374151;
+  cursor: pointer;
+  padding: 4px 0;
+  user-select: none;
+}
+
+.filter-checkbox input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #1d4ed8;
+  cursor: pointer;
+}
+
+/* ── Sort bar ─────────────────────────────────────────── */
+.sort-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.result-count {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.result-count strong {
+  color: #111827;
+  font-weight: 700;
+}
+
+.sort-options {
+  display: flex;
+  gap: 6px;
+}
+
+.sort-btn {
+  padding: 6px 16px;
+  border: 1.5px solid #e5e7eb;
+  background: #fff;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sort-btn:hover {
+  border-color: #1d4ed8;
+  color: #1d4ed8;
+}
+
+.sort-btn.active {
+  background: #eff6ff;
+  border-color: #1d4ed8;
+  color: #1d4ed8;
+  font-weight: 700;
+}
+
+.sort-arrow { font-size: 11px; }
+
+/* ── Country filter ───────────────────────────────────── */
+.country-filter-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.country-filter-btn {
+  padding: 5px 10px;
+  border: 1.5px solid #e5e7eb;
+  background: #fff;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.country-filter-btn:hover {
+  border-color: #1d4ed8;
+  color: #1d4ed8;
+}
+
+.country-filter-btn.active {
+  background: #eff6ff;
+  border-color: #1d4ed8;
+  color: #1d4ed8;
+  font-weight: 700;
+}
+
+/* ── Destination filter ───────────────────────────────── */
+.dest-filter-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  max-height: 420px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.dest-filter-list::-webkit-scrollbar { width: 4px; }
+.dest-filter-list::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 2px; }
+.dest-filter-list::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
+
+/* 전체 버튼은 2열 모두 차지 */
+.dest-filter-btn.all-btn {
+  grid-column: 1 / -1;
+}
+
+.dest-filter-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 1.5px solid #e5e7eb;
+  background: #fff;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: left;
+}
+
+.dest-filter-btn:hover {
+  border-color: #1d4ed8;
+  background: #eff6ff;
+}
+
+.dest-filter-btn.active {
+  background: #eff6ff;
+  border-color: #1d4ed8;
+}
+
+.dest-filter-code {
+  font-size: 11px;
+  font-weight: 800;
+  color: #1d4ed8;
+  background: #dbeafe;
+  padding: 1px 6px;
+  border-radius: 4px;
+  line-height: 1.4;
+}
+
+.dest-filter-city {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  line-height: 1.3;
+  word-break: keep-all;
+}
+
+.dest-filter-btn.active .dest-filter-code {
+  background: #1d4ed8;
+  color: #fff;
+}
+
+.dest-filter-btn.active .dest-filter-city {
+  color: #1d4ed8;
+  font-weight: 700;
+}
+
+/* ── Roundtrip required notice ────────────────────────── */
+.roundtrip-required-notice {
+  margin-top: 8px;
+  padding: 8px 10px;
+  background: #fef3c7;
+  border: 1px solid #fbbf24;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #92400e;
+  line-height: 1.4;
+}
+
+/* ── Flight results ───────────────────────────────────── */
+.flight-results {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ── Flight card ──────────────────────────────────────── */
+.flight-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 20px 0 20px 0;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 10px;
+  transition: box-shadow 0.2s, transform 0.15s;
+  cursor: default;
+  overflow: hidden;
+  position: relative;
+}
+
+/* 좌측 airline accent bar */
+.flight-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, #1e3a8a, #3b82f6);
+  border-radius: 4px 0 0 4px;
+}
+
+.flight-card:hover {
+  box-shadow: 0 6px 24px rgba(29, 78, 216, 0.10);
+  transform: translateY(-1px);
+}
+
+.flight-card.selected {
+  border-color: #1d4ed8;
+  box-shadow: 0 6px 28px rgba(29, 78, 216, 0.16);
+}
+
+.flight-card.selected::before {
+  background: linear-gradient(180deg, #1d4ed8, #60a5fa);
+}
+
+/* 카드 내부 패딩 — ::before bar 때문에 왼쪽 여백 조정 */
+.flight-brand,
+.flight-route {
+  padding-left: 20px;
+}
+
+.flight-price-wrap {
+  padding-right: 24px;
+}
+
+/* Brand */
+.flight-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 148px;
+  flex-shrink: 0;
+}
+
+.cw-badge {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #1e3a8a, #1d4ed8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+
+.brand-name {
+  font-size: 13px;
+  font-weight: 800;
+  color: #1d4ed8;
+  margin: 0 0 3px;
+  letter-spacing: 0.3px;
+}
+
+.flight-no {
+  font-size: 12px;
+  color: #9ca3af;
+  margin: 0;
+}
+
+/* Route */
+.flight-route {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+.route-point {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex-shrink: 0;
+}
+
+.route-point.right {
+  align-items: flex-end;
+}
+
+.flight-time {
+  font-size: 26px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1;
+}
+
+.flight-city {
+  font-size: 14px;
+  font-weight: 700;
+  color: #374151;
+  margin-top: 4px;
+}
+
+.flight-airport {
+  font-size: 12px;
+  color: #9ca3af;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.flight-flag { font-size: 14px; line-height: 1; flex-shrink: 0; }
+
+.route-line {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.route-duration {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.route-track {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+}
+
+.route-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #1d4ed8;
+  flex-shrink: 0;
+}
+
+.route-dash {
+  flex: 1;
+  height: 1.5px;
+  background: #1d4ed8;
+}
+
+.route-stop-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #f59e0b;
+  flex-shrink: 0;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1.5px #f59e0b;
+}
+
+.route-plane {
+  width: 16px;
+  height: 16px;
+  color: #1d4ed8;
+  flex-shrink: 0;
+  margin: 0 2px;
+}
+
+.route-direct {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 10px;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.route-direct.via {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+/* ── Roundtrip step banner ────────────────────────────── */
+.roundtrip-step-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 10px;
+  padding: 10px 16px;
+  margin-bottom: 14px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1d4ed8;
+}
+
+.roundtrip-outbound-summary {
+  font-size: 12px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.route-back-btn {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.route-back-btn:hover { background: rgba(255,255,255,0.25); }
+
+.booking-bar-info.roundtrip { gap: 10px; }
+
+/* Fare class toggle in filter */
+.fare-toggle {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fare-toggle button {
+  padding: 8px 12px;
+  border: 1.5px solid #e5e7eb;
+  background: #fff;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+}
+
+.fare-toggle button:hover {
+  border-color: #1d4ed8;
+  color: #1d4ed8;
+}
+
+.fare-toggle button.active {
+  background: #eff6ff;
+  border-color: #1d4ed8;
+  color: #1d4ed8;
+  font-weight: 700;
+}
+
+.filter-checkbox span em {
+  font-style: normal;
+  font-size: 11px;
+  color: #9ca3af;
+  margin-left: 4px;
+}
+
+/* Fare class label above price */
+.fare-class-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #1d4ed8;
+  background: #eff6ff;
+  padding: 2px 8px;
+  border-radius: 6px;
+  margin: 0;
+}
+
+/* Price */
+.flight-price-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
+  gap: 4px;
+  border-left: 1.5px dashed #e5e7eb;
+  padding-left: 20px;
+  margin-left: 8px;
+  min-width: 140px;
+}
+
+.seats-left {
+  font-size: 11px;
+  font-weight: 700;
+  color: #ef4444;
+  background: #fff1f2;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.flight-price {
+  font-size: 24px;
+  font-weight: 900;
+  color: #0f172a;
+  letter-spacing: -0.5px;
+  margin: 0;
+}
+
+.price-note {
+  font-size: 11px;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.select-btn {
+  margin-top: 8px;
+  padding: 10px 22px;
+  background: linear-gradient(135deg, #1d4ed8, #2563eb);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+  box-shadow: 0 2px 8px rgba(29,78,216,0.25);
+}
+
+.select-btn:hover {
+  background: linear-gradient(135deg, #1e40af, #1d4ed8);
+  box-shadow: 0 4px 16px rgba(29,78,216,0.35);
+  transform: translateY(-1px);
+}
+
+.select-btn:active {
+  transform: scale(0.97);
+}
+
+.select-btn.selected {
+  background: linear-gradient(135deg, #15803d, #16a34a);
+  box-shadow: 0 2px 8px rgba(22,163,74,0.3);
+}
+
+/* ── Booking bar ──────────────────────────────────────── */
+.booking-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #0f172a;
+  border-top: 1px solid #1e293b;
+  z-index: 150;
+  animation: slide-up 0.2s ease;
+}
+
+@keyframes slide-up {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+.booking-bar-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.booking-bar-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.bb-flight-no { font-size: 14px; font-weight: 700; color: #fff; margin: 0 0 2px; }
+.bb-route     { font-size: 13px; color: #94a3b8; margin: 0; }
+
+.bb-fare-tag {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #e2e8f0;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 12px;
+  border-radius: 10px;
+}
+
+.booking-bar-right { display: flex; align-items: center; gap: 20px; }
+
+.bb-price { font-size: 22px; font-weight: 900; color: #fff; letter-spacing: -0.5px; }
+
+.bb-btn {
+  padding: 12px 28px;
+  background: #1d4ed8;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+  font-family: inherit;
+}
+
+.bb-btn:hover { background: #2563eb; }
+
+/* ── No results ───────────────────────────────────────── */
+.no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 80px 0;
+  color: #9ca3af;
+}
+
+.no-results svg {
+  width: 48px;
+  height: 48px;
+}
+
+.no-results p {
+  font-size: 16px;
+}
+
+.no-results button {
+  padding: 8px 20px;
+  background: #eff6ff;
+  border: none;
+  border-radius: 8px;
+  color: #1d4ed8;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ── 여행지 칩 필터 바 ─────────────────────────────────────────── */
+.dest-chip-bar {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 0 0 12px;
+  margin-bottom: 4px;
+  scrollbar-width: none;
+}
+.dest-chip-bar::-webkit-scrollbar { display: none; }
+
+.dest-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1.5px solid #e5e7eb;
+  background: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: border-color .15s, background .15s, color .15s;
+}
+.dest-chip:hover { border-color: #93c5fd; background: #f0f9ff; color: #1d4ed8; }
+.dest-chip.active { border-color: #1d4ed8; background: #1d4ed8; color: #fff; }
+.dest-chip.active .dest-chip-code { color: #bfdbfe; }
+
+.dest-chip-flag { font-size: 15px; line-height: 1; }
+.dest-chip-code { font-size: 11px; font-weight: 500; color: #9ca3af; }
+.dest-chip.active .dest-chip-code { color: #bfdbfe; }
+
+/* ── 여행지 모달 트리거 버튼 ──────────────────────────────────── */
+.dest-modal-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 12px;
+  background: #fff;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: border-color 0.15s, background 0.15s;
+  text-align: left;
+}
+.dest-modal-trigger:hover { border-color: #1d4ed8; background: #eff6ff; }
+.dest-modal-trigger svg { width: 16px; height: 16px; color: #9ca3af; margin-left: auto; flex-shrink: 0; }
+
+.dest-modal-trigger-placeholder { color: #9ca3af; font-size: 13px; }
+.dest-modal-trigger-code {
+  font-size: 11px; font-weight: 800; color: #fff;
+  background: #1d4ed8; padding: 2px 7px; border-radius: 4px;
+}
+.dest-modal-trigger-city { font-size: 14px; font-weight: 700; color: #1d4ed8; }
+
+.dest-modal-clear {
+  margin-top: 6px;
+  width: 100%;
+  padding: 6px;
+  background: none;
+  border: 1px solid #fca5a5;
+  border-radius: 8px;
+  color: #ef4444;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.dest-modal-clear:hover { background: #fef2f2; }
+
+/* ── 여행지 모달 ────────────────────────────────────────────── */
+.dest-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  backdrop-filter: blur(2px);
+}
+
+.dest-modal {
+  background: #fff;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 560px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  overflow: hidden;
+}
+
+.dest-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid #f1f5f9;
+  flex-shrink: 0;
+}
+.dest-modal-header h3 { font-size: 18px; font-weight: 800; color: #0f172a; margin: 0; }
+.dest-modal-close {
+  width: 32px; height: 32px;
+  border: none; background: #f1f5f9; border-radius: 8px;
+  font-size: 14px; cursor: pointer; color: #475569;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.12s;
+}
+.dest-modal-close:hover { background: #e2e8f0; }
+
+.dest-modal-search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  border-bottom: 1px solid #f1f5f9;
+  flex-shrink: 0;
+}
+.dest-modal-search-wrap svg { width: 18px; height: 18px; color: #94a3b8; flex-shrink: 0; }
+.dest-modal-search {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  color: #0f172a;
+  background: transparent;
+  font-family: inherit;
+}
+.dest-modal-search::placeholder { color: #94a3b8; }
+.dest-modal-search-clear {
+  background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 14px; padding: 2px;
+}
+.dest-modal-search-clear:hover { color: #475569; }
+
+.dest-modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px 24px;
+}
+
+.dest-modal-reset {
+  width: 100%;
+  padding: 9px;
+  margin-bottom: 16px;
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  border-radius: 10px;
+  color: #ef4444;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.dest-modal-reset:hover { background: #fee2e2; }
+
+.dest-modal-empty { text-align: center; color: #94a3b8; font-size: 14px; padding: 40px 0; }
+
+.dest-modal-group { margin-bottom: 20px; }
+.dest-modal-group-label {
+  font-size: 11px; font-weight: 800; color: #94a3b8;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  margin: 0 0 10px;
+}
+
+.dest-modal-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.dest-modal-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 8px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.12s;
+  text-align: center;
+}
+.dest-modal-item:hover { border-color: #1d4ed8; background: #eff6ff; transform: translateY(-1px); }
+.dest-modal-item.active { border-color: #1d4ed8; background: #eff6ff; }
+
+.dest-modal-flag { font-size: 22px; line-height: 1; }
+.dest-modal-city { font-size: 13px; font-weight: 700; color: #0f172a; }
+.dest-modal-code {
+  font-size: 10px; font-weight: 800; color: #1d4ed8;
+  background: #dbeafe; padding: 1px 6px; border-radius: 4px;
+}
+.dest-modal-item.active .dest-modal-code { background: #1d4ed8; color: #fff; }
+
+/* ── AI 여행지 추천 배너 ── */
+.rec-banner {
+  display: flex; align-items: center; justify-content: space-between;
+  background: linear-gradient(135deg, #eff6ff, #f0fdf4);
+  border: 1.5px dashed #93c5fd; border-radius: 12px;
+  padding: 12px 18px; margin-bottom: 12px; gap: 12px;
+  font-size: 13px; color: #374151; font-weight: 500;
+}
+.rec-banner-btn {
+  padding: 8px 16px; background: #1d4ed8; color: #fff; border: none;
+  border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer;
+  white-space: nowrap; transition: background .15s;
+}
+.rec-banner-btn:hover { background: #1e40af; }
+
+/* ── AI 추천 모달 ── */
+.rec-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 1000;
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+}
+.rec-modal {
+  background: #fff; border-radius: 18px; width: 100%; max-width: 520px;
+  max-height: 85vh; overflow-y: auto;
+  box-shadow: 0 24px 60px rgba(0,0,0,.2);
+}
+.rec-modal-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 24px 0; position: sticky; top: 0; background: #fff; z-index: 1;
+}
+.rec-modal-head h2 { margin: 0; font-size: 18px; font-weight: 800; }
+.rec-close { background: none; border: none; font-size: 20px; cursor: pointer; color: #94a3b8; }
+.rec-close:hover { color: #1e293b; }
+
+.rec-form { padding: 16px 24px 24px; display: flex; flex-direction: column; gap: 20px; }
+.rec-field label { display: block; font-size: 13px; font-weight: 700; color: #374151; margin-bottom: 8px; }
+.rec-field label span { font-weight: 400; color: #9ca3af; }
+.rec-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.rec-chip {
+  padding: 7px 14px; border-radius: 20px; border: 1.5px solid #e5e7eb;
+  background: #fff; font-size: 13px; font-weight: 600; color: #374151; cursor: pointer; transition: all .15s;
+}
+.rec-chip:hover { border-color: #93c5fd; color: #1d4ed8; }
+.rec-chip.active { border-color: #1d4ed8; background: #1d4ed8; color: #fff; }
+.rec-submit {
+  padding: 13px; background: #1d4ed8; color: #fff; border: none; border-radius: 12px;
+  font-size: 15px; font-weight: 700; cursor: pointer; transition: background .15s;
+}
+.rec-submit:hover:not(:disabled) { background: #1e40af; }
+.rec-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.rec-results { padding: 16px 24px 24px; display: flex; flex-direction: column; gap: 12px; }
+.rec-results-title { font-size: 13px; font-weight: 700; color: #64748b; margin: 0 0 4px; }
+.rec-card {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  border: 1.5px solid #e5e7eb; border-radius: 14px; padding: 14px 16px;
+  transition: border-color .15s;
+}
+.rec-card:hover { border-color: #93c5fd; }
+.rec-card-left { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+.rec-emoji { font-size: 28px; flex-shrink: 0; }
+.rec-card-city { font-size: 15px; font-weight: 800; color: #1e293b; }
+.rec-card-country { font-size: 12px; font-weight: 500; color: #94a3b8; margin-left: 4px; }
+.rec-card-reason { font-size: 12px; color: #64748b; margin-top: 2px; }
+.rec-card-highlight { font-size: 12px; color: #1d4ed8; font-weight: 600; margin-top: 3px; }
+.rec-card-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
+.rec-budget { font-size: 14px; font-weight: 800; color: #1e293b; }
+.rec-budget span { font-size: 11px; font-weight: 500; color: #94a3b8; }
+.rec-apply {
+  padding: 7px 14px; background: #1d4ed8; color: #fff; border: none;
+  border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap;
+  transition: background .15s;
+}
+.rec-apply:hover { background: #1e40af; }
+.rec-retry {
+  background: none; border: none; color: #1d4ed8; font-size: 13px; font-weight: 600;
+  cursor: pointer; padding: 4px 0; text-align: left;
+}
+.rec-retry:hover { text-decoration: underline; }
+
+/* ── AI 항공편 추천 ─────────────────────────────────────────────── */
+.flight-rec-btn { background: #059669; }
+.flight-rec-btn:hover { background: #047857; }
+
+.flight-rec-desc { font-size: 13px; color: #64748b; margin: 0; line-height: 1.6; }
+
+.flight-rec-examples { display: flex; flex-direction: column; gap: 6px; }
+.flight-rec-example {
+  background: #f8fafc; border: 1.5px solid #e5e7eb; border-radius: 10px;
+  padding: 8px 12px; font-size: 12px; color: #374151; cursor: pointer;
+  text-align: left; transition: all .15s;
+}
+.flight-rec-example:hover { border-color: #93c5fd; background: #eff6ff; color: #1d4ed8; }
+
+.flight-rec-input {
+  width: 100%; padding: 12px 14px; border: 1.5px solid #e5e7eb; border-radius: 12px;
+  font-size: 14px; color: #1e293b; resize: none; outline: none;
+  font-family: inherit; line-height: 1.5; transition: border-color .15s;
+  box-sizing: border-box;
+}
+.flight-rec-input:focus { border-color: #1d4ed8; }
+
+.flight-rec-card {
+  border: 1.5px solid #e5e7eb; border-radius: 14px; padding: 14px 16px;
+  display: flex; flex-direction: column; gap: 10px; transition: border-color .15s;
+}
+.flight-rec-card:hover { border-color: #93c5fd; }
+
+.flight-rec-card-top { display: flex; align-items: center; gap: 8px; }
+.flight-rec-badge {
+  background: #1d4ed8; color: #fff; font-size: 11px; font-weight: 700;
+  padding: 2px 8px; border-radius: 20px;
+}
+.flight-rec-no { font-size: 13px; font-weight: 700; color: #374151; }
+.flight-rec-direct {
+  margin-left: auto; font-size: 11px; font-weight: 700;
+  background: #dcfce7; color: #15803d; padding: 2px 8px; border-radius: 20px;
+}
+.flight-rec-direct.via { background: #fef9c3; color: #a16207; }
+
+.flight-rec-route {
+  display: flex; align-items: center; gap: 12px;
+}
+.flight-rec-point { display: flex; flex-direction: column; gap: 2px; }
+.flight-rec-point strong { font-size: 18px; font-weight: 800; color: #1e293b; }
+.flight-rec-point span { font-size: 12px; color: #64748b; }
+.flight-rec-point.right { text-align: right; }
+.flight-rec-arrow {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.flight-rec-arrow span { font-size: 11px; color: #94a3b8; }
+.flight-rec-arrow svg { width: 20px; height: 20px; color: #1d4ed8; }
+
+.flight-rec-info { display: flex; align-items: center; justify-content: space-between; }
+.flight-rec-date { font-size: 12px; color: #94a3b8; }
+.flight-rec-price { font-size: 16px; font-weight: 800; color: #1d4ed8; }
+
+.flight-rec-reason {
+  font-size: 12px; color: #64748b; background: #f8fafc;
+  border-radius: 8px; padding: 8px 10px; margin: 0; line-height: 1.5;
+}
+
+.flight-rec-empty { font-size: 14px; color: #94a3b8; text-align: center; padding: 20px 0; line-height: 1.6; margin: 0; }
+
+/* ══════════════════════════════════════════════════════════
+   Responsive
+   ══════════════════════════════════════════════════════════ */
+
+/* ── 1100px: 데스크탑 여백 축소 ─────────────────────────── */
+@media (max-width: 1100px) {
+  .booking-topbar    { padding: 0 20px; }
+  .booking-body      { padding: 24px 20px 64px; gap: 20px; }
+  .booking-bar-inner { padding: 14px 20px; }
+  .filter-panel      { width: 240px; }
+}
+
+/* ── 900px: 태블릿 — 필터를 결과 위로 이동 ──────────────── */
+@media (max-width: 900px) {
+  /* 상단 바 */
+  .booking-topbar { padding: 0 16px; }
+  .booking-topbar-inner {
+    height: auto;
+    min-height: 56px;
+    padding: 10px 0;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .booking-route { flex-wrap: wrap; gap: 8px; }
+  .route-city    { font-size: 15px; }
+  .route-meta    { font-size: 12px; }
+
+  /* 본문 레이아웃: 세로 방향 */
+  .booking-body {
+    flex-direction: column;
+    padding: 20px 16px 80px;
+    gap: 16px;
+  }
+
+  /* 필터 패널: 가로 2열 그리드 */
+  .filter-panel {
+    width: 100%;
+    box-sizing: border-box;
+    position: static;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 24px;
+    row-gap: 0;
+    padding: 20px;
+  }
+  .filter-title   { grid-column: 1 / -1; margin-bottom: 16px; }
+  .filter-section { margin-bottom: 16px; }
+
+  /* AI 배너: 버튼 줄바꿈 허용 */
+  .rec-banner { flex-wrap: wrap; gap: 8px; }
+
+  /* 예약 하단 바 */
+  .booking-bar-inner { padding: 12px 16px; flex-wrap: wrap; gap: 10px; }
+  .booking-bar-info  { min-width: 0; flex: 1; }
+}
+
+/* ── 640px: 모바일 — 항공편 카드 세로 배치 ───────────────── */
+@media (max-width: 640px) {
+  .booking-topbar { padding: 0 12px; }
+  .booking-body   { padding: 14px 12px 80px; gap: 12px; }
+
+  /* 필터: 1열 */
+  .filter-panel { grid-template-columns: 1fr; padding: 16px; }
+  .filter-title { margin-bottom: 12px; }
+
+  /* 항공편 카드: 세로 배치 */
+  .flight-card {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 14px 0;
+    gap: 0;
+  }
+  .flight-brand {
+    width: auto;
+    flex-shrink: 1;
+    padding-left: 20px;
+    padding-right: 16px;
+  }
+  .flight-route {
+    width: 100%;
+    box-sizing: border-box;
+    padding-left: 20px;
+    padding-right: 16px;
+    padding-top: 12px;
+  }
+  .flight-price-wrap {
+    width: 100%;
+    box-sizing: border-box;
+    border-left: none;
+    border-top: 1.5px dashed #e5e7eb;
+    padding: 12px 16px 0 20px;
+    margin: 12px 0 0;
+    min-width: 0;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 12px;
+  }
+  .select-btn   { margin-top: 0; margin-left: auto; }
+  .price-note   { display: none; }
+  .flight-time  { font-size: 20px; }
+  .flight-price { font-size: 20px; }
+
+  /* 정렬 바 */
+  .sort-bar     { flex-wrap: wrap; gap: 8px; }
+  .sort-options { flex-wrap: wrap; gap: 4px; }
+  .sort-btn     { padding: 5px 12px; font-size: 12px; }
+
+  /* 왕복 단계 배너 */
+  .roundtrip-step-banner { flex-wrap: wrap; gap: 6px; }
+  .roundtrip-outbound-summary { font-size: 11px; }
+
+  /* 예약 하단 바: 세로 배치 */
+  .booking-bar-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .booking-bar-right { justify-content: space-between; gap: 12px; }
+  .bb-price { font-size: 20px; }
+  .bb-btn   { padding: 10px 18px; font-size: 13px; }
+
+  /* 모달 */
+  .dest-modal-overlay,
+  .rec-overlay     { padding: 12px; }
+  .dest-modal      { border-radius: 16px; max-height: 90vh; }
+  .dest-modal-grid { grid-template-columns: repeat(2, 1fr); }
+  .rec-modal       { max-height: 90vh; border-radius: 16px; }
+}
+
+/* ── 480px: 소형 모바일 ──────────────────────────────────── */
+@media (max-width: 480px) {
+  .route-city { font-size: 13px; }
+  .route-meta { font-size: 11px; margin-left: 0; }
+
+  .rec-banner     { padding: 10px 12px; }
+  .rec-banner-btn { font-size: 12px; padding: 7px 12px; }
+
+  .bb-fare-tag { display: none; }
+
+  .rec-form,
+  .rec-results { padding: 14px 16px 20px; }
+}
