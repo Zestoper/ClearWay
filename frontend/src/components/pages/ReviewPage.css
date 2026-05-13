@@ -1,0 +1,103 @@
+.rv-page { min-height: 100vh; background: #f8fafc; padding-top: 64px; }
+
+.rv-topbar { background: #1e3a8a; padding: 0 32px; }
+.rv-topbar--ai { background: linear-gradient(135deg, #1e1b4b 0%, #4f46e5 100%); }
+.rv-topbar-inner { max-width: 720px; margin: 0 auto; height: 56px; display: flex; align-items: center; gap: 16px; }
+.rv-topbar-inner h1 { font-size: 18px; font-weight: 700; color: #fff; margin: 0; }
+
+.rv-back-btn { background: none; border: none; color: rgba(255,255,255,0.8); font-size: 13px; cursor: pointer; padding: 4px 0; flex-shrink: 0; }
+.rv-back-btn:hover { color: #fff; }
+
+.rv-body { max-width: 720px; margin: 0 auto; padding: 32px 20px; }
+
+.rv-card {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  padding: 32px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+}
+
+.rv-card-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid #f1f5f9; }
+.rv-card-header--ai { border-color: #ede9fe; }
+.rv-card-header h2 { font-size: 18px; font-weight: 700; color: #0f172a; margin: 0 0 4px; }
+.rv-card-header p { font-size: 13px; color: #6b7280; margin: 0; }
+
+.rv-card-icon { width: 44px; height: 44px; background: #eff6ff; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+.rv-ai-icon { background: linear-gradient(135deg, #ede9fe, #ddd6fe); color: #7c3aed; font-size: 18px; font-weight: 700; }
+
+.rv-form { display: flex; flex-direction: column; gap: 24px; }
+
+.rv-field { display: flex; flex-direction: column; gap: 8px; }
+.rv-field label { font-size: 14px; font-weight: 600; color: #374151; display: flex; align-items: center; gap: 6px; }
+.rv-field-desc { font-size: 12px; color: #6b7280; margin: -4px 0 0; }
+.rv-required { font-size: 11px; font-weight: 600; color: #ef4444; background: #fef2f2; border-radius: 4px; padding: 1px 6px; }
+.rv-optional { font-size: 11px; font-weight: 600; color: #6b7280; background: #f9fafb; border-radius: 4px; padding: 1px 6px; }
+
+.rv-field select,
+.rv-field input[type="text"],
+.rv-field input[type="email"] {
+  padding: 10px 14px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #0f172a;
+  background: #fff;
+  transition: border-color .15s;
+  outline: none;
+}
+.rv-field select:focus,
+.rv-field input:focus { border-color: #1d4ed8; }
+
+.rv-field textarea {
+  padding: 12px 14px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #0f172a;
+  line-height: 1.6;
+  resize: vertical;
+  outline: none;
+  transition: border-color .15s;
+  font-family: inherit;
+}
+.rv-field textarea:focus { border-color: #1d4ed8; }
+
+.rv-char-count { font-size: 12px; color: #9ca3af; text-align: right; }
+
+.rv-stars-row { display: flex; align-items: center; gap: 4px; }
+.rv-star { background: none; border: none; font-size: 28px; cursor: pointer; color: #e2e8f0; transition: color .1s, transform .1s; line-height: 1; padding: 2px; }
+.rv-star:hover, .rv-star.filled { color: #fbbf24; transform: scale(1.1); }
+.rv-stars-label { font-size: 13px; color: #6b7280; margin-left: 8px; }
+
+.rv-error { color: #ef4444; font-size: 13px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 10px 14px; }
+
+.rv-submit-btn {
+  padding: 14px 28px;
+  background: #1d4ed8;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background .15s;
+}
+.rv-submit-btn:hover:not(:disabled) { background: #1e40af; }
+.rv-submit-btn:disabled { background: #e5e7eb; color: #9ca3af; cursor: not-allowed; }
+.rv-submit-ai { background: linear-gradient(135deg, #7c3aed, #4f46e5); }
+.rv-submit-ai:hover:not(:disabled) { background: linear-gradient(135deg, #6d28d9, #4338ca); }
+.rv-submit-outline { background: #fff; color: #374151; border: 1.5px solid #e5e7eb; }
+.rv-submit-outline:hover { border-color: #6b7280; }
+
+.rv-done-card { text-align: center; padding: 48px 32px; }
+.rv-done-icon { width: 64px; height: 64px; background: #059669; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; color: #fff; font-weight: 700; margin: 0 auto 20px; }
+.rv-done-card h2 { font-size: 22px; font-weight: 700; color: #0f172a; margin: 0 0 8px; }
+.rv-done-card p { font-size: 14px; color: #6b7280; margin: 0 0 28px; }
+
+.rv-empty-icon { font-size: 36px; margin-bottom: 12px; color: #7c3aed; font-weight: 700; }
+
+@media (max-width: 600px) {
+  .rv-card { padding: 20px 16px; }
+  .rv-body { padding: 20px 12px; }
+}

@@ -1,0 +1,482 @@
+.cs-page { min-height: 100vh; background: #f8fafc; padding-top: 64px; }
+
+.cs-hero {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #1d4ed8 100%);
+  padding: 56px 24px 48px;
+  text-align: center;
+  color: #fff;
+}
+
+.cs-hero-inner h1 {
+  font-size: 32px;
+  font-weight: 900;
+  margin: 0 0 8px;
+  letter-spacing: -0.5px;
+}
+
+.cs-hero-inner p {
+  font-size: 15px;
+  opacity: 0.8;
+  margin: 0;
+}
+
+.cs-body {
+  max-width: 840px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+}
+
+/* Tabs */
+.cs-tabs {
+  display: flex;
+  border-bottom: 2px solid #e5e7eb;
+  margin-bottom: 32px;
+  gap: 0;
+}
+
+.cs-tab {
+  height: 44px;
+  padding: 0 24px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #6b7280;
+  background: none;
+  border: none;
+  border-bottom: 2.5px solid transparent;
+  margin-bottom: -2px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.cs-tab:hover { color: #1d4ed8; }
+.cs-tab.active { color: #1d4ed8; border-bottom-color: #1d4ed8; }
+
+.cs-section {
+  background: #fff;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+/* FAQ */
+.cs-faq-cats {
+  display: flex;
+  gap: 6px;
+  padding: 20px 24px;
+  border-bottom: 1px solid #f3f4f6;
+  flex-wrap: wrap;
+}
+
+.cs-faq-cat {
+  height: 32px;
+  padding: 0 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+  background: #f8fafc;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 99px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.cs-faq-cat:hover { border-color: #1d4ed8; color: #1d4ed8; }
+.cs-faq-cat.active { background: #1d4ed8; color: #fff; border-color: #1d4ed8; }
+
+.cs-faq-list {
+  padding: 8px 0;
+}
+
+.cs-faq-item {
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.cs-faq-item:last-child { border-bottom: none; }
+
+.cs-faq-q {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.12s;
+}
+
+.cs-faq-q:hover { background: #f8fafc; }
+.cs-faq-q.open { background: #eff6ff; }
+
+.cs-faq-qmark {
+  width: 24px;
+  height: 24px;
+  background: #1d4ed8;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cs-faq-qtext {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0f172a;
+  line-height: 1.5;
+}
+
+.cs-faq-chevron {
+  font-size: 10px;
+  color: #9ca3af;
+  flex-shrink: 0;
+}
+
+.cs-faq-a {
+  display: flex;
+  gap: 12px;
+  padding: 16px 24px 20px;
+  background: #f8fafc;
+}
+
+.cs-faq-amark {
+  width: 24px;
+  height: 24px;
+  background: #d1fae5;
+  color: #065f46;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cs-faq-atext {
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.7;
+}
+
+.cs-empty {
+  text-align: center;
+  padding: 48px 24px;
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+/* Inquiry form */
+.cs-inquiry-form {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cs-form-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+}
+
+.cs-form-sub {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.cs-form-row { display: flex; gap: 16px; }
+.cs-form-row.two > * { flex: 1; }
+
+.cs-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cs-form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.cs-form-group input,
+.cs-form-group select,
+.cs-form-group textarea {
+  padding: 10px 12px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 14px;
+  color: #0f172a;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.15s;
+  font-family: inherit;
+}
+
+.cs-form-group input:focus,
+.cs-form-group select:focus,
+.cs-form-group textarea:focus { border-color: #1d4ed8; }
+
+.cs-form-group textarea { resize: vertical; }
+
+.cs-login-note {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.cs-link {
+  background: none;
+  border: none;
+  color: #1d4ed8;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 13px;
+  padding: 0;
+}
+
+/* Buttons */
+.cs-btn {
+  height: 44px;
+  padding: 0 24px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s;
+}
+
+.cs-btn.primary { background: #1d4ed8; color: #fff; }
+.cs-btn.primary:hover:not(:disabled) { background: #1e40af; }
+.cs-btn.primary:disabled { opacity: 0.6; cursor: not-allowed; }
+.cs-btn.full { width: 100%; }
+
+/* Done state */
+.cs-done-box {
+  padding: 60px 32px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.cs-done-icon {
+  width: 56px;
+  height: 56px;
+  background: #d1fae5;
+  color: #065f46;
+  border-radius: 50%;
+  font-size: 24px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.cs-done-box h3 {
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+}
+
+.cs-done-box p {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.7;
+}
+
+/* My inquiries */
+.cs-empty-box {
+  padding: 48px 32px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.cs-empty-box p { font-size: 15px; color: #6b7280; margin: 0; }
+
+.cs-inq-list {
+  padding: 8px 0;
+}
+
+.cs-inq-card {
+  padding: 20px 24px;
+  border-bottom: 1px solid #f3f4f6;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cs-inq-card:last-child { border-bottom: none; }
+
+.cs-inq-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cs-inq-cat {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1d4ed8;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 20px;
+  padding: 2px 10px;
+}
+
+.cs-inq-status {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: 20px;
+}
+
+.cs-inq-status.pending  { background: #fef3c7; color: #d97706; }
+.cs-inq-status.answered { background: #d1fae5; color: #065f46; }
+
+.cs-inq-date {
+  font-size: 12px;
+  color: #9ca3af;
+  margin-left: auto;
+}
+
+.cs-inq-subject {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+}
+
+.cs-inq-content {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.cs-inq-answer {
+  background: #f8fafc;
+  border-left: 3px solid #1d4ed8;
+  border-radius: 0 8px 8px 0;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cs-inq-answer-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #1d4ed8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cs-inq-answer p {
+  font-size: 13px;
+  color: #374151;
+  margin: 0;
+  line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+  .cs-form-row.two { flex-direction: column; }
+  .cs-inquiry-form { padding: 20px; }
+}
+
+/* ── AI 챗봇 ── */
+.aichat-wrap {
+  max-width: 680px; margin: 0 auto;
+  display: flex; flex-direction: column; gap: 0;
+  border: 1px solid #e5e7eb; border-radius: 16px; overflow: hidden;
+  background: #fff; box-shadow: 0 2px 12px rgba(0,0,0,.06);
+}
+.aichat-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 16px 20px; background: linear-gradient(135deg, #1e3a8a, #1d4ed8);
+  color: #fff;
+}
+.aichat-avatar { font-size: 28px; }
+.aichat-header h3 { margin: 0 0 2px; font-size: 15px; font-weight: 700; }
+.aichat-header p { margin: 0; font-size: 12px; opacity: 0.8; }
+
+.aichat-messages {
+  flex: 1; min-height: 340px; max-height: 440px; overflow-y: auto;
+  padding: 20px 16px; display: flex; flex-direction: column; gap: 12px;
+  background: #f8fafc;
+}
+.aichat-welcome { text-align: center; color: #64748b; font-size: 14px; padding: 8px 0; }
+.aichat-welcome p { margin: 0 0 6px; }
+.aichat-suggestions { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 12px; }
+.aichat-suggestion {
+  padding: 6px 12px; border-radius: 20px; border: 1.5px solid #dbeafe;
+  background: #eff6ff; color: #1d4ed8; font-size: 12px; font-weight: 600; cursor: pointer;
+  transition: all .15s;
+}
+.aichat-suggestion:hover { background: #dbeafe; }
+
+.aichat-bubble-wrap { display: flex; align-items: flex-end; gap: 8px; }
+.aichat-bubble-wrap.user { justify-content: flex-end; }
+.aichat-bubble-wrap.assistant { justify-content: flex-start; }
+.aichat-bot-avatar { font-size: 20px; flex-shrink: 0; margin-bottom: 2px; }
+
+.aichat-bubble {
+  max-width: 72%; padding: 10px 14px; border-radius: 16px;
+  font-size: 14px; line-height: 1.6; white-space: pre-wrap;
+}
+.aichat-bubble.user { background: #1d4ed8; color: #fff; border-bottom-right-radius: 4px; }
+.aichat-bubble.assistant { background: #fff; color: #1e293b; border: 1px solid #e5e7eb; border-bottom-left-radius: 4px; }
+
+.aichat-typing { display: flex; gap: 4px; align-items: center; padding: 12px 16px; }
+.aichat-typing span {
+  width: 7px; height: 7px; border-radius: 50%; background: #94a3b8;
+  animation: aichat-bounce 1.2s infinite;
+}
+.aichat-typing span:nth-child(2) { animation-delay: .2s; }
+.aichat-typing span:nth-child(3) { animation-delay: .4s; }
+@keyframes aichat-bounce {
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-6px); }
+}
+
+.aichat-input-row {
+  display: flex; gap: 8px; padding: 12px 16px;
+  border-top: 1px solid #e5e7eb; background: #fff;
+}
+.aichat-input {
+  flex: 1; padding: 10px 14px; border: 1.5px solid #e5e7eb; border-radius: 10px;
+  font-size: 14px; outline: none; transition: border .15s;
+}
+.aichat-input:focus { border-color: #1d4ed8; }
+.aichat-send {
+  padding: 10px 18px; background: #1d4ed8; color: #fff; border: none;
+  border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; transition: background .15s;
+}
+.aichat-send:hover:not(:disabled) { background: #1e40af; }
+.aichat-send:disabled { opacity: 0.4; cursor: not-allowed; }
+
+@media (max-width: 640px) {
+  .cs-body { padding: 20px 16px 60px; }
+  .cs-tab-bar { gap: 4px; }
+  .cs-tab { padding: 8px 12px; font-size: 13px; }
+  .cs-section { padding: 16px; }
+  .cs-faq-item { padding: 14px 12px; }
+  .aichat-wrap { height: 420px; }
+  .inquiry-form { padding: 16px; }
+}
