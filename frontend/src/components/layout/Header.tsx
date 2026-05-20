@@ -49,6 +49,7 @@ export default function Header({ currentPage, onNavigate, user, onGoLogin, onLog
   ]
 
   return (
+    <>
     <header className="header">
       <div className="header-inner">
         <button className="logo" onClick={() => navigate('home')}>
@@ -133,7 +134,9 @@ export default function Header({ currentPage, onNavigate, user, onGoLogin, onLog
         </button>
       </div>
 
-      {/* Mobile menu overlay */}
+    </header>
+
+      {/* Mobile menu - outside header to avoid z-index stacking context */}
       {mobileMenuOpen && (
         <div className="mobile-menu">
           <nav className="mobile-nav">
@@ -170,6 +173,6 @@ export default function Header({ currentPage, onNavigate, user, onGoLogin, onLog
           </div>
         </div>
       )}
-    </header>
+    </>
   )
 }
