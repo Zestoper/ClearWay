@@ -12,3 +12,19 @@ body {
 #root {
   min-height: 100vh;
 }
+
+@media (max-width: 768px) {
+  .booking-page,
+  .bf-page,
+  .fs-page,
+  .admin-page,
+  .cs-page,
+  .checkin-page,
+  .rv-page,
+  .reservations-page,
+  .mypage,
+  .notice-page,
+  .nextrip-page {
+    padding-top: 57px;
+  }
+}

@@ -69,3 +69,11 @@
 .rl-page-btn:hover:not(:disabled) { border-color: #1d4ed8; color: #1d4ed8; }
 .rl-page-btn.active { background: #1d4ed8; border-color: #1d4ed8; color: #fff; }
 .rl-page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+@media (max-width: 768px) {
+  .rl-body { padding: 20px 16px 60px; }
+  .rl-summary { flex-wrap: wrap; gap: 12px; }
+  .rl-filter-bar { flex-wrap: wrap; }
+  .rl-card { padding: 14px; }
+  .rl-card-meta { flex-wrap: wrap; }
+}

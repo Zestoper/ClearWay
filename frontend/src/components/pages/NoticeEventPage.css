@@ -202,3 +202,15 @@
   line-height: 1.8;
   white-space: pre-wrap;
 }
+
+@media (max-width: 768px) {
+  .notice-page { padding-top: 57px; }
+  .notice-hero { padding: 32px 16px; }
+  .notice-hero-inner h1 { font-size: 22px; }
+  .notice-body { padding: 20px 16px 60px; }
+  .notice-tabs { flex-wrap: wrap; gap: 8px; }
+  .notice-tab { padding: 8px 16px; font-size: 13px; }
+  .notice-grid { grid-template-columns: 1fr; gap: 12px; }
+  .notice-modal { width: 95vw; max-height: 88vh; border-radius: 16px; padding: 20px; }
+  .notice-modal-content { font-size: 14px; }
+}
