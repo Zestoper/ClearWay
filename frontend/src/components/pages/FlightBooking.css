@@ -1145,8 +1145,14 @@
   /* 본문 레이아웃: 세로 방향 */
   .booking-body {
     flex-direction: column;
+    align-items: stretch;
     padding: 20px 16px 80px;
     gap: 16px;
+  }
+  .flight-results {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
   }
 
   /* 필터 패널: 가로 2열 그리드 */
