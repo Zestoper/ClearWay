@@ -1223,18 +1223,29 @@
     box-sizing: border-box;
     border-left: none;
     border-top: 1.5px dashed #e5e7eb;
-    padding: 12px 16px 0 20px;
+    padding: 12px 14px 14px;
     margin: 12px 0 0;
     min-width: 0;
     flex-direction: row;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     align-items: center;
-    gap: 6px 12px;
+    gap: 8px;
   }
-  .select-btn   { margin-top: 0; margin-left: auto; }
-  .price-note   { display: none; }
-  .flight-time  { font-size: 20px; }
-  .flight-price { font-size: 20px; }
+  /* 가격 + 라벨은 왼쪽 flex:1 영역에 쌓임 */
+  .fare-class-label { order: 1; }
+  .seats-left       { order: 2; }
+  .flight-price     { order: 3; font-size: 18px; flex: 1; min-width: 0; }
+  .price-note       { display: none; }
+  /* 선택 버튼은 오른쪽에 항상 고정 */
+  .select-btn {
+    order: 10;
+    margin-top: 0;
+    margin-left: 0;
+    flex-shrink: 0;
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+  .flight-time { font-size: 20px; }
 
   /* 정렬 바 */
   .sort-bar     { flex-wrap: wrap; gap: 8px; }
