@@ -1182,40 +1182,50 @@
 
   /* 항공편 카드: 세로 배치 */
   .flight-card {
-    flex-direction: column;
-    align-items: stretch;
-    padding: 14px 0;
-    gap: 0;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    padding: 14px 0 !important;
+    gap: 0 !important;
+    max-width: 100%;
   }
   .flight-brand {
-    width: auto;
-    flex-shrink: 1;
-    padding-left: 20px;
-    padding-right: 16px;
+    width: auto !important;
+    flex-shrink: 1 !important;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
   }
-  /* 경로: 3열 그리드 + flex:0 0 auto로 height 붕괴 방지 */
+  /* 경로: flex row 고정, !important로 base flex:1 완전 덮어쓰기 */
   .flight-route {
-    display: grid !important;
-    grid-template-columns: 1fr 80px 1fr;
-    flex: 0 0 auto;
-    width: 100%;
-    box-sizing: border-box;
-    padding: 12px 14px 8px;
-    gap: 8px;
-    overflow: visible;
-    min-height: 0;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    flex: 0 0 auto !important;         /* height 붕괴 방지 */
+    align-items: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 10px 14px !important;
+    overflow: hidden !important;
+    min-height: 60px;
   }
-  .route-point { min-width: 0; overflow: hidden; }
-  .route-line  { min-width: 0; }
+  .route-point {
+    flex: 1 1 0% !important;
+    min-width: 0 !important;
+    max-width: calc(50% - 40px) !important;
+    overflow: hidden;
+  }
+  .route-line {
+    flex: 0 0 72px !important;
+    width: 72px !important;
+    min-width: 72px !important;
+    overflow: hidden;
+    text-align: center;
+  }
+  /* 공항명 숨기고 시간+코드만 표시 */
+  .flight-airport { display: none !important; }
+  .flight-time    { font-size: 18px !important; }
   .route-duration { font-size: 11px; }
   .route-direct   { font-size: 11px; padding: 2px 6px; }
-  .flight-airport {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: block;
-  }
-  .flight-time { font-size: 20px; }
 
   /* 가격 영역: 세로 배치, 버튼 하단 전체 너비 */
   .flight-price-wrap {
