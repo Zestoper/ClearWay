@@ -1193,17 +1193,19 @@
     padding-left: 20px;
     padding-right: 16px;
   }
-  /* 경로: flex → grid로 전환해 3열 고정 배치 */
+  /* 경로: 3열 그리드 + flex:0 0 auto로 height 붕괴 방지 */
   .flight-route {
-    display: grid;
+    display: grid !important;
     grid-template-columns: 1fr 80px 1fr;
+    flex: 0 0 auto;
     width: 100%;
     box-sizing: border-box;
-    padding: 12px 14px 0;
+    padding: 12px 14px 8px;
     gap: 8px;
     overflow: visible;
+    min-height: 0;
   }
-  .route-point { min-width: 0; }
+  .route-point { min-width: 0; overflow: hidden; }
   .route-line  { min-width: 0; }
   .route-duration { font-size: 11px; }
   .route-direct   { font-size: 11px; padding: 2px 6px; }
@@ -1215,29 +1217,33 @@
   }
   .flight-time { font-size: 20px; }
 
-  /* 가격 영역: 라벨+가격(왼쪽) / 선택버튼(오른쪽) */
+  /* 가격 영역: 세로 배치, 버튼 하단 전체 너비 */
   .flight-price-wrap {
     width: 100%;
     box-sizing: border-box;
     border-left: none;
     border-top: 1.5px dashed #e5e7eb;
     padding: 12px 14px 14px;
-    margin: 12px 0 0;
+    margin: 8px 0 0;
     min-width: 0;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    align-items: center;
+    flex-direction: column;
+    align-items: stretch;
     gap: 8px;
   }
-  .fare-class-label { flex-shrink: 0; }
-  .flight-price     { font-size: 18px; flex: 1; min-width: 0; }
+  .flight-price-wrap .fare-class-label,
+  .flight-price-wrap .seats-left,
+  .flight-price-wrap .flight-price {
+    align-self: flex-start;
+  }
+  .flight-price     { font-size: 20px; }
   .price-note       { display: none; }
   .select-btn {
-    margin-top: 0;
+    margin-top: 4px;
     margin-left: 0;
-    flex-shrink: 0;
-    padding: 10px 16px;
-    font-size: 13px;
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    border-radius: 10px;
   }
 
   /* 정렬 바 */
