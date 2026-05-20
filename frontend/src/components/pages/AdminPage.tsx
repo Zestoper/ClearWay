@@ -63,10 +63,11 @@ interface AdminBooking {
   flight: { flight_no: string; from_code: string; to_code: string; date: string; depart_time: string }
 }
 interface PopularRoute { from_code: string; to_code: string; from_city: string; to_city: string; count: number }
+type RevItem = { date?: string; week_start?: string; month?: string; revenue: number }
 interface RevenueStats {
-  daily: { date: string; revenue: number }[]
-  weekly: { week_start: string; revenue: number }[]
-  monthly: { month: string; revenue: number }[]
+  daily: RevItem[]
+  weekly: RevItem[]
+  monthly: RevItem[]
 }
 
 interface Props { user: User | null; onGoLogin: () => void }
