@@ -21,7 +21,7 @@ class Booking(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=True)  # nullable = 비회원 예약 허용
     flight_id = Column(Integer, ForeignKey("flights.id"), nullable=False)
 
-    fare_class = Column(Enum("economy", "business"), nullable=False)
+    fare_class = Column(Enum("economy", "business", name="fare_class_enum"), nullable=False)
     seat_number = Column(String(4), nullable=True)
 
     passenger_name_ko = Column(String(50), nullable=False)
