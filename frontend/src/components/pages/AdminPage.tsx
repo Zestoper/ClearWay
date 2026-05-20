@@ -488,7 +488,7 @@ export default function AdminPage({ user, onGoLogin }: Props) {
                           <div className="rev-bar-fill" style={{ width: `${(r.revenue / maxRev) * 100}%` }} />
                         </div>
                         <span className="rev-bar-label">
-                          {revPeriod === 'daily' ? r.date.slice(5) : revPeriod === 'weekly' ? r.week_start.slice(5) : r.month}
+                          {revPeriod === 'daily' ? r.date?.slice(5) : revPeriod === 'weekly' ? r.week_start?.slice(5) : r.month}
                         </span>
                         <span className="rev-bar-val">{r.revenue > 0 ? `₩${Math.round(r.revenue / 10000)}만` : '-'}</span>
                       </div>
