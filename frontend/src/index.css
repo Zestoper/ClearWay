@@ -27,4 +27,16 @@ body {
   .nextrip-page {
     padding-top: 57px;
   }
+
+  /* sticky topbar들 모바일 헤더 높이에 맞춤 */
+  .page-topbar,
+  .rv-topbar,
+  .fs-hero,
+  .nx-plan-topbar {
+    top: 57px !important;
+  }
+
+  /* 가로 넘침 방지 */
+  body { overflow-x: hidden; }
+  img, video { max-width: 100%; }
 }

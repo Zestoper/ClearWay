@@ -1052,3 +1052,16 @@
     background: #f1f5f9;
     color: #94a3b8;
 }
+
+@media (max-width: 768px) {
+  .page-topbar { top: 57px; padding: 12px 16px; }
+  .page-topbar-inner { padding: 0; flex-wrap: wrap; gap: 8px; }
+  .page-topbar-inner h1 { font-size: 16px; }
+  .admin-tabs-bar { top: 57px; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .admin-tabs { min-width: max-content; padding: 0 12px; }
+  .admin-tab { padding: 10px 14px; font-size: 12px; white-space: nowrap; }
+  .admin-tab-badge { font-size: 10px; padding: 1px 6px; }
+  .rev-chart { gap: 4px; }
+  .rev-bar-item { min-width: 32px; }
+  .admin-popular-routes { gap: 6px; }
+}

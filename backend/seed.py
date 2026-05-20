@@ -83,10 +83,7 @@ db = SessionLocal()
 try:
     print("기존 항공편 데이터 초기화 중...")
     from sqlalchemy import text
-    db.execute(text("SET FOREIGN_KEY_CHECKS=0"))
-    db.execute(text("TRUNCATE TABLE bookings"))
-    db.execute(text("TRUNCATE TABLE flights"))
-    db.execute(text("SET FOREIGN_KEY_CHECKS=1"))
+    db.execute(text("TRUNCATE TABLE bookings, flights RESTART IDENTITY CASCADE"))
     db.commit()
     print("✓ 초기화 완료")
 

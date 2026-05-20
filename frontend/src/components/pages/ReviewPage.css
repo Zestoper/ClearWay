@@ -101,3 +101,13 @@
   .rv-card { padding: 20px 16px; }
   .rv-body { padding: 20px 12px; }
 }
+
+@media (max-width: 640px) {
+  .rv-topbar { padding: 0 16px; }
+  .rv-topbar-inner { height: 48px; }
+  .rv-body { padding: 20px 16px 60px; }
+  .rv-card { padding: 20px 16px; border-radius: 14px; }
+  .rv-card-header { gap: 12px; margin-bottom: 20px; }
+  .rv-card-header h2 { font-size: 16px; }
+  .rv-topbar-inner h1 { font-size: 16px; }
+}

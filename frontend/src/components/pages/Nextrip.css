@@ -658,3 +658,17 @@
 @media (max-width: 480px) {
   .packing-categories { grid-template-columns: 1fr; }
 }
+
+@media (max-width: 768px) {
+  .nx-plan-topbar { top: 57px; padding: 10px 16px; gap: 10px; }
+  .nx-plan-topbar-dest { font-size: 14px; }
+  .nx-plan-topbar-actions { gap: 6px; }
+  .nx-plan-body { padding: 20px 16px 80px; gap: 20px; }
+  .nx-hero { padding: 36px 16px 44px; min-height: unset; }
+  .nx-hero-inner h1 { font-size: 26px; }
+  .nx-dest-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .nx-wizard-body { padding: 20px 16px; }
+  .nx-step-card { padding: 20px 16px; }
+  .nx-tl-card { padding: 16px; }
+  .nx-summary-card { padding: 20px 16px; }
+}
