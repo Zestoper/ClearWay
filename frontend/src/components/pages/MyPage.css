@@ -589,13 +589,16 @@
 .myr-btn-save:disabled { opacity: 0.5; cursor: not-allowed; }
 
 @media (max-width: 640px) {
-  .mp-body { padding: 20px 16px 60px; max-width: 100%; }
-  .mp-profile-card { padding: 20px 16px; flex-direction: column; gap: 16px; text-align: center; }
-  .mp-stats { grid-template-columns: repeat(2, 1fr); }
-  .mp-tab-bar { gap: 4px; overflow-x: auto; }
-  .mp-tab { padding: 8px 14px; font-size: 13px; white-space: nowrap; }
-  .mp-booking-card { padding: 14px; }
-  .mp-booking-route { flex-direction: column; gap: 6px; }
-  .mp-booking-line { display: none; }
-  .myr-card { padding: 14px; }
+  .mypage-body      { padding: 20px 16px 60px; }
+  .profile-card     { padding: 20px 16px; flex-direction: column; gap: 16px; text-align: center; }
+  .profile-join     { text-align: center; }
+  .stats-row        { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .quicklinks-grid  { grid-template-columns: 1fr; }
+  .mp-booking-card  { padding: 12px 14px; }
+  .mp-booking-top   { flex-wrap: wrap; gap: 6px; }
+  .mp-booking-route { flex-wrap: wrap; gap: 4px; }
+  .mp-history-summary { flex-direction: column; gap: 8px; }
+  .myr-card         { padding: 12px 14px; }
+  .mp-modal         { border-radius: 16px 16px 0 0; position: fixed; bottom: 0; top: auto; max-height: 90vh; max-width: 100%; }
+  .mp-modal-overlay { align-items: flex-end; padding: 0; }
 }
