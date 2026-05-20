@@ -1169,65 +1169,52 @@
   /* 예약 하단 바 */
   .booking-bar-inner { padding: 12px 16px; flex-wrap: wrap; gap: 10px; }
   .booking-bar-info  { min-width: 0; flex: 1; }
-}
 
-/* ── 640px: 모바일 — 항공편 카드 세로 배치 ───────────────── */
-@media (max-width: 640px) {
-  .booking-topbar { padding: 0 12px; }
-  .booking-body   { padding: 14px 12px 80px; gap: 12px; }
-
-  /* 필터: 1열 */
-  .filter-panel { grid-template-columns: 1fr; padding: 16px; }
-  .filter-title { margin-bottom: 12px; }
-
-  /* 항공편 카드: 세로 배치 */
+  /* ── 항공편 카드 모바일 레이아웃 (900px 이하 전체 적용) ── */
   .flight-card {
-    flex-direction: column !important;
-    align-items: stretch !important;
-    padding: 14px 0 !important;
-    gap: 0 !important;
-    max-width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 14px 0;
+    gap: 0;
   }
   .flight-brand {
-    width: auto !important;
-    flex-shrink: 1 !important;
-    padding-left: 14px !important;
-    padding-right: 14px !important;
+    width: auto;
+    flex-shrink: 1;
+    padding-left: 14px;
+    padding-right: 14px;
   }
-  /* 경로: flex row 고정, !important로 base flex:1 완전 덮어쓰기 */
   .flight-route {
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    flex: 0 0 auto !important;         /* height 붕괴 방지 */
-    align-items: center !important;
-    gap: 8px !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-    padding: 10px 14px !important;
-    overflow: hidden !important;
+    /* flex:1(flex-basis:0%)이 height를 0으로 만드는 것을 막기 위해 flex:none */
+    flex: none !important;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 14px;
+    overflow: hidden;
     min-height: 60px;
   }
   .route-point {
-    flex: 1 1 0% !important;
-    min-width: 0 !important;
-    max-width: calc(50% - 40px) !important;
+    flex: 1 1 0%;
+    min-width: 0;
+    max-width: calc(50% - 40px);
     overflow: hidden;
   }
   .route-line {
-    flex: 0 0 72px !important;
-    width: 72px !important;
-    min-width: 72px !important;
+    flex: 0 0 72px;
+    width: 72px;
+    min-width: 72px;
     overflow: hidden;
     text-align: center;
   }
-  /* 공항명 숨기고 시간+코드만 표시 */
-  .flight-airport { display: none !important; }
-  .flight-time    { font-size: 18px !important; }
+  .flight-airport { display: none; }
+  .flight-time    { font-size: 18px; }
   .route-duration { font-size: 11px; }
   .route-direct   { font-size: 11px; padding: 2px 6px; }
 
-  /* 가격 영역: 세로 배치, 버튼 하단 전체 너비 */
   .flight-price-wrap {
     width: 100%;
     box-sizing: border-box;
@@ -1242,26 +1229,32 @@
   }
   .flight-price-wrap .fare-class-label,
   .flight-price-wrap .seats-left,
-  .flight-price-wrap .flight-price {
-    align-self: flex-start;
-  }
-  .flight-price     { font-size: 20px; }
-  .price-note       { display: none; }
+  .flight-price-wrap .flight-price { align-self: flex-start; }
+  .flight-price { font-size: 20px; }
+  .price-note   { display: none; }
   .select-btn {
+    width: 100%;
     margin-top: 4px;
     margin-left: 0;
-    width: 100%;
     padding: 12px;
     font-size: 14px;
     border-radius: 10px;
   }
+}
+
+/* ── 640px: 소형폰 추가 조정 ────────────────────────────── */
+@media (max-width: 640px) {
+  .booking-topbar { padding: 0 12px; }
+  .booking-body   { padding: 14px 12px 80px; gap: 12px; }
+
+  .filter-panel { grid-template-columns: 1fr; padding: 16px; }
+  .filter-title { margin-bottom: 12px; }
 
   /* 정렬 바 */
   .sort-bar     { flex-wrap: wrap; gap: 8px; }
   .sort-options { flex-wrap: wrap; gap: 4px; }
   .sort-btn     { padding: 5px 12px; font-size: 12px; }
 
-  /* 왕복 단계 배너 */
   .roundtrip-step-banner { flex-wrap: wrap; gap: 6px; }
   .roundtrip-outbound-summary { font-size: 11px; }
 
