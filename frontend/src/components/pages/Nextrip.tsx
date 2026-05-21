@@ -158,7 +158,6 @@ export default function Nextrip({ user, onGoLogin }: Props) {
   const [submitting, setSubmitting] = useState(false)
 
   // 계획 수정 (교체/삭제)
-  const [replaceItemId, setReplaceItemId] = useState<string | null>(null)
   const [replaceHint, setReplaceHint] = useState('')
   const [replaceLoading, setReplaceLoading] = useState(false)
 
@@ -231,10 +230,10 @@ export default function Nextrip({ user, onGoLogin }: Props) {
     } catch { alert('계획을 불러오지 못했습니다.') }
   }
 
-  async function loadPackingList(detail: PlanDetail) {
+  async function loadPackingList(detail: PlanDetail, forceReload = false) {
     if (packingLoading) return
     setPackingOpen(true)
-    if (packingData) return
+    if (packingData && !forceReload) return
     setPackingLoading(true)
     try {
       const arrival = new Date(detail.arrival_date)
@@ -337,8 +336,8 @@ export default function Nextrip({ user, onGoLogin }: Props) {
         })
         return { ...prev, plan_data: { ...prev.plan_data, days, total_estimated_cost: days.reduce((s, d) => s + (d.daily_estimated_cost ?? 0), 0) } }
       })
-      setReplaceItemId(null)
       setReplaceHint('')
+      setEditItemId(null)
     } catch { alert('교체에 실패했습니다. 잠시 후 다시 시도해 주세요.') }
     finally { setReplaceLoading(false) }
   }
@@ -916,7 +915,7 @@ export default function Nextrip({ user, onGoLogin }: Props) {
             <span className="nx-plan-topbar-dates">{planDetail.arrival_date} ~ {planDetail.departure_date}</span>
           </div>
           <div className="nx-plan-topbar-actions">
-            <button className="nx-plan-action-btn packing" onClick={() => { setPackingData(null); loadPackingList(planDetail) }}>🎒 짐 리스트</button>
+            <button className="nx-plan-action-btn packing" onClick={() => { setPackingData(null); loadPackingList(planDetail, true) }}>🎒 짐 리스트</button>
             <button className="nx-plan-action-btn" onClick={handleShare}>🔗 공유</button>
             <button className="nx-plan-action-btn" onClick={() => window.print()}>🖨 인쇄</button>
           </div>
@@ -973,7 +972,6 @@ export default function Nextrip({ user, onGoLogin }: Props) {
                 {day.items.map((item, idx) => {
                   const meta = CAT_META[item.category] ?? CAT_META['attraction']
                   const isEditing = editItemId === item.id
-                  const isReplacing = replaceItemId === item.id
                   const reasonExpanded = expandedReasonId === item.id
                   const catLabel = item.category === 'restaurant' ? '식당' : item.category === 'cafe' ? '카페' : item.category === 'attraction' ? '관광지' : item.category === 'transport' ? '이동' : item.category === 'accommodation' ? '숙소' : item.category === 'shopping' ? '쇼핑' : '액티비티'
 
@@ -1007,16 +1005,12 @@ export default function Nextrip({ user, onGoLogin }: Props) {
                             {meta.icon} {catLabel}
                           </span>
                           <Stars rating={item.rating} />
-                          {!isEditing && !isReplacing && (
+                          {!isEditing && (
                             <div className="nx-item-actions no-print">
                               <button
                                 className="nx-action-btn edit"
-                                onClick={() => { setEditItemId(item.id); setEditTime(item.time); setEditNotes(item.notes ?? ''); setReplaceItemId(null) }}
+                                onClick={() => { setEditItemId(item.id); setEditTime(item.time); setEditNotes(item.notes ?? ''); setReplaceHint(''); setExpandedReasonId(null) }}
                               >수정</button>
-                              <button
-                                className="nx-action-btn replace"
-                                onClick={() => { setReplaceItemId(item.id); setReplaceHint(''); setEditItemId(null); setExpandedReasonId(null) }}
-                              >교체</button>
                               <button
                                 className="nx-action-btn delete"
                                 onClick={() => deleteItem(planDetail.id, item.id)}
@@ -1025,27 +1019,7 @@ export default function Nextrip({ user, onGoLogin }: Props) {
                           )}
                         </div>
 
-                        {isReplacing ? (
-                          <div className="nx-replace-form">
-                            <p className="nx-replace-label">🔄 AI가 다른 장소로 교체합니다</p>
-                            <input
-                              className="nx-input"
-                              placeholder="원하는 조건 (선택) — 예: 조용한 카페, 야외 명소"
-                              value={replaceHint}
-                              onChange={e => setReplaceHint(e.target.value)}
-                              disabled={replaceLoading}
-                              onKeyDown={e => { if (e.key === 'Enter') replaceItem(planDetail.id, item.id) }}
-                            />
-                            <div className="nx-edit-actions">
-                              <button
-                                className="nx-btn-primary sm"
-                                onClick={() => replaceItem(planDetail.id, item.id)}
-                                disabled={replaceLoading}
-                              >{replaceLoading ? 'AI 교체 중...' : '교체하기'}</button>
-                              <button className="nx-btn-ghost sm" onClick={() => setReplaceItemId(null)} disabled={replaceLoading}>취소</button>
-                            </div>
-                          </div>
-                        ) : isEditing ? (
+                        {isEditing ? (
                           <div className="nx-edit-form">
                             <div className="nx-edit-row">
                               <label>시간</label>
@@ -1059,6 +1033,24 @@ export default function Nextrip({ user, onGoLogin }: Props) {
                               <button className="nx-btn-primary sm" onClick={() => saveItemEdit(planDetail.id, item.id)}>저장</button>
                               <button className="nx-btn-ghost sm" onClick={() => setEditItemId(null)}>취소</button>
                             </div>
+
+                            <div className="nx-edit-divider">또는 AI로 다른 장소 교체</div>
+                            <div className="nx-edit-row">
+                              <label>교체 조건</label>
+                              <input
+                                className="nx-input"
+                                placeholder="예: 야외 카페, 무료 명소, 조용한 곳..."
+                                value={replaceHint}
+                                onChange={e => setReplaceHint(e.target.value)}
+                                disabled={replaceLoading}
+                                onKeyDown={e => { if (e.key === 'Enter' && !replaceLoading) replaceItem(planDetail.id, item.id) }}
+                              />
+                            </div>
+                            <button
+                              className="nx-btn-replace sm"
+                              onClick={() => replaceItem(planDetail.id, item.id)}
+                              disabled={replaceLoading}
+                            >{replaceLoading ? 'AI 교체 중...' : 'AI로 교체하기'}</button>
                           </div>
                         ) : (
                           <>
