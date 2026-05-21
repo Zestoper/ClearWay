@@ -153,12 +153,11 @@ export default function Nextrip({ user, onGoLogin }: Props) {
   const [form, setForm] = useState<SurveyForm>(BLANK_FORM)
   const [editItemId, setEditItemId] = useState<string | null>(null)
   const [editTime, setEditTime] = useState('')
-  const [editNotes, setEditNotes] = useState('')
   const [genStatus, setGenStatus] = useState<string[]>([])
   const [submitting, setSubmitting] = useState(false)
 
   // 계획 수정 (교체/삭제)
-  const [replaceHint, setReplaceHint] = useState('')
+  const [replaceHints, setReplaceHints] = useState<string[]>([''])
   const [replaceLoading, setReplaceLoading] = useState(false)
 
   // 추천 근거 expand
@@ -295,12 +294,12 @@ export default function Nextrip({ user, onGoLogin }: Props) {
 
   async function saveItemEdit(planId: number, itemId: string) {
     try {
-      await api.patch(`/nextrip/plans/${planId}/items/${itemId}`, { time: editTime, notes: editNotes || undefined })
+      await api.patch(`/nextrip/plans/${planId}/items/${itemId}`, { time: editTime })
       setPlanDetail(prev => {
         if (!prev?.plan_data) return prev
         const days = prev.plan_data.days.map(d => ({
           ...d,
-          items: d.items.map(it => it.id === itemId ? { ...it, time: editTime, notes: editNotes } : it),
+          items: d.items.map(it => it.id === itemId ? { ...it, time: editTime } : it),
         }))
         return { ...prev, plan_data: { ...prev.plan_data, days } }
       })
@@ -327,7 +326,8 @@ export default function Nextrip({ user, onGoLogin }: Props) {
   async function replaceItem(planId: number, itemId: string) {
     setReplaceLoading(true)
     try {
-      const newItem = await api.post<PlanItem>(`/nextrip/plans/${planId}/items/${itemId}/replace`, { hint: replaceHint || undefined })
+      const hintsText = replaceHints.filter(h => h.trim()).join(', ')
+      const newItem = await api.post<PlanItem>(`/nextrip/plans/${planId}/items/${itemId}/replace`, { hint: hintsText || undefined })
       setPlanDetail(prev => {
         if (!prev?.plan_data) return prev
         const days = prev.plan_data.days.map(d => {
@@ -336,7 +336,7 @@ export default function Nextrip({ user, onGoLogin }: Props) {
         })
         return { ...prev, plan_data: { ...prev.plan_data, days, total_estimated_cost: days.reduce((s, d) => s + (d.daily_estimated_cost ?? 0), 0) } }
       })
-      setReplaceHint('')
+      setReplaceHints([''])
       setEditItemId(null)
     } catch { alert('교체에 실패했습니다. 잠시 후 다시 시도해 주세요.') }
     finally { setReplaceLoading(false) }
@@ -1009,7 +1009,7 @@ export default function Nextrip({ user, onGoLogin }: Props) {
                             <div className="nx-item-actions no-print">
                               <button
                                 className="nx-action-btn edit"
-                                onClick={() => { setEditItemId(item.id); setEditTime(item.time); setEditNotes(item.notes ?? ''); setReplaceHint(''); setExpandedReasonId(null) }}
+                                onClick={() => { setEditItemId(item.id); setEditTime(item.time); setReplaceHints(['']); setExpandedReasonId(null) }}
                               >수정</button>
                               <button
                                 className="nx-action-btn delete"
@@ -1024,33 +1024,45 @@ export default function Nextrip({ user, onGoLogin }: Props) {
                             <div className="nx-edit-row">
                               <label>시간</label>
                               <input type="time" className="nx-input sm" value={editTime} onChange={e => setEditTime(e.target.value)} />
-                            </div>
-                            <div className="nx-edit-row">
-                              <label>메모</label>
-                              <input className="nx-input" placeholder="메모 추가..." value={editNotes} onChange={e => setEditNotes(e.target.value)} />
-                            </div>
-                            <div className="nx-edit-actions">
-                              <button className="nx-btn-primary sm" onClick={() => saveItemEdit(planDetail.id, item.id)}>저장</button>
-                              <button className="nx-btn-ghost sm" onClick={() => setEditItemId(null)}>취소</button>
+                              <button className="nx-btn-ghost sm" onClick={() => saveItemEdit(planDetail.id, item.id)}>저장</button>
                             </div>
 
-                            <div className="nx-edit-divider">또는 AI로 다른 장소 교체</div>
-                            <div className="nx-edit-row">
-                              <label>교체 조건</label>
-                              <input
-                                className="nx-input"
-                                placeholder="예: 야외 카페, 무료 명소, 조용한 곳..."
-                                value={replaceHint}
-                                onChange={e => setReplaceHint(e.target.value)}
+                            <div className="nx-edit-divider">AI로 다른 장소로 교체</div>
+
+                            <div className="nx-conditions-list">
+                              {replaceHints.map((hint, i) => (
+                                <div key={i} className="nx-condition-row">
+                                  <input
+                                    className="nx-input"
+                                    placeholder={`조건 ${i + 1} — 예: 야외 카페, 무료 명소`}
+                                    value={hint}
+                                    onChange={e => setReplaceHints(h => h.map((v, j) => j === i ? e.target.value : v))}
+                                    disabled={replaceLoading}
+                                  />
+                                  {replaceHints.length > 1 && (
+                                    <button
+                                      className="nx-remove-condition"
+                                      onClick={() => setReplaceHints(h => h.filter((_, j) => j !== i))}
+                                      disabled={replaceLoading}
+                                    >×</button>
+                                  )}
+                                </div>
+                              ))}
+                              <button
+                                className="nx-add-condition"
+                                onClick={() => setReplaceHints(h => [...h, ''])}
                                 disabled={replaceLoading}
-                                onKeyDown={e => { if (e.key === 'Enter' && !replaceLoading) replaceItem(planDetail.id, item.id) }}
-                              />
+                              >+ 조건 추가</button>
                             </div>
-                            <button
-                              className="nx-btn-replace sm"
-                              onClick={() => replaceItem(planDetail.id, item.id)}
-                              disabled={replaceLoading}
-                            >{replaceLoading ? 'AI 교체 중...' : 'AI로 교체하기'}</button>
+
+                            <div className="nx-edit-bottom">
+                              <button
+                                className="nx-btn-replace"
+                                onClick={() => replaceItem(planDetail.id, item.id)}
+                                disabled={replaceLoading || replaceHints.every(h => !h.trim())}
+                              >{replaceLoading ? 'AI 검색 중...' : 'AI로 교체하기'}</button>
+                              <button className="nx-btn-ghost sm" onClick={() => setEditItemId(null)} disabled={replaceLoading}>취소</button>
+                            </div>
                           </div>
                         ) : (
                           <>
