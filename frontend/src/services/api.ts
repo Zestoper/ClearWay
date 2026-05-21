@@ -18,6 +18,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     const err = await res.json().catch(() => ({ detail: '오류가 발생했습니다.' }))
     throw new Error(err.detail ?? '오류가 발생했습니다.')
   }
+  if (res.status === 204) return null as T
   return res.json()
 }
 

@@ -688,20 +688,41 @@
 .nx-action-btn.replace:hover { background: #f0fdf4; border-color: #86efac; }
 .nx-action-btn.delete:hover { background: #fff1f2; border-color: #fca5a5; }
 
-/* ── 장소 교체 폼 ─────────────────────────────────────────────────── */
-.nx-replace-form {
-  margin-top: 10px;
+/* ── 수정 폼 내 교체 구분선 ──────────────────────────────────────── */
+.nx-edit-divider {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #94a3b8;
+  margin: 4px 0;
 }
 
-.nx-replace-label {
+.nx-edit-divider::before,
+.nx-edit-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e5e7eb;
+}
+
+.nx-btn-replace {
+  padding: 8px 16px;
+  background: #f0fdf4;
+  color: #16a34a;
+  border: 1.5px solid #86efac;
+  border-radius: 8px;
   font-size: 13px;
   font-weight: 700;
-  color: #16a34a;
-  margin: 0;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+  width: 100%;
 }
+
+.nx-btn-replace:hover { background: #dcfce7; }
+.nx-btn-replace:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* ── 추천 근거 ────────────────────────────────────────────────────── */
 .nx-reason-wrap {
