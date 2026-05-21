@@ -297,10 +297,11 @@ export default function Nextrip({ user, onGoLogin }: Props) {
       await api.patch(`/nextrip/plans/${planId}/items/${itemId}`, { time: editTime })
       setPlanDetail(prev => {
         if (!prev?.plan_data) return prev
-        const days = prev.plan_data.days.map(d => ({
-          ...d,
-          items: d.items.map(it => it.id === itemId ? { ...it, time: editTime } : it),
-        }))
+        const days = prev.plan_data.days.map(d => {
+          const items = d.items.map(it => it.id === itemId ? { ...it, time: editTime } : it)
+          items.sort((a, b) => a.time.localeCompare(b.time))
+          return { ...d, items }
+        })
         return { ...prev, plan_data: { ...prev.plan_data, days } }
       })
       setEditItemId(null)

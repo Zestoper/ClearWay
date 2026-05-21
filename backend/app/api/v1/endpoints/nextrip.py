@@ -533,6 +533,9 @@ def update_plan_item(
                 if body.duration_min is not None: item["duration_min"] = body.duration_min
                 if body.notes is not None: item["notes"] = body.notes
                 updated = True
+        if updated:
+            day["items"].sort(key=lambda x: x.get("time", "00:00"))
+            break
     if not updated:
         raise HTTPException(status_code=404, detail="일정 항목을 찾을 수 없습니다.")
 
