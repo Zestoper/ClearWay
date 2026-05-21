@@ -659,6 +659,147 @@
   .packing-categories { grid-template-columns: 1fr; }
 }
 
+/* ── 아이템 액션 버튼 (수정/교체/삭제) ───────────────────────────── */
+.nx-item-actions {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.nx-action-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, border-color 0.15s;
+  flex-shrink: 0;
+}
+
+.nx-action-btn.edit:hover  { background: #eff6ff; border-color: #93c5fd; }
+.nx-action-btn.replace:hover { background: #f0fdf4; border-color: #86efac; }
+.nx-action-btn.delete:hover { background: #fff1f2; border-color: #fca5a5; }
+
+/* ── 장소 교체 폼 ─────────────────────────────────────────────────── */
+.nx-replace-form {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.nx-replace-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #16a34a;
+  margin: 0;
+}
+
+/* ── 추천 근거 ────────────────────────────────────────────────────── */
+.nx-reason-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nx-reason-toggle {
+  align-self: flex-start;
+  font-size: 11px;
+  font-weight: 600;
+  color: #6b7280;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-family: inherit;
+  transition: color 0.15s;
+}
+
+.nx-reason-toggle:hover { color: #1d4ed8; }
+
+.nx-reason-detail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.nx-rtag {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px 9px;
+  border-radius: 100px;
+  font-size: 11px;
+  font-weight: 600;
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+}
+
+.nx-rtag.match {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border-color: #bfdbfe;
+}
+
+/* ── 총 예산 선택 (설문 Step 7) ──────────────────────────────────── */
+.nx-optional-label {
+  font-size: 12px;
+  font-weight: 400;
+  color: #94a3b8;
+}
+
+.nx-budget-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.nx-budget-chip {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1.5px solid #e5e7eb;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+
+.nx-budget-chip:hover { border-color: #1d4ed8; color: #1d4ed8; }
+.nx-budget-chip.selected { background: #1d4ed8; color: #fff; border-color: #1d4ed8; }
+
+.nx-custom-budget-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nx-budget-unit {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  flex-shrink: 0;
+}
+
+.nx-budget-confirm {
+  margin: 4px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #16a34a;
+}
+
 @media (max-width: 768px) {
   .nx-plan-topbar { top: 57px; padding: 10px 16px; gap: 10px; }
   .nx-plan-topbar-dest { font-size: 14px; }
