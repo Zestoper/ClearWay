@@ -34,6 +34,7 @@ class TripPlanCreate(BaseModel):
     budget: str              # budget / normal / premium
     companion: str           # solo / friends / couple / family
     booking_ref: Optional[str] = None
+    total_budget_krw: Optional[int] = None  # 1인 총 예산 (원)
 
 class PlanItemUpdate(BaseModel):
     time: Optional[str] = None
@@ -70,17 +71,21 @@ def build_user_prompt(data: TripPlanCreate) -> str:
     style_count = {"relaxed": "하루 3~4개 일정만, 첫일정 12:00 이후", "normal": "하루 5~6개 일정, 첫일정 10:00", "tight": "하루 7~9개 일정, 첫일정 08:00"}
     count_rule = style_count.get(data.travel_style, "하루 5~6개 일정, 첫일정 10:00")
 
+    budget_constraint = ""
+    if data.total_budget_krw and data.total_budget_krw > 0:
+        budget_constraint = f"\nBUDGET CONSTRAINT: total_estimated_cost for the whole trip must not exceed ₩{data.total_budget_krw:,}. Distribute daily_estimated_cost proportionally across days."
+
     return f"""Create a Korean travel itinerary as JSON.
 
 Destination:{data.destination}({data.destination_en}) | Arrive:{data.arrival_date} {data.arrival_time} | Depart:{data.departure_date} {data.departure_time}
 Hotel:{data.hotel_location} | Style:{STYLE_DESC.get(data.travel_style)} | Types:{types_str} | Food:{food_str}
-Transport:{TRANSPORT_DESC.get(data.transport)} | Budget:{BUDGET_DESC.get(data.budget)} | With:{COMPANION_DESC.get(data.companion)}
+Transport:{TRANSPORT_DESC.get(data.transport)} | Budget:{BUDGET_DESC.get(data.budget)} | With:{COMPANION_DESC.get(data.companion)}{budget_constraint}
 
 Rules: {count_rule}. MEAL RULE: place a restaurant/cafe item every 6 hours without exception (e.g. 08:00 breakfast, 13:00 lunch, 19:00 dinner — never skip more than 6h without eating). Cluster nearby places. Start day1 after arrival. End last day 2h before departure.
 Places: restaurants Google Maps 4.2+, attractions 4.3+. Real famous places only. All text in Korean except place_name_en and maps_query.
 Cost rules: estimated_cost = entry fee + average spend per person in KRW (use 0 for free places like parks/temples with no fee). distance_from_prev = walking/driving distance in km between this place and previous one (e.g. "1.2km", use "0km" for first item of day). Compute daily_estimated_cost as sum of items in that day. Compute total_estimated_cost as sum of all days.
 
-Output compact JSON (keep reason under 50 Korean chars, tip optional):
+Output compact JSON (keep reason under 80 Korean chars, tip optional):
 {{"summary":"...","total_estimated_cost":350000,"highlights":["...","...","..."],"days":[{{"day":1,"date":"YYYY-MM-DD","title":"...","daily_estimated_cost":120000,"items":[{{"id":"d1_1","time":"HH:MM","period":"morning|afternoon|evening|night","place_name":"장소명","place_name_en":"Name","category":"restaurant|attraction|cafe|shopping|activity|accommodation","rating":4.5,"duration_min":60,"distance_from_prev":"1.2km","travel_time_min":10,"reason":"한줄추천이유","tip":"팁","estimated_cost":15000,"lat":0.0,"lng":0.0,"maps_query":"query"}}]}}]}}"""
 
 def build_title(name: str, destination: str) -> str:
@@ -535,3 +540,113 @@ def update_plan_item(
     flag_modified(plan, "plan_data")
     db.commit()
     return {"ok": True}
+
+
+# ── 일정 항목 삭제 ─────────────────────────────────────────────────────────────
+
+@router.delete("/plans/{plan_id}/items/{item_id}", status_code=204)
+def delete_plan_item(
+    plan_id: int,
+    item_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    plan = db.query(TripPlan).filter(TripPlan.id == plan_id, TripPlan.user_id == current_user.id).first()
+    if not plan or not plan.plan_data:
+        raise HTTPException(status_code=404, detail="계획을 찾을 수 없습니다.")
+
+    removed = False
+    for day in plan.plan_data.get("days", []):
+        before = len(day.get("items", []))
+        day["items"] = [it for it in day.get("items", []) if it.get("id") != item_id]
+        if len(day["items"]) < before:
+            removed = True
+            day["daily_estimated_cost"] = sum((it.get("estimated_cost") or 0) for it in day["items"])
+
+    if not removed:
+        raise HTTPException(status_code=404, detail="항목을 찾을 수 없습니다.")
+
+    plan.plan_data["total_estimated_cost"] = sum(
+        (day.get("daily_estimated_cost") or 0) for day in plan.plan_data.get("days", [])
+    )
+
+    from sqlalchemy.orm.attributes import flag_modified
+    flag_modified(plan, "plan_data")
+    db.commit()
+
+
+# ── 일정 항목 AI 교체 ─────────────────────────────────────────────────────────
+
+class ReplaceItemRequest(BaseModel):
+    hint: Optional[str] = None
+
+@router.post("/plans/{plan_id}/items/{item_id}/replace")
+def replace_plan_item(
+    plan_id: int,
+    item_id: str,
+    body: ReplaceItemRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    plan = db.query(TripPlan).filter(TripPlan.id == plan_id, TripPlan.user_id == current_user.id).first()
+    if not plan or not plan.plan_data:
+        raise HTTPException(status_code=404, detail="계획을 찾을 수 없습니다.")
+
+    current_item = None
+    day_info: dict = {}
+    for day in plan.plan_data.get("days", []):
+        for item in day.get("items", []):
+            if item.get("id") == item_id:
+                current_item = dict(item)
+                day_info = {"date": day.get("date", ""), "title": day.get("title", "")}
+                break
+
+    if not current_item:
+        raise HTTPException(status_code=404, detail="항목을 찾을 수 없습니다.")
+
+    hint_line = f'\n사용자 요청: "{body.hint}"' if body.hint else ""
+    types_str = ", ".join(TYPE_DESC.get(t, t) for t in (plan.travel_types or []))
+
+    prompt = f"""Replace one travel itinerary item with a different place. Return a single JSON object only.
+
+Destination: {plan.destination} ({plan.destination_en})
+Date: {day_info.get('date')} / {day_info.get('title')}
+Budget: {BUDGET_DESC.get(plan.budget, plan.budget)}
+Companion: {COMPANION_DESC.get(plan.companion, plan.companion)}
+Travel interests: {types_str}{hint_line}
+
+Current item to replace:
+{json.dumps(current_item, ensure_ascii=False)}
+
+Rules:
+- Keep exactly: id="{item_id}", time="{current_item.get('time')}", period="{current_item.get('period')}"
+- Must be a DIFFERENT place from "{current_item.get('place_name')}"
+- Real place on Google Maps, rating 4.2+
+- All text in Korean except place_name_en and maps_query
+- Keep reason under 80 Korean chars
+
+Return only this JSON (no arrays, no extra wrapper):
+{{"id":"{item_id}","time":"{current_item.get('time')}","period":"{current_item.get('period')}","place_name":"장소명","place_name_en":"Name","category":"restaurant","rating":4.5,"duration_min":60,"distance_from_prev":"1.0km","travel_time_min":10,"reason":"추천이유","estimated_cost":15000,"lat":0.0,"lng":0.0,"maps_query":"검색어"}}"""
+
+    try:
+        raw = _call_ai(prompt, system=_SIMPLE_SYSTEM)
+        new_item = json.loads(_strip_fences(raw))
+        new_item["id"] = item_id
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"AI 교체 실패: {str(e)}")
+
+    from sqlalchemy.orm.attributes import flag_modified
+    for day in plan.plan_data.get("days", []):
+        for i, item in enumerate(day.get("items", [])):
+            if item.get("id") == item_id:
+                day["items"][i] = new_item
+                day["daily_estimated_cost"] = sum((it.get("estimated_cost") or 0) for it in day["items"])
+                break
+
+    plan.plan_data["total_estimated_cost"] = sum(
+        (day.get("daily_estimated_cost") or 0) for day in plan.plan_data.get("days", [])
+    )
+
+    flag_modified(plan, "plan_data")
+    db.commit()
+    return new_item

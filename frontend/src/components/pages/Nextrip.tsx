@@ -53,6 +53,7 @@ interface SurveyForm {
   food_cant_eat: string; food_allergy: string; food_prefer: string
   transport: string; budget: string; companion: string
   booking_ref: string
+  total_budget_krw: string
 }
 
 // ── Constants ─────────────────────────────────────────────────────────────────
@@ -109,6 +110,19 @@ const BLANK_FORM: SurveyForm = {
   food_cant_eat: '', food_allergy: '', food_prefer: '',
   transport: '', budget: '', companion: '',
   booking_ref: '',
+  total_budget_krw: '',
+}
+
+const BUDGET_AMOUNT_CHIPS = [
+  { label: '30만원', value: '300000' },
+  { label: '50만원', value: '500000' },
+  { label: '100만원', value: '1000000' },
+  { label: '200만원', value: '2000000' },
+  { label: '500만원', value: '5000000' },
+]
+
+const BUDGET_LABEL: Record<string, string> = {
+  budget: '저예산', normal: '일반 예산', premium: '프리미엄',
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -142,6 +156,14 @@ export default function Nextrip({ user, onGoLogin }: Props) {
   const [editNotes, setEditNotes] = useState('')
   const [genStatus, setGenStatus] = useState<string[]>([])
   const [submitting, setSubmitting] = useState(false)
+
+  // 계획 수정 (교체/삭제)
+  const [replaceItemId, setReplaceItemId] = useState<string | null>(null)
+  const [replaceHint, setReplaceHint] = useState('')
+  const [replaceLoading, setReplaceLoading] = useState(false)
+
+  // 추천 근거 expand
+  const [expandedReasonId, setExpandedReasonId] = useState<string | null>(null)
 
   // 짐 리스트
   const [packingOpen, setPackingOpen] = useState(false)
@@ -260,6 +282,7 @@ export default function Nextrip({ user, onGoLogin }: Props) {
         budget: form.budget,
         companion: form.companion,
         booking_ref: form.booking_ref || null,
+        total_budget_krw: form.total_budget_krw ? Number(form.total_budget_krw) : null,
       }
       const res = await api.post<{ id: number }>('/nextrip/plans', body)
       setActivePlanId(res.id)
@@ -284,6 +307,40 @@ export default function Nextrip({ user, onGoLogin }: Props) {
       })
       setEditItemId(null)
     } catch { alert('저장에 실패했습니다.') }
+  }
+
+  async function deleteItem(planId: number, itemId: string) {
+    if (!confirm('이 장소를 일정에서 삭제하시겠습니까?')) return
+    try {
+      await api.delete(`/nextrip/plans/${planId}/items/${itemId}`)
+      setPlanDetail(prev => {
+        if (!prev?.plan_data) return prev
+        const days = prev.plan_data.days.map(d => {
+          const items = d.items.filter(it => it.id !== itemId)
+          return { ...d, items, daily_estimated_cost: items.reduce((s, it) => s + (it.estimated_cost ?? 0), 0) }
+        })
+        return { ...prev, plan_data: { ...prev.plan_data, days, total_estimated_cost: days.reduce((s, d) => s + (d.daily_estimated_cost ?? 0), 0) } }
+      })
+      setEditItemId(null)
+    } catch { alert('삭제에 실패했습니다.') }
+  }
+
+  async function replaceItem(planId: number, itemId: string) {
+    setReplaceLoading(true)
+    try {
+      const newItem = await api.post<PlanItem>(`/nextrip/plans/${planId}/items/${itemId}/replace`, { hint: replaceHint || undefined })
+      setPlanDetail(prev => {
+        if (!prev?.plan_data) return prev
+        const days = prev.plan_data.days.map(d => {
+          const items = d.items.map(it => it.id === itemId ? newItem : it)
+          return { ...d, items, daily_estimated_cost: items.reduce((s, it) => s + (it.estimated_cost ?? 0), 0) }
+        })
+        return { ...prev, plan_data: { ...prev.plan_data, days, total_estimated_cost: days.reduce((s, d) => s + (d.daily_estimated_cost ?? 0), 0) } }
+      })
+      setReplaceItemId(null)
+      setReplaceHint('')
+    } catch { alert('교체에 실패했습니다. 잠시 후 다시 시도해 주세요.') }
+    finally { setReplaceLoading(false) }
   }
 
   // 선택한 여행지에 해당하는 예약만 필터링 (도시명 기준, 복수 공항 포함)
@@ -728,6 +785,37 @@ export default function Nextrip({ user, onGoLogin }: Props) {
                     ))}
                   </div>
                 </div>
+
+                <div className="nx-choice-section">
+                  <h3>1인 총 예산 <span className="nx-optional-label">(선택)</span></h3>
+                  <p className="nx-step-desc">설정하면 AI가 예산 안에서 일정을 구성합니다</p>
+                  <div className="nx-budget-chips">
+                    {BUDGET_AMOUNT_CHIPS.map(chip => (
+                      <button
+                        key={chip.value}
+                        className={`nx-budget-chip ${form.total_budget_krw === chip.value ? 'selected' : ''}`}
+                        onClick={() => set('total_budget_krw', form.total_budget_krw === chip.value ? '' : chip.value)}
+                      >{chip.label}</button>
+                    ))}
+                  </div>
+                  <div className="nx-custom-budget-row">
+                    <input
+                      type="number"
+                      className="nx-input"
+                      placeholder="직접 입력 (예: 800000)"
+                      value={form.total_budget_krw}
+                      onChange={e => set('total_budget_krw', e.target.value)}
+                      min={0}
+                      step={10000}
+                    />
+                    <span className="nx-budget-unit">원</span>
+                  </div>
+                  {form.total_budget_krw && Number(form.total_budget_krw) > 0 && (
+                    <p className="nx-budget-confirm">
+                      ✓ ₩{Number(form.total_budget_krw).toLocaleString()} 이내로 일정을 구성합니다
+                    </p>
+                  )}
+                </div>
               </div>
             )}
 
@@ -885,6 +973,18 @@ export default function Nextrip({ user, onGoLogin }: Props) {
                 {day.items.map((item, idx) => {
                   const meta = CAT_META[item.category] ?? CAT_META['attraction']
                   const isEditing = editItemId === item.id
+                  const isReplacing = replaceItemId === item.id
+                  const reasonExpanded = expandedReasonId === item.id
+                  const catLabel = item.category === 'restaurant' ? '식당' : item.category === 'cafe' ? '카페' : item.category === 'attraction' ? '관광지' : item.category === 'transport' ? '이동' : item.category === 'accommodation' ? '숙소' : item.category === 'shopping' ? '쇼핑' : '액티비티'
+
+                  const typeMatch = planDetail.travel_types.filter(t => {
+                    const m: Record<string, string[]> = {
+                      food: ['restaurant', 'cafe'], activity: ['activity'],
+                      nature: ['attraction'], shopping: ['shopping'],
+                      history: ['attraction'], night: ['attraction', 'activity'],
+                    }
+                    return m[t]?.includes(item.category)
+                  })
 
                   return (
                     <div key={item.id} className="nx-tl-row">
@@ -904,16 +1004,51 @@ export default function Nextrip({ user, onGoLogin }: Props) {
                       <div className="nx-tl-card" style={{ borderLeftColor: meta.color }}>
                         <div className="nx-tl-card-top">
                           <span className="nx-tl-cat-badge" style={{ background: meta.bg, color: meta.color }}>
-                            {meta.icon} {item.category === 'restaurant' ? '식당' : item.category === 'cafe' ? '카페' : item.category === 'attraction' ? '관광지' : item.category === 'transport' ? '이동' : item.category === 'accommodation' ? '숙소' : item.category === 'shopping' ? '쇼핑' : '액티비티'}
+                            {meta.icon} {catLabel}
                           </span>
                           <Stars rating={item.rating} />
-                          <button
-                            className="nx-edit-btn no-print"
-                            onClick={() => { setEditItemId(item.id); setEditTime(item.time); setEditNotes(item.notes ?? '') }}
-                          >✏</button>
+                          {!isEditing && !isReplacing && (
+                            <div className="nx-item-actions no-print">
+                              <button
+                                className="nx-action-btn edit"
+                                title="시간·메모 수정"
+                                onClick={() => { setEditItemId(item.id); setEditTime(item.time); setEditNotes(item.notes ?? ''); setReplaceItemId(null) }}
+                              >✏</button>
+                              <button
+                                className="nx-action-btn replace"
+                                title="다른 장소로 교체"
+                                onClick={() => { setReplaceItemId(item.id); setReplaceHint(''); setEditItemId(null); setExpandedReasonId(null) }}
+                              >🔄</button>
+                              <button
+                                className="nx-action-btn delete"
+                                title="삭제"
+                                onClick={() => deleteItem(planDetail.id, item.id)}
+                              >🗑</button>
+                            </div>
+                          )}
                         </div>
 
-                        {isEditing ? (
+                        {isReplacing ? (
+                          <div className="nx-replace-form">
+                            <p className="nx-replace-label">🔄 AI가 다른 장소로 교체합니다</p>
+                            <input
+                              className="nx-input"
+                              placeholder="원하는 조건 (선택) — 예: 조용한 카페, 야외 명소"
+                              value={replaceHint}
+                              onChange={e => setReplaceHint(e.target.value)}
+                              disabled={replaceLoading}
+                              onKeyDown={e => { if (e.key === 'Enter') replaceItem(planDetail.id, item.id) }}
+                            />
+                            <div className="nx-edit-actions">
+                              <button
+                                className="nx-btn-primary sm"
+                                onClick={() => replaceItem(planDetail.id, item.id)}
+                                disabled={replaceLoading}
+                              >{replaceLoading ? 'AI 교체 중...' : '교체하기'}</button>
+                              <button className="nx-btn-ghost sm" onClick={() => setReplaceItemId(null)} disabled={replaceLoading}>취소</button>
+                            </div>
+                          </div>
+                        ) : isEditing ? (
                           <div className="nx-edit-form">
                             <div className="nx-edit-row">
                               <label>시간</label>
@@ -932,7 +1067,37 @@ export default function Nextrip({ user, onGoLogin }: Props) {
                           <>
                             <h3 className="nx-tl-place">{item.place_name}</h3>
                             {item.place_name_en && <p className="nx-tl-place-en">{item.place_name_en}</p>}
-                            <p className="nx-tl-reason">{item.reason}</p>
+
+                            {/* 추천 근거 */}
+                            <div className="nx-reason-wrap">
+                              <p className="nx-tl-reason">✦ {item.reason}</p>
+                              <button
+                                className="nx-reason-toggle no-print"
+                                onClick={() => setExpandedReasonId(reasonExpanded ? null : item.id)}
+                              >추천 근거 {reasonExpanded ? '▲' : '▼'}</button>
+                              {reasonExpanded && (
+                                <div className="nx-reason-detail">
+                                  {typeMatch.length > 0 && typeMatch.map(t => (
+                                    <span key={t} className="nx-rtag match">
+                                      ✓ {TRAVEL_TYPES.find(x => x.id === t)?.label} 관심사 일치
+                                    </span>
+                                  ))}
+                                  <span className="nx-rtag">
+                                    {BUDGET_LABEL[planDetail.budget]} 예산 수준
+                                  </span>
+                                  {item.rating && (
+                                    <span className="nx-rtag">Google Maps {item.rating}점 검증</span>
+                                  )}
+                                  <span className="nx-rtag">
+                                    {COMPANION_LABEL[planDetail.companion]} 여행에 적합
+                                  </span>
+                                  {item.estimated_cost === 0 && (
+                                    <span className="nx-rtag match">🆓 무료 입장</span>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+
                             {item.tip && <p className="nx-tl-tip">💡 {item.tip}</p>}
                             {item.notes && <p className="nx-tl-notes">📝 {item.notes}</p>}
                             <div className="nx-tl-meta">
