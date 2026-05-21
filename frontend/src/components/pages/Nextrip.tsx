@@ -1011,19 +1011,16 @@ export default function Nextrip({ user, onGoLogin }: Props) {
                             <div className="nx-item-actions no-print">
                               <button
                                 className="nx-action-btn edit"
-                                title="시간·메모 수정"
                                 onClick={() => { setEditItemId(item.id); setEditTime(item.time); setEditNotes(item.notes ?? ''); setReplaceItemId(null) }}
-                              >✏</button>
+                              >수정</button>
                               <button
                                 className="nx-action-btn replace"
-                                title="다른 장소로 교체"
                                 onClick={() => { setReplaceItemId(item.id); setReplaceHint(''); setEditItemId(null); setExpandedReasonId(null) }}
-                              >🔄</button>
+                              >교체</button>
                               <button
                                 className="nx-action-btn delete"
-                                title="삭제"
                                 onClick={() => deleteItem(planDetail.id, item.id)}
-                              >🗑</button>
+                              >삭제</button>
                             </div>
                           )}
                         </div>
