@@ -688,7 +688,7 @@
 .nx-action-btn.replace:hover { background: #f0fdf4; border-color: #86efac; }
 .nx-action-btn.delete:hover { background: #fff1f2; border-color: #fca5a5; }
 
-/* ── 수정 폼 내 교체 구분선 ──────────────────────────────────────── */
+/* ── 수정 폼 구분선 ───────────────────────────────────────────────── */
 .nx-edit-divider {
   display: flex;
   align-items: center;
@@ -696,7 +696,7 @@
   font-size: 11px;
   font-weight: 600;
   color: #94a3b8;
-  margin: 4px 0;
+  margin: 8px 0 6px;
 }
 
 .nx-edit-divider::before,
@@ -707,8 +707,81 @@
   background: #e5e7eb;
 }
 
+/* ── 시간 수정 행 ─────────────────────────────────────────────────── */
+.nx-edit-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nx-edit-row label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  flex-shrink: 0;
+  width: 28px;
+}
+
+/* ── 교체 조건 목록 ───────────────────────────────────────────────── */
+.nx-conditions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.nx-condition-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.nx-remove-condition {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #9ca3af;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+  font-family: inherit;
+}
+
+.nx-remove-condition:hover { background: #fff1f2; color: #ef4444; border-color: #fca5a5; }
+
+.nx-add-condition {
+  align-self: flex-start;
+  padding: 5px 12px;
+  border-radius: 6px;
+  border: 1.5px dashed #d1d5db;
+  background: #f9fafb;
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+
+.nx-add-condition:hover { border-color: #1d4ed8; color: #1d4ed8; background: #eff6ff; }
+.nx-add-condition:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── 교체 하단 버튼 영역 ──────────────────────────────────────────── */
+.nx-edit-bottom {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
 .nx-btn-replace {
-  padding: 8px 16px;
+  flex: 1;
+  padding: 9px 16px;
   background: #f0fdf4;
   color: #16a34a;
   border: 1.5px solid #86efac;
@@ -718,11 +791,10 @@
   cursor: pointer;
   font-family: inherit;
   transition: background 0.15s;
-  width: 100%;
 }
 
-.nx-btn-replace:hover { background: #dcfce7; }
-.nx-btn-replace:disabled { opacity: 0.5; cursor: not-allowed; }
+.nx-btn-replace:hover:not(:disabled) { background: #dcfce7; }
+.nx-btn-replace:disabled { opacity: 0.4; cursor: not-allowed; }
 
 /* ── 추천 근거 ────────────────────────────────────────────────────── */
 .nx-reason-wrap {
