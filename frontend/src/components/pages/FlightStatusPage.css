@@ -27,8 +27,8 @@
 .fs-summary-item:last-child { border-right: none; }
 .fs-summary-num { font-size: 24px; font-weight: 800; color: #fff; line-height: 1; }
 .fs-summary-item > span:last-child { font-size: 11px; color: rgba(255,255,255,0.55); letter-spacing: 0.04em; }
-.fs-summary-item.boarding .fs-summary-num { color: #60a5fa; }
-.fs-summary-item.delayed  .fs-summary-num { color: #fbbf24; }
+.fs-summary-item.boarding  .fs-summary-num { color: #60a5fa; }
+.fs-summary-item.departed  .fs-summary-num { color: #94a3b8; }
 .fs-summary-item.cancelled .fs-summary-num { color: #f87171; }
 
 /* Body */
@@ -81,7 +81,16 @@
 }
 .fs-row:last-child { border-bottom: none; }
 .fs-row:hover { background: #f8fafc; }
-.fs-row.cancelled { opacity: 0.5; }
+.fs-row.cancelled { opacity: 0.45; }
+.fs-row.departed-row { opacity: 0.6; }
+.fs-tab-count {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 20px; height: 18px; padding: 0 5px;
+  font-size: 11px; font-weight: 700;
+  background: rgba(0,0,0,0.08); color: inherit;
+  border-radius: 100px; margin-left: 6px;
+}
+.fs-tab.active .fs-tab-count { background: rgba(255,255,255,0.25); }
 
 .fs-no { font-weight: 700; font-size: 13px; color: #0f172a; }
 .fs-dest em { font-style: normal; font-size: 11px; color: #94a3b8; margin-left: 4px; }

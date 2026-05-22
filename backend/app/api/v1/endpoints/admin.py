@@ -2,7 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from typing import Optional
-from datetime import date, datetime, timedelta, time
+from datetime import date, datetime, timedelta, time, timezone
+import calendar
 from pydantic import BaseModel
 from app.db.database import get_db
 from app.models.flight import Flight
@@ -95,21 +96,22 @@ def admin_stats(
     db: Session = Depends(get_db),
     _: User = Depends(get_admin_user),
 ):
+    today = date.today()
     total_flights = db.query(Flight).count()
     total_bookings = db.query(Booking).count()
-    total_users = db.query(User).filter(User.is_admin == False).count()  # noqa
-    revenue_rows = (
-        db.query(Booking.price)
-        .filter(Booking.status.in_(["confirmed", "checked_in", "completed"]))
-        .all()
-    )
-    revenue = sum(float(r[0]) for r in revenue_rows)
-    today_bookings = db.query(Booking).count()
+    total_users = db.query(User).filter(User.is_admin.is_(False)).count()
+    revenue = db.query(func.sum(Booking.price)).filter(
+        Booking.status.in_(["confirmed", "checked_in", "completed"])
+    ).scalar() or 0
+    today_bookings = db.query(Booking).filter(
+        Booking.created_at >= datetime.combine(today, time(0, 0)),
+        Booking.created_at < datetime.combine(today + timedelta(days=1), time(0, 0)),
+    ).count()
     return {
         "total_flights": total_flights,
         "total_bookings": total_bookings,
         "total_users": total_users,
-        "total_revenue": revenue,
+        "total_revenue": float(revenue),
         "today_bookings": today_bookings,
     }
 
@@ -126,7 +128,7 @@ def admin_list_flights(
         q = q.filter(Flight.to_code == to_code.upper())
     if flight_date:
         q = q.filter(Flight.date == flight_date)
-    return q.order_by(Flight.date, Flight.depart_time).limit(200).all()
+    return q.order_by(Flight.date, Flight.depart_time).limit(500).all()
 
 
 @router.post("/flights", response_model=FlightOut, status_code=status.HTTP_201_CREATED)
@@ -179,21 +181,29 @@ def admin_list_members(
     db: Session = Depends(get_db),
     _: User = Depends(get_admin_user),
 ):
-    users = db.query(User).filter(User.is_admin == False).order_by(User.created_at.desc()).all()  # noqa
-    result = []
-    for u in users:
-        booking_count = db.query(Booking).filter(Booking.user_id == u.id).count()
-        total_spent = sum(float(b.price) for b in db.query(Booking).filter(
-            Booking.user_id == u.id,
-            Booking.status.in_(["confirmed", "checked_in", "completed"])
-        ).all())
-        result.append({
+    # 예약 수와 결제 합계를 서브쿼리로 한 번에 조회 (N+1 방지)
+    booking_counts = dict(
+        db.query(Booking.user_id, func.count(Booking.id))
+        .group_by(Booking.user_id)
+        .all()
+    )
+    spent_map = dict(
+        db.query(Booking.user_id, func.sum(Booking.price))
+        .filter(Booking.status.in_(["confirmed", "checked_in", "completed"]))
+        .group_by(Booking.user_id)
+        .all()
+    )
+    users = db.query(User).filter(User.is_admin.is_(False)).order_by(User.created_at.desc()).all()
+    return [
+        {
             "id": u.id, "name": u.name, "email": u.email,
             "tier": u.tier, "miles": u.miles,
             "created_at": str(u.created_at),
-            "booking_count": booking_count, "total_spent": total_spent,
-        })
-    return result
+            "booking_count": booking_counts.get(u.id, 0),
+            "total_spent": float(spent_map.get(u.id) or 0),
+        }
+        for u in users
+    ]
 
 
 @router.get("/bookings")
@@ -235,14 +245,16 @@ def admin_revenue_stats(
         ).scalar() or 0
         weekly.append({"week_start": str(start), "revenue": float(rev)})
 
-    # Monthly: last 12 months
+    # Monthly: last 12 months (정확한 월 계산)
     monthly = []
+    base = today.replace(day=1)
     for i in range(11, -1, -1):
-        month_start = (today.replace(day=1) - timedelta(days=i * 30)).replace(day=1)
-        if month_start.month == 12:
-            month_end = month_start.replace(year=month_start.year + 1, month=1)
-        else:
-            month_end = month_start.replace(month=month_start.month + 1)
+        total_months = base.month - i
+        year = base.year + (total_months - 1) // 12
+        month = ((total_months - 1) % 12) + 1
+        month_start = date(year, month, 1)
+        last_day = calendar.monthrange(year, month)[1]
+        month_end = date(year, month, last_day) + timedelta(days=1)
         rev = db.query(func.sum(Booking.price)).filter(
             Booking.created_at >= datetime.combine(month_start, time(0, 0)),
             Booking.created_at < datetime.combine(month_end, time(0, 0)),
@@ -269,7 +281,7 @@ def list_subscribers(
 ):
     users = (
         db.query(User)
-        .filter(User.is_admin == False)  # noqa
+        .filter(User.is_admin.is_(False))  # noqa
         .order_by(User.created_at.desc())
         .all()
     )
@@ -293,7 +305,7 @@ def send_newsletter(
     if not subject or not content:
         raise HTTPException(status_code=400, detail="제목과 내용을 입력해 주세요.")
 
-    q = db.query(User).filter(User.is_admin == False, User.newsletter_subscribed == True, User.email_notifications == True)  # noqa
+    q = db.query(User).filter(User.is_admin.is_(False), User.newsletter_subscribed == True, User.email_notifications == True)  # noqa
     if tier:
         mile_ranges = {"BLUE": (0, 49999), "RED": (50000, 199999), "RAINBOW": (200000, None)}
         rng = mile_ranges.get(tier)

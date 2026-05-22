@@ -86,7 +86,9 @@ Places: restaurants Google Maps 4.2+, attractions 4.3+. Real famous places only.
 Cost rules: estimated_cost = entry fee + average spend per person in KRW (use 0 for free places like parks/temples with no fee). distance_from_prev = walking/driving distance in km between this place and previous one (e.g. "1.2km", use "0km" for first item of day). Compute daily_estimated_cost as sum of items in that day. Compute total_estimated_cost as sum of all days.
 
 Output compact JSON (keep reason under 80 Korean chars, tip optional):
-{{"summary":"...","total_estimated_cost":350000,"highlights":["...","...","..."],"days":[{{"day":1,"date":"YYYY-MM-DD","title":"...","daily_estimated_cost":120000,"items":[{{"id":"d1_1","time":"HH:MM","period":"morning|afternoon|evening|night","place_name":"장소명","place_name_en":"Name","category":"restaurant|attraction|cafe|shopping|activity|accommodation","rating":4.5,"duration_min":60,"distance_from_prev":"1.2km","travel_time_min":10,"reason":"한줄추천이유","tip":"팁","estimated_cost":15000,"lat":0.0,"lng":0.0,"maps_query":"query"}}]}}]}}"""
+{{"summary":"...","total_estimated_cost":350000,"highlights":["...","...","..."],"recommendation_basis":["평점 4.3+ 선별","도보 동선 최적화","인기 명소 위주"],"days":[{{"day":1,"date":"YYYY-MM-DD","title":"...","daily_estimated_cost":120000,"items":[{{"id":"d1_1","time":"HH:MM","period":"morning|afternoon|evening|night","place_name":"장소명","place_name_en":"Name","category":"restaurant|attraction|cafe|shopping|activity|accommodation","rating":4.5,"duration_min":60,"distance_from_prev":"1.2km","travel_time_min":10,"reason":"한줄추천이유","tip":"팁","estimated_cost":15000,"lat":0.0,"lng":0.0,"maps_query":"query"}}]}}]}}
+
+recommendation_basis: 3~4개의 짧은 추천 기준 태그 (예: "평점순 선별", "도보 동선 최적화", "예산 내 최선", "현지인 인기 맛집"). 실제 플랜에 적용된 기준만 작성."""
 
 def build_title(name: str, destination: str) -> str:
     return f"{name}님의 {destination} 여행"

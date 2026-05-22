@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, WebSocket, WebSocketDisconnect, Query
 from sqlalchemy.orm import Session
 from typing import Optional, Dict, List
-from datetime import datetime
+from datetime import datetime, timezone
 from jose import JWTError
 
 from app.db.database import get_db, SessionLocal
@@ -217,7 +217,7 @@ async def chat_ws(
                     room.user_unread = (room.user_unread or 0) + 1
                 else:
                     room.admin_unread = (room.admin_unread or 0) + 1
-                room.updated_at = datetime.now()
+                room.updated_at = datetime.now(timezone.utc)
 
                 db.commit()
                 db.refresh(msg)

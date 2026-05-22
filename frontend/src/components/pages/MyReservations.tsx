@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import './MyReservations.css'
 import { fetchMyBookings, cancelBooking, lookupBooking, claimBooking } from '../../services/bookings'
 import type { BookingRecord } from '../../services/bookings'
+import { useToast } from '../common/ToastProvider'
 
 interface Props {
   isLoggedIn: boolean
@@ -21,6 +22,7 @@ const STATUS_LABEL: Record<string, { text: string; cls: string }> = {
 type Tab = 'all' | 'upcoming' | 'completed'
 
 export default function MyReservations({ isLoggedIn, onGoLogin, onCancelSuccess, initialRef, initialLastName }: Props) {
+  const { toast } = useToast()
   const [tab, setTab] = useState<Tab>('all')
   const [bookings, setBookings] = useState<BookingRecord[]>([])
   const [loading, setLoading] = useState(true)
@@ -403,7 +405,7 @@ export default function MyReservations({ isLoggedIn, onGoLogin, onCancelSuccess,
                         setBookings(prev => prev.map(b => b.booking_ref === cancelTarget.booking_ref ? { ...b, status: 'cancelled' } : b))
                         onCancelSuccess?.()
                       } catch (e) {
-                        alert(e instanceof Error ? e.message : '취소 실패')
+                        toast(e instanceof Error ? e.message : '취소 실패', 'error')
                       } finally {
                         setCancelLoading(false)
                       }

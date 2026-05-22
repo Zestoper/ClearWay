@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import './Nextrip.css'
 import { api } from '../../services/api'
 import type { User } from '../../services/auth'
+import { useToast } from '../common/ToastProvider'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface Props { user: User | null; onGoLogin: () => void }
@@ -30,7 +31,7 @@ interface PlanDetail {
   food_restrictions: { cant_eat: string; allergy: string; prefer: string }
   transport: string; budget: string; companion: string; status: string
   error_msg: string | null
-  plan_data: { summary: string; highlights: string[]; days: PlanDay[]; total_estimated_cost?: number } | null
+  plan_data: { summary: string; highlights: string[]; recommendation_basis?: string[]; days: PlanDay[]; total_estimated_cost?: number } | null
 }
 
 interface BookingRecord {
@@ -138,12 +139,16 @@ function Stars({ rating }: { rating: number | null }) {
   )
 }
 
-function mapsUrl(query: string) {
-  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`
+function mapsUrl(lat: number, lng: number, name: string) {
+  if (lat && lng) {
+    return `https://www.google.com/maps/place/${encodeURIComponent(name)}/@${lat},${lng},17z/`
+  }
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name)}`
 }
 
 // ── Main Component ────────────────────────────────────────────────────────────
 export default function Nextrip({ user, onGoLogin }: Props) {
+  const { toast } = useToast()
   const [view, setView] = useState<NextripView>('home')
   const [plans, setPlans] = useState<PlanSummary[]>([])
   const [bookings, setBookings] = useState<BookingRecord[]>([])
@@ -203,7 +208,7 @@ export default function Nextrip({ user, onGoLogin }: Props) {
           clearInterval(pollTimer)
           clearInterval(msgTimer)
         } else if (detail.status === 'error') {
-          alert(`일정 생성 실패: ${detail.error_msg}`)
+          toast(`일정 생성 실패: ${detail.error_msg}`, 'error')
           setView('home')
           clearInterval(pollTimer)
           clearInterval(msgTimer)
@@ -226,7 +231,7 @@ export default function Nextrip({ user, onGoLogin }: Props) {
       const detail = await api.get<PlanDetail>(`/nextrip/plans/${id}`)
       setPlanDetail(detail)
       setView('plan')
-    } catch { alert('계획을 불러오지 못했습니다.') }
+    } catch { toast('계획을 불러오지 못했습니다.', 'error') }
   }
 
   async function loadPackingList(detail: PlanDetail, forceReload = false) {
@@ -247,7 +252,7 @@ export default function Nextrip({ user, onGoLogin }: Props) {
       })
       setPackingData(data)
     } catch {
-      alert('짐 리스트 생성에 실패했습니다.')
+      toast('짐 리스트 생성에 실패했습니다.', 'error')
       setPackingOpen(false)
     } finally {
       setPackingLoading(false)
@@ -286,7 +291,7 @@ export default function Nextrip({ user, onGoLogin }: Props) {
       setActivePlanId(res.id)
       setView('generating')
     } catch (e) {
-      alert(e instanceof Error ? e.message : '오류가 발생했습니다.')
+      toast(e instanceof Error ? e.message : '오류가 발생했습니다.', 'error')
     } finally {
       setSubmitting(false)
     }
@@ -305,7 +310,7 @@ export default function Nextrip({ user, onGoLogin }: Props) {
         return { ...prev, plan_data: { ...prev.plan_data, days } }
       })
       setEditItemId(null)
-    } catch { alert('저장에 실패했습니다.') }
+    } catch { toast('저장에 실패했습니다.', 'error') }
   }
 
   async function deleteItem(planId: number, itemId: string) {
@@ -321,7 +326,7 @@ export default function Nextrip({ user, onGoLogin }: Props) {
         return { ...prev, plan_data: { ...prev.plan_data, days, total_estimated_cost: days.reduce((s, d) => s + (d.daily_estimated_cost ?? 0), 0) } }
       })
       setEditItemId(null)
-    } catch { alert('삭제에 실패했습니다.') }
+    } catch { toast('삭제에 실패했습니다.', 'error') }
   }
 
   async function replaceItem(planId: number, itemId: string) {
@@ -339,7 +344,7 @@ export default function Nextrip({ user, onGoLogin }: Props) {
       })
       setReplaceHints([''])
       setEditItemId(null)
-    } catch { alert('교체에 실패했습니다. 잠시 후 다시 시도해 주세요.') }
+    } catch { toast('교체에 실패했습니다. 잠시 후 다시 시도해 주세요.', 'error') }
     finally { setReplaceLoading(false) }
   }
 
@@ -900,10 +905,11 @@ export default function Nextrip({ user, onGoLogin }: Props) {
     const days = planDetail.plan_data?.days ?? []
     const highlights = planDetail.plan_data?.highlights ?? []
     const summary = planDetail.plan_data?.summary ?? ''
+    const recommendationBasis = planDetail.plan_data?.recommendation_basis ?? []
 
     function handleShare() {
       navigator.clipboard.writeText(window.location.href).catch(() => {})
-      alert('링크가 복사되었습니다!')
+      toast('링크가 복사되었습니다!', 'success')
     }
 
     return (
@@ -940,6 +946,13 @@ export default function Nextrip({ user, onGoLogin }: Props) {
                 <span className="nx-badge">{STYLE_LABEL[planDetail.travel_style]} 여행</span>
                 <span className="nx-badge">{planDetail.budget === 'budget' ? '저예산' : planDetail.budget === 'premium' ? '프리미엄' : '일반 예산'}</span>
               </div>
+              {recommendationBasis.length > 0 && (
+                <div className="nx-rec-basis">
+                  {recommendationBasis.map((b, i) => (
+                    <span key={i} className="nx-rec-basis-tag">✦ {b}</span>
+                  ))}
+                </div>
+              )}
             </div>
             {highlights.length > 0 && (
               <div className="nx-summary-highlights">
@@ -1113,7 +1126,7 @@ export default function Nextrip({ user, onGoLogin }: Props) {
                                 </span>
                               )}
                               <a
-                                href={mapsUrl(item.maps_query)}
+                                href={mapsUrl(item.lat, item.lng, item.maps_query)}
                                 target="_blank"
                                 rel="noreferrer"
                                 className="nx-maps-btn no-print"

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import './CheckIn.css'
 import { lookupBooking, doCheckin, publicCheckin } from '../../services/bookings'
 import type { BookingRecord } from '../../services/bookings'
+import { useToast } from '../common/ToastProvider'
 
 interface Props {
   isLoggedIn: boolean
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export default function CheckIn({ isLoggedIn, onGoLogin, initialRef, initialLastName }: Props) {
+  const { toast } = useToast()
   const [bookingRef, setBookingRef] = useState(initialRef ?? '')
   const [lastName, setLastName] = useState(initialLastName ?? '')
   const [booking, setBooking] = useState<BookingRecord | null>(null)
@@ -55,7 +57,7 @@ export default function CheckIn({ isLoggedIn, onGoLogin, initialRef, initialLast
       }
       setDone(true)
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : '체크인에 실패했습니다.')
+      toast(err instanceof Error ? err.message : '체크인에 실패했습니다.', 'error')
     } finally {
       setCheckinLoading(false)
     }

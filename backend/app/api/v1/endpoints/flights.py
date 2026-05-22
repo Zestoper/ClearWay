@@ -16,6 +16,8 @@ def list_flights(
     from_code: Optional[str] = Query(None),
     to_code: Optional[str] = Query(None),
     date: Optional[date] = Query(None),
+    limit: int = Query(default=300, le=1000),
+    offset: int = Query(default=0, ge=0),
     db: Session = Depends(get_db),
 ):
     q = db.query(Flight)
@@ -25,7 +27,7 @@ def list_flights(
         q = q.filter(Flight.to_code == to_code.upper())
     if date:
         q = q.filter(Flight.date == date)
-    return q.all()
+    return q.order_by(Flight.depart_time).offset(offset).limit(limit).all()
 
 
 @router.get("/{flight_id}", response_model=FlightOut)
