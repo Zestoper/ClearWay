@@ -20,7 +20,7 @@ interface RawFlight {
 // 출발편 상태
 type DepStatus = 'ontime' | 'boarding' | 'departed' | 'cancelled'
 // 도착편 상태
-type ArrStatus = 'arriving' | 'arrived' | 'cancelled'
+type ArrStatus = 'scheduled' | 'in_flight' | 'arriving' | 'arrived' | 'cancelled'
 
 const DEP_STATUS_META: Record<DepStatus, { label: string }> = {
   ontime:    { label: '정시 출발' },
@@ -30,6 +30,8 @@ const DEP_STATUS_META: Record<DepStatus, { label: string }> = {
 }
 
 const ARR_STATUS_META: Record<ArrStatus, { label: string }> = {
+  scheduled: { label: '출발 전'   },
+  in_flight: { label: '비행 중'   },
   arriving:  { label: '도착 예정' },
   arrived:   { label: '도착 완료' },
   cancelled: { label: '결항'      },
@@ -44,10 +46,12 @@ const DEP_FILTERS: Array<{ key: DepStatus | ''; label: string }> = [
 ]
 
 const ARR_FILTERS: Array<{ key: ArrStatus | ''; label: string }> = [
-  { key: '',         label: '전체'     },
-  { key: 'arriving', label: '도착 예정' },
-  { key: 'arrived',  label: '도착 완료' },
-  { key: 'cancelled', label: '결항'    },
+  { key: '',          label: '전체'     },
+  { key: 'scheduled', label: '출발 전'  },
+  { key: 'in_flight', label: '비행 중'  },
+  { key: 'arriving',  label: '도착 예정' },
+  { key: 'arrived',   label: '도착 완료' },
+  { key: 'cancelled', label: '결항'     },
 ]
 
 const DOMESTIC = new Set(['CJU', 'PUS', 'TAE', 'KWJ', 'RSU', 'YNY', 'CJJ'])
@@ -65,11 +69,14 @@ function computeDepStatus(depart: string, isCancelled: boolean, now: number): De
   return 'ontime'
 }
 
-function computeArrStatus(arrival: string, isCancelled: boolean, now: number): ArrStatus {
+function computeArrStatus(depart: string, arrival: string, isCancelled: boolean, now: number): ArrStatus {
   if (isCancelled) return 'cancelled'
+  const dep = toMins(depart)
   const arr = toMins(arrival)
   if (now >= arr) return 'arrived'
-  return 'arriving'
+  if (now >= arr - 30) return 'arriving'
+  if (now >= dep) return 'in_flight'
+  return 'scheduled'
 }
 
 function getDepGate(flight: RawFlight): string {
@@ -147,10 +154,10 @@ export default function FlightStatusPage() {
     _gate: getDepGate(f),
   }))
 
-  // 도착편 상태 계산 — arrival_time(인천 도착 시각) 기준
+  // 도착편 상태 계산 — depart_time(출발 시각), arrival_time(인천 도착 시각) 기준
   const arrWithStatus = arrFlights.map(f => ({
     ...f,
-    _status: computeArrStatus(f.arrival_time, f.is_cancelled, now),
+    _status: computeArrStatus(f.depart_time, f.arrival_time, f.is_cancelled, now),
     _gate: getArrGate(f),
   }))
 
@@ -170,6 +177,8 @@ export default function FlightStatusPage() {
     cancelled: depWithStatus.filter(f => f._status === 'cancelled').length,
   }
   const arrCounts = {
+    scheduled: arrWithStatus.filter(f => f._status === 'scheduled').length,
+    in_flight: arrWithStatus.filter(f => f._status === 'in_flight').length,
     arriving:  arrWithStatus.filter(f => f._status === 'arriving').length,
     arrived:   arrWithStatus.filter(f => f._status === 'arrived').length,
     cancelled: arrWithStatus.filter(f => f._status === 'cancelled').length,
@@ -191,6 +200,8 @@ export default function FlightStatusPage() {
             </div>
           ) : (
             <div className="fs-summary">
+              <div className="fs-summary-item scheduled"><span className="fs-summary-num">{arrCounts.scheduled}</span><span>출발 전</span></div>
+              <div className="fs-summary-item in-flight"><span className="fs-summary-num">{arrCounts.in_flight}</span><span>비행 중</span></div>
               <div className="fs-summary-item arriving"><span className="fs-summary-num">{arrCounts.arriving}</span><span>도착 예정</span></div>
               <div className="fs-summary-item arrived"><span className="fs-summary-num">{arrCounts.arrived}</span><span>도착 완료</span></div>
               <div className="fs-summary-item cancelled"><span className="fs-summary-num">{arrCounts.cancelled}</span><span>결항</span></div>
