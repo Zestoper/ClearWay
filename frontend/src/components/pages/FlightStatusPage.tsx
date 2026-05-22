@@ -110,7 +110,7 @@ export default function FlightStatusPage() {
   const [arrFilter, setArrFilter] = useState<ArrStatus | ''>('')
   const [flights, setFlights] = useState<RawFlight[]>([])
   const [loading, setLoading] = useState(true)
-  const [tick, setTick] = useState(0) // 매분 강제 리렌더
+  const [, setTick] = useState(0) // 매분 강제 리렌더
 
   // 렌더마다 항상 최신 현재 시각 계산 (stale state 방지)
   const now = getNow()

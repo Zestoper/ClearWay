@@ -179,12 +179,6 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
     }
   }
 
-  function applyRecommend(code: string) {
-    setDestFilter(code)
-    setRecOpen(false)
-    setRecResults(null)
-    setRecFlightDest(null)
-  }
 
   const recDestFlights = recFlightDest
     ? applyFilters(flights.filter(f => f.to_code === recFlightDest.code))
