@@ -84,13 +84,17 @@ function getArrGate(flight: RawFlight): string {
   return `B${((flight.id * 11 + 3) % 40) + 1}`
 }
 
-function nowMins(): number {
+function getNow() {
   const n = new Date()
   return n.getHours() * 60 + n.getMinutes()
 }
 
-function todayStr(): string {
-  return new Date().toISOString().slice(0, 10)
+function localDateStr(): string {
+  const d = new Date()
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${y}-${m}-${day}`
 }
 
 export default function FlightStatusPage() {
@@ -99,11 +103,14 @@ export default function FlightStatusPage() {
   const [arrFilter, setArrFilter] = useState<ArrStatus | ''>('')
   const [flights, setFlights] = useState<RawFlight[]>([])
   const [loading, setLoading] = useState(true)
-  const [now, setNow] = useState(nowMins())
+  const [tick, setTick] = useState(0) // 매분 강제 리렌더
+
+  // 렌더마다 항상 최신 현재 시각 계산 (stale state 방지)
+  const now = getNow()
 
   const load = useCallback(async () => {
     try {
-      const date = todayStr()
+      const date = localDateStr()
       const [dep, arr] = await Promise.all([
         api.get<RawFlight[]>(`/flights?from_code=ICN&date=${date}&limit=300`),
         api.get<RawFlight[]>(`/flights?to_code=ICN&date=${date}&limit=300`),
@@ -118,9 +125,9 @@ export default function FlightStatusPage() {
 
   useEffect(() => {
     load()
-    const tick   = setInterval(() => setNow(nowMins()), 60_000)
-    const reload = setInterval(load, 5 * 60_000)
-    return () => { clearInterval(tick); clearInterval(reload) }
+    const tickInterval  = setInterval(() => setTick(t => t + 1), 60_000)
+    const reloadInterval = setInterval(load, 5 * 60_000)
+    return () => { clearInterval(tickInterval); clearInterval(reloadInterval) }
   }, [load])
 
   const today = new Date().toLocaleDateString('ko-KR', {
