@@ -6,6 +6,7 @@ import { fetchFlights } from '../../services/flights'
 import type { Flight } from '../../services/flights'
 import type { User } from '../../services/auth'
 import { api } from '../../services/api'
+import { useToast } from '../common/ToastProvider'
 
 type SortKey = 'price' | 'departure' | 'duration'
 type SortDir = 'asc' | 'desc'
@@ -91,6 +92,7 @@ interface Props {
 }
 
 export default function FlightBooking({ onBook, searchParams, user: _user, onGoLogin: _onGoLogin }: Props) {
+  const { toast } = useToast()
   const [isRoundtrip, setIsRoundtrip] = useState(searchParams?.tripType === 'roundtrip')
 
   // Outbound flights
@@ -128,6 +130,7 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
   const [recVibes, setRecVibes] = useState<string[]>([])
   const [recLoading, setRecLoading] = useState(false)
   const [recResults, setRecResults] = useState<RecDest[] | null>(null)
+  const [recFlightDest, setRecFlightDest] = useState<RecDest | null>(null)
 
   // AI 항공편 추천
   interface FlightRec { flight_id: number; flight_no: string; from_city: string; from_code: string; to_city: string; to_code: string; date: string; depart_time: string; arrival_time: string; duration: string; economy_price: number; business_price: number; is_direct: boolean; reason: string }
@@ -149,9 +152,9 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : ''
       if (msg.includes('429') || msg.includes('Too Many')) {
-        alert('AI 요청이 너무 많습니다. 잠시 후 다시 시도해 주세요.')
+        toast('AI 요청이 너무 많습니다. 잠시 후 다시 시도해 주세요.', 'warning')
       } else {
-        alert('추천을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.')
+        toast('추천을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.', 'error')
       }
     } finally {
       setFlightRecLoading(false)
@@ -170,7 +173,7 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
       })
       setRecResults(data.destinations)
     } catch {
-      alert('추천을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.')
+      toast('추천을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.', 'error')
     } finally {
       setRecLoading(false)
     }
@@ -180,7 +183,12 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
     setDestFilter(code)
     setRecOpen(false)
     setRecResults(null)
+    setRecFlightDest(null)
   }
+
+  const recDestFlights = recFlightDest
+    ? applyFilters(flights.filter(f => f.to_code === recFlightDest.code))
+    : []
 
   // searchParams가 바뀌면 로컬 날짜도 동기화
   useEffect(() => {
@@ -820,11 +828,11 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
 
       {/* ── AI 여행지 추천 모달 ── */}
       {recOpen && (
-        <div className="rec-overlay" onClick={() => setRecOpen(false)}>
+        <div className="rec-overlay" onClick={() => { setRecOpen(false); setRecFlightDest(null) }}>
           <div className="rec-modal" onClick={e => e.stopPropagation()}>
             <div className="rec-modal-head">
               <h2>🤖 AI 여행지 추천</h2>
-              <button className="rec-close" onClick={() => setRecOpen(false)}>✕</button>
+              <button className="rec-close" onClick={() => { setRecOpen(false); setRecFlightDest(null) }}>✕</button>
             </div>
 
             {!recResults ? (
@@ -861,6 +869,55 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
                   {recLoading ? 'AI가 추천 중...' : '✨ 추천받기'}
                 </button>
               </div>
+            ) : recFlightDest ? (
+              <div className="rec-results">
+                <button className="rec-retry" onClick={() => setRecFlightDest(null)}>← 다른 여행지 보기</button>
+                <div className="rec-dest-header">
+                  <span className="rec-dest-emoji">{recFlightDest.emoji}</span>
+                  <div>
+                    <p className="rec-dest-name">{recFlightDest.city} <span className="rec-card-country">{recFlightDest.country}</span></p>
+                    <p className="rec-card-highlight">✦ {recFlightDest.highlight}</p>
+                  </div>
+                </div>
+                {recDestFlights.length === 0 ? (
+                  <p className="flight-rec-empty">이 목적지 운항 편이 없습니다.<br />날짜를 변경해 보세요.</p>
+                ) : (
+                  recDestFlights.map((f, i) => (
+                    <div key={f.id} className="flight-rec-card">
+                      <div className="flight-rec-card-top">
+                        <span className="flight-rec-badge">#{i + 1}</span>
+                        <span className="flight-rec-no">{f.flight_no}</span>
+                        <span className={`flight-rec-direct ${f.is_direct ? '' : 'via'}`}>{f.is_direct ? '직항' : `경유 ${f.via_city}`}</span>
+                      </div>
+                      <div className="flight-rec-route">
+                        <div className="flight-rec-point">
+                          <strong>{f.depart_time}</strong>
+                          <span>{f.from_code}</span>
+                        </div>
+                        <div className="flight-rec-arrow">
+                          <span>{f.duration}</span>
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </div>
+                        <div className="flight-rec-point right">
+                          <strong>{f.arrival_time}</strong>
+                          <span>{f.to_code} {f.to_city}</span>
+                        </div>
+                      </div>
+                      <div className="flight-rec-info">
+                        <span className="flight-rec-date">{f.date}</span>
+                        <span className="flight-rec-price">₩{(fareClass === 'economy' ? Number(f.economy_price) : Number(f.business_price)).toLocaleString()}</span>
+                      </div>
+                      <button className="rec-apply" onClick={() => {
+                        setSelectedId(f.id)
+                        setDestFilter(f.to_code)
+                        setRecOpen(false)
+                        setRecResults(null)
+                        setRecFlightDest(null)
+                      }}>이 항공편 선택</button>
+                    </div>
+                  ))
+                )}
+              </div>
             ) : (
               <div className="rec-results">
                 <p className="rec-results-title">AI 추천 여행지 TOP 3</p>
@@ -876,7 +933,7 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
                     </div>
                     <div className="rec-card-right">
                       <div className="rec-budget">₩{r.est_budget_per_day?.toLocaleString()}<span>/일</span></div>
-                      <button className="rec-apply" onClick={() => applyRecommend(r.code)}>항공권 보기</button>
+                      <button className="rec-apply" onClick={() => setRecFlightDest(r)}>항공권 보기</button>
                     </div>
                   </div>
                 ))}

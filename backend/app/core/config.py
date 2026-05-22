@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
     ALLOWED_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:5173", "http://localhost:5174"]
     ALLOW_ALL_ORIGINS: bool = False
+    FRONTEND_URL: str = "http://localhost:5173"
     AI_PROVIDER: str = "groq"          # groq | gemini | anthropic
     GROQ_API_KEY: str = ""
     GOOGLE_API_KEY: str = ""

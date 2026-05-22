@@ -26,7 +26,7 @@ def _send_welcome_email(name: str, email: str) -> None:
         CLEARWAY 회원가입을 환영합니다.<br>
         앞으로 특가 항공권, 이벤트, 서비스 소식을 이메일로 보내드리겠습니다.
       </p>
-      <a href="http://localhost:5173" style="display:inline-block;padding:12px 28px;background:#1d4ed8;color:#fff;text-decoration:none;border-radius:8px;font-weight:700">CLEARWAY 바로가기</a>
+      <a href="{settings.FRONTEND_URL}" style="display:inline-block;padding:12px 28px;background:#1d4ed8;color:#fff;text-decoration:none;border-radius:8px;font-weight:700">CLEARWAY 바로가기</a>
       <p style="margin-top:24px;font-size:12px;color:#9ca3af">본 메일은 회원가입 시 자동으로 발송됩니다.</p>
     </div>
     """
@@ -47,8 +47,9 @@ def _send_welcome_email(name: str, email: str) -> None:
                 srv.ehlo(); srv.starttls()
                 srv.login(settings.SMTP_USER, settings.SMTP_PASSWORD)
                 srv.sendmail(msg["From"], email, msg.as_string())
-    except Exception:
-        pass
+    except Exception as e:
+        import logging
+        logging.getLogger(__name__).warning("Welcome email failed for %s: %s", email, e)
 
 
 @router.post("/signup", response_model=Token, status_code=status.HTTP_201_CREATED)

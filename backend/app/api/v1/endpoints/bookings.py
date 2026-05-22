@@ -1,6 +1,6 @@
 import random
 import string
-from datetime import datetime, date, time
+from datetime import datetime, date, time, timezone
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 from typing import Optional
@@ -19,7 +19,7 @@ def _gen_ref() -> str:
 
 
 def _calc_miles(price: float, fare_class: str) -> int:
-    rate = random.uniform(0.03, 0.05) if fare_class == "economy" else random.uniform(0.07, 0.10)
+    rate = 0.04 if fare_class == "economy" else 0.08
     return round(price * rate)
 
 
@@ -212,8 +212,8 @@ def cancel_booking(
     # 환불율 계산
     flight = booking.flight
     depart_h, depart_m = map(int, flight.depart_time.split(":"))
-    depart_dt = datetime.combine(flight.date, time(depart_h, depart_m))
-    diff_days = (depart_dt - datetime.now()).total_seconds() / 86400
+    depart_dt = datetime.combine(flight.date, time(depart_h, depart_m), tzinfo=timezone.utc)
+    diff_days = (depart_dt - datetime.now(timezone.utc)).total_seconds() / 86400
     if diff_days > 7:
         refund_rate = 1.0
     elif diff_days > 3:
@@ -246,8 +246,8 @@ def _validate_checkin_time(booking: Booking):
     """출발 48시간 전 ~ 1시간 전까지 체크인 가능"""
     flight = booking.flight
     depart_h, depart_m = map(int, flight.depart_time.split(":"))
-    depart_dt = datetime.combine(flight.date, time(depart_h, depart_m))
-    now = datetime.now()
+    depart_dt = datetime.combine(flight.date, time(depart_h, depart_m)).replace(tzinfo=timezone.utc)
+    now = datetime.now(timezone.utc)
     diff_hours = (depart_dt - now).total_seconds() / 3600
     if diff_hours > 48:
         raise HTTPException(status_code=400, detail="체크인은 출발 48시간 전부터 가능합니다.")

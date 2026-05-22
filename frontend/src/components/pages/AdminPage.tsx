@@ -3,6 +3,7 @@ import './AdminPage.css'
 import { api } from '../../services/api'
 import type { User } from '../../services/auth'
 import ChatWidget from './ChatWidget'
+import { useToast } from '../common/ToastProvider'
 
 const DEST_GROUPS: { region: string; airports: { code: string; city: string; country: string }[] }[] = [
   { region: '일본', airports: [
@@ -77,6 +78,7 @@ const STATUS_TXT: Record<string, string> = { confirmed: '예약확정', checked_
 const TIER_COLOR: Record<string, string> = { BLUE: '#1d4ed8', RED: '#dc2626', RAINBOW: '#7c3aed' }
 
 export default function AdminPage({ user, onGoLogin }: Props) {
+  const { toast } = useToast()
   const [tab, setTab] = useState<AdminTab>('dashboard')
   const [stats, setStats] = useState<Stats | null>(null)
   const [flights, setFlights] = useState<Flight[]>([])
@@ -179,7 +181,7 @@ export default function AdminPage({ user, onGoLogin }: Props) {
         setNoticeList(prev => [created, ...prev])
       }
       cancelEditNotice()
-    } catch { alert('저장에 실패했습니다.') }
+    } catch { toast('저장에 실패했습니다.', 'error') }
     finally { setNoticeSaving(false) }
   }
 
@@ -188,14 +190,14 @@ export default function AdminPage({ user, onGoLogin }: Props) {
     try {
       await api.delete(`/notices/${id}`)
       setNoticeList(prev => prev.filter(n => n.id !== id))
-    } catch { alert('삭제에 실패했습니다.') }
+    } catch { toast('삭제에 실패했습니다.', 'error') }
   }
 
   async function toggleNoticeActive(n: NoticeItem) {
     try {
       const updated = await api.put<NoticeItem>(`/notices/${n.id}`, { is_active: !n.is_active })
       setNoticeList(prev => prev.map(x => x.id === n.id ? updated : x))
-    } catch { alert('변경에 실패했습니다.') }
+    } catch { toast('변경에 실패했습니다.', 'error') }
   }
 
   async function sendNewsletter() {
@@ -204,8 +206,9 @@ export default function AdminPage({ user, onGoLogin }: Props) {
     try {
       await api.post('/admin/newsletter', { subject: nlSubject, content: nlContent, recipient_tier: nlTier || null })
       setNlSubject(''); setNlContent(''); setNlTier('')
+      toast('뉴스레터가 발송되었습니다.', 'success')
       api.get<typeof nlLogs>('/admin/newsletter').then(setNlLogs).catch(() => {})
-    } catch (e) { alert(e instanceof Error ? e.message : '오류 발생') }
+    } catch (e) { toast(e instanceof Error ? e.message : '오류 발생', 'error') }
     finally { setNlSending(false) }
   }
 
@@ -225,7 +228,7 @@ export default function AdminPage({ user, onGoLogin }: Props) {
       await api.put<Flight>(`/admin/flights/${id}`, editForm)
       setSaveMsg('저장 완료'); setTimeout(() => setSaveMsg(''), 2000)
       setEditId(null); loadFlights()
-    } catch (e) { alert(e instanceof Error ? e.message : '오류 발생') }
+    } catch (e) { toast(e instanceof Error ? e.message : '오류 발생', 'error') }
   }
 
   async function cancelFlight(id: number) {
