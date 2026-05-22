@@ -29,6 +29,8 @@
 .fs-summary-item > span:last-child { font-size: 11px; color: rgba(255,255,255,0.55); letter-spacing: 0.04em; }
 .fs-summary-item.boarding  .fs-summary-num { color: #60a5fa; }
 .fs-summary-item.departed  .fs-summary-num { color: #94a3b8; }
+.fs-summary-item.arriving  .fs-summary-num { color: #34d399; }
+.fs-summary-item.arrived   .fs-summary-num { color: #94a3b8; }
 .fs-summary-item.cancelled .fs-summary-num { color: #f87171; }
 
 /* Body */
@@ -107,6 +109,9 @@
 .fs-status--departed  { background: #f1f5f9; color: #475569; }
 .fs-status--delayed   { background: #fef9c3; color: #92400e; }
 .fs-status--cancelled { background: #fee2e2; color: #dc2626; }
+.fs-status--arriving  { background: #d1fae5; color: #065f46; }
+.fs-status--arrived   { background: #f1f5f9; color: #475569; }
+.fs-arr-time { color: #1d4ed8; }
 
 .fs-empty { padding: 60px 0; text-align: center; color: #94a3b8; font-size: 14px; }
 
