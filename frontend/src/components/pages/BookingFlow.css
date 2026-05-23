@@ -1596,11 +1596,12 @@
     .bf-topbar { padding: 0 16px; }
     .bf-topbar-inner {
         height: auto;
+        flex-direction: column;
+        align-items: stretch;
         padding: 10px 0;
-        align-items: center;
-        gap: 8px;
+        gap: 4px;
     }
-    .bf-price { font-size: 15px; white-space: nowrap; }
+    .bf-price { font-size: 15px; white-space: nowrap; text-align: right; }
     .bf-route { font-size: 13px; }
     .bf-date  { font-size: 11px; }
     .bf-fare-tag { font-size: 10px; padding: 2px 7px; }
