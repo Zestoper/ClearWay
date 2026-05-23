@@ -22,6 +22,13 @@ interface PassengerInfo {
   email: string; phone: string
 }
 
+function formatPhone(raw: string): string {
+  const digits = raw.replace(/\D/g, '').slice(0, 11)
+  if (digits.length <= 3) return digits
+  if (digits.length <= 7) return `${digits.slice(0, 3)}-${digits.slice(3)}`
+  return `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7)}`
+}
+
 const STEPS = ['승객 정보', '좌석 선택', '결제', '예약 완료']
 const COLS = ['A', 'B', 'C', '', 'D', 'E', 'F']
 
@@ -380,7 +387,12 @@ export default function BookingFlow({ flight, user, onGoReservations, onGoHome, 
                         type={type}
                         placeholder={placeholder}
                         value={p[key as keyof PassengerInfo]}
-                        onChange={e => updatePassenger(activePaxIdx, key, key.endsWith('En') || key === 'passportNo' ? e.target.value.toUpperCase() : e.target.value)}
+                        onChange={e => {
+                          const val = key === 'phone' ? formatPhone(e.target.value)
+                            : key.endsWith('En') || key === 'passportNo' ? e.target.value.toUpperCase()
+                            : e.target.value
+                          updatePassenger(activePaxIdx, key, val)
+                        }}
                         onBlur={() => touchField(activePaxIdx, key)}
                       />
                       {t[key] && errs[key] && <span className="field-error">{errs[key]}</span>}
