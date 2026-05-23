@@ -4,7 +4,7 @@
   padding: 0;
 }
 
-html, body {
+html, body, #root {
   overflow-x: hidden;
   max-width: 100%;
 }
@@ -44,4 +44,20 @@ body {
   /* 가로 넘침 방지 */
   body { overflow-x: hidden; }
   img, video { max-width: 100%; }
+
+  /* 모든 컨테이너 최대 너비 제한 */
+  .fs-body,
+  .booking-body,
+  .bf-body,
+  .admin-inner,
+  .cs-inner,
+  .checkin-inner,
+  .rv-body,
+  .reservations-inner,
+  .mypage-inner,
+  .notice-inner,
+  .nx-body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
 }

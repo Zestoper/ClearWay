@@ -61,7 +61,8 @@
 .fs-filter:not(.active):hover { border-color: #475569; color: #0f172a; }
 
 /* Table */
-.fs-table { background: #fff; border: 1px solid #f1f5f9; border-radius: 16px; overflow: hidden; }
+.fs-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 16px; }
+.fs-table { background: #fff; border: 1px solid #f1f5f9; border-radius: 16px; overflow: hidden; min-width: 480px; }
 
 .fs-table-head {
   display: grid;
