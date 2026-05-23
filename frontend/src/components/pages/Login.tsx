@@ -1,7 +1,9 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './Login.css'
 import { login, signup } from '../../services/auth'
 import type { User } from '../../services/auth'
+
+const API_BASE = (import.meta.env.VITE_API_URL as string | undefined) ?? 'http://localhost:8000/api/v1'
 
 interface Props {
   onLogin: (token: string, user: User) => void
@@ -17,6 +19,14 @@ export default function Login({ onLogin, onGoHome }: Props) {
   const [showPw, setShowPw] = useState(false)
   const [apiError, setApiError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [serverStatus, setServerStatus] = useState<'connecting' | 'connected' | 'error'>('connecting')
+
+  useEffect(() => {
+    const url = API_BASE.replace('/api/v1', '') + '/health'
+    fetch(url)
+      .then(r => setServerStatus(r.ok ? 'connected' : 'error'))
+      .catch(() => setServerStatus('error'))
+  }, [])
 
   function touch(f: string) { setTouched(t => ({ ...t, [f]: true })) }
 
@@ -81,6 +91,13 @@ export default function Login({ onLogin, onGoHome }: Props) {
       <div className="login-card">
         <div className="login-logo" onClick={onGoHome}>CLEARWAY</div>
         <p className="login-sub">항공권 예매부터 체크인까지</p>
+
+        <div className={`server-status server-status--${serverStatus}`}>
+          <span className="server-status-dot" />
+          {serverStatus === 'connecting' && '서버 연결 중...'}
+          {serverStatus === 'connected'  && '서버 연결됨'}
+          {serverStatus === 'error'      && '서버 연결 실패'}
+        </div>
 
         <div className="login-tabs">
           <button className={tab === 'login' ? 'active' : ''} onClick={() => setTab('login')}>로그인</button>
