@@ -10,6 +10,17 @@ body {
     background: #fff;
 }
 
+/* ── 모든 페이지 가로 고정 (iOS Safari 포함) ──────────────── */
+.home-page, .login-page,
+.booking-page, .bf-page, .fs-page,
+.admin-page, .cs-page, .checkin-page,
+.rv-page, .reservations-page,
+.mypage, .notice-page, .nextrip-page {
+  overflow-x: hidden;
+  max-width: 100%;
+  width: 100%;
+}
+
 /* ── Shared page topbar ───────────────────────────────── */
 .page-topbar {
   background: linear-gradient(90deg, #0f172a 0%, #1e3a8a 60%, #1d4ed8 100%);

@@ -385,3 +385,8 @@
   .bp-code { font-size: 32px; }
   .bp-details { grid-template-columns: 1fr 1fr; }
 }
+
+@media (max-width: 400px) {
+  .bp-details { grid-template-columns: 1fr; }
+  .bp-code { font-size: 28px; }
+}
