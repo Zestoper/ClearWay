@@ -1605,4 +1605,31 @@
         height: 32px;
         font-size: 10px;
     }
+
+    /* 승객 정보 폼 1컬럼 */
+    .bf-form-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    /* 항공편 상세 정보 1컬럼 */
+    .bi-details {
+        grid-template-columns: 1fr;
+    }
+
+    /* 환불 정책 테이블 스크롤 */
+    .bi-policy-grid {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .bi-policy-row {
+        grid-template-columns: 120px 1fr 1fr;
+        min-width: 360px;
+        font-size: 11px;
+    }
+
+    /* Step3 결제 레이아웃 1컬럼 */
+    .bf-step3-layout {
+        grid-template-columns: 1fr;
+    }
 }
