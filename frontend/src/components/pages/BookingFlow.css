@@ -78,6 +78,30 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    flex: 1;
+    min-width: 0;
+}
+
+/* 데스크탑: 두 sub-row를 flat하게 펼침 */
+.bf-summary-row1,
+.bf-summary-row2 {
+    display: contents;
+}
+
+/* 모바일에서만 실제 행으로 전환 */
+@media (max-width: 640px) {
+  .bf-flight-summary {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  .bf-summary-row1,
+  .bf-summary-row2 {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
 }
 
 .bf-flight-no {
@@ -1568,6 +1592,19 @@
 }
 
 @media (max-width: 640px) {
+    /* 상단 예약 요약 바 */
+    .bf-topbar { padding: 0 16px; }
+    .bf-topbar-inner {
+        height: auto;
+        padding: 10px 0;
+        align-items: center;
+        gap: 8px;
+    }
+    .bf-price { font-size: 15px; white-space: nowrap; }
+    .bf-route { font-size: 13px; }
+    .bf-date  { font-size: 11px; }
+    .bf-fare-tag { font-size: 10px; padding: 2px 7px; }
+
     .bf-wrap {
         padding: 16px 12px 60px;
     }

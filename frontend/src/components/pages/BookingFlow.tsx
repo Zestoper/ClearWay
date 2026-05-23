@@ -246,13 +246,17 @@ export default function BookingFlow({ flight, user, onGoReservations, onGoHome, 
       <div className="bf-topbar">
         <div className="bf-topbar-inner">
           <div className="bf-flight-summary">
-            <div className="cw-badge-sm">CW</div>
-            <span className="bf-flight-no">{flight.flightNo}</span>
-            <span className="bf-route">{flight.from.city} ({flight.from.code}) → {flight.to.city} ({flight.to.code})</span>
-            {flight.to.country && <span className="bf-country-tag">{flight.to.country}</span>}
-            <span className="bf-date">{flight.date}</span>
-            <span className="bf-fare-tag">{flight.fareClass === 'economy' ? '일반석' : '비즈니스석'}</span>
-            {paxCount > 1 && <span className="bf-fare-tag" style={{ background: '#059669' }}>{paxCount}명</span>}
+            <div className="bf-summary-row1">
+              <div className="cw-badge-sm">CW</div>
+              <span className="bf-flight-no">{flight.flightNo}</span>
+              <span className="bf-route">{flight.from.code} → {flight.to.code}</span>
+              {flight.to.country && <span className="bf-country-tag">{flight.to.country}</span>}
+            </div>
+            <div className="bf-summary-row2">
+              <span className="bf-date">{flight.date}</span>
+              <span className="bf-fare-tag">{flight.fareClass === 'economy' ? '일반석' : '비즈니스석'}</span>
+              {paxCount > 1 && <span className="bf-fare-tag" style={{ background: '#059669' }}>{paxCount}명</span>}
+            </div>
           </div>
           <span className="bf-price">₩{totalPrice.toLocaleString()}</span>
         </div>
