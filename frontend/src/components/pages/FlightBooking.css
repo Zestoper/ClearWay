@@ -1251,6 +1251,15 @@
 /* ── 640px: 소형폰 추가 조정 ────────────────────────────── */
 @media (max-width: 640px) {
   .booking-topbar { padding: 0 12px; }
+  .booking-topbar-inner {
+    height: auto;
+    min-height: 48px;
+    padding: 10px 0;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .booking-route { flex-wrap: wrap; gap: 6px; }
+  .route-back-btn { font-size: 12px; padding: 5px 10px; }
   .booking-body   { padding: 14px 12px 80px; gap: 12px; }
 
   .filter-panel { grid-template-columns: 1fr; padding: 16px; }
