@@ -4,18 +4,30 @@
   padding: 0;
 }
 
-html, body, #root {
+/* ── iOS Safari 가로 스크롤 완전 차단 ── */
+html {
   overflow-x: hidden;
-  max-width: 100%;
+  max-width: 100vw;
+  width: 100%;
 }
-
 body {
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
+  position: relative; /* iOS Safari overflow-x: hidden 필수 */
   font-family: 'Pretendard', 'Apple SD Gothic Neo', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
-
 #root {
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
   min-height: 100vh;
+}
+
+/* 모든 이미지·미디어 뷰포트 초과 금지 */
+img, video, svg, canvas {
+  max-width: 100%;
 }
 
 @media (max-width: 768px) {
@@ -41,22 +53,12 @@ body {
     top: 57px !important;
   }
 
-  /* 가로 넘침 방지 */
-  body { overflow-x: hidden; }
-  img, video { max-width: 100%; }
-
-  /* 모든 컨테이너 최대 너비 제한 */
-  .fs-body,
-  .booking-body,
-  .bf-body,
-  .admin-inner,
-  .cs-inner,
-  .checkin-inner,
-  .rv-body,
-  .reservations-inner,
-  .mypage-inner,
-  .notice-inner,
-  .nx-body {
+  /* 모든 페이지 컨테이너 가로 고정 */
+  .fs-body, .booking-body, .bf-body, .bf-content,
+  .admin-inner, .cs-inner, .checkin-inner, .checkin-body,
+  .rv-body, .reservations-body, .reservations-inner,
+  .mypage-inner, .notice-inner, .nx-body,
+  .home-page, .login-page {
     max-width: 100%;
     overflow-x: hidden;
   }
