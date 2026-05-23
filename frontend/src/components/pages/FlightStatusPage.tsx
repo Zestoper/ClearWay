@@ -229,6 +229,7 @@ export default function FlightStatusPage() {
               ))}
             </div>
 
+            <div className="fs-table-wrap">
             <div className="fs-table">
               <div className="fs-table-head">
                 <span>편명</span><span>목적지</span><span>출발</span><span>도착(현지)</span><span>상태</span><span>게이트</span>
@@ -248,6 +249,7 @@ export default function FlightStatusPage() {
                 </div>
               ))}
             </div>
+            </div>
           </>
         ) : (
           <>
@@ -258,6 +260,7 @@ export default function FlightStatusPage() {
               ))}
             </div>
 
+            <div className="fs-table-wrap">
             <div className="fs-table">
               <div className="fs-table-head">
                 <span>편명</span><span>출발지</span><span>현지 출발</span><span>인천 도착</span><span>상태</span><span>게이트</span>
@@ -276,6 +279,7 @@ export default function FlightStatusPage() {
                   <span className="fs-gate">{f._gate}</span>
                 </div>
               ))}
+            </div>
             </div>
           </>
         )}
