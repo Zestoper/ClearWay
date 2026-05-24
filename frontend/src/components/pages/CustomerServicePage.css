@@ -473,10 +473,10 @@
 
 @media (max-width: 640px) {
   .cs-body { padding: 20px 16px 60px; }
-  .cs-tab-bar { gap: 4px; }
-  .cs-tab { padding: 8px 12px; font-size: 13px; }
-  .cs-section { padding: 16px; }
-  .cs-faq-item { padding: 14px 12px; }
-  .aichat-wrap { height: 420px; }
-  .inquiry-form { padding: 16px; }
+  .cs-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; gap: 0; }
+  .cs-tab { padding: 8px 10px; font-size: 12px; white-space: nowrap; flex-shrink: 0; }
+  .cs-section { border-radius: 12px; }
+  .cs-faq-q { padding: 14px 16px; }
+  .aichat-wrap { border-radius: 12px; }
+  .cs-inquiry-form { padding: 20px 16px; }
 }
