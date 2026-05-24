@@ -593,6 +593,8 @@
   .profile-card     { padding: 20px 16px; flex-direction: column; gap: 16px; text-align: center; }
   .profile-join     { text-align: center; }
   .stats-row        { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .stat-card        { padding: 16px 12px; }
+  .stat-value       { font-size: 20px; }
   .quicklinks-grid  { grid-template-columns: 1fr; }
   .mp-booking-card  { padding: 12px 14px; }
   .mp-booking-top   { flex-wrap: wrap; gap: 6px; }

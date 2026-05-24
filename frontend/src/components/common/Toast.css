@@ -48,3 +48,12 @@
 .toast-msg   { flex: 1; line-height: 1.45; }
 .toast-close { background: none; border: none; color: #64748b; font-size: 12px; cursor: pointer; padding: 0 0 0 4px; flex-shrink: 0; transition: color 0.15s; }
 .toast-close:hover { color: #f8fafc; }
+
+@media (max-width: 480px) {
+  .toast-stack {
+    right: 12px;
+    left: 12px;
+    max-width: unset;
+    bottom: 16px;
+  }
+}
