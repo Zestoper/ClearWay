@@ -471,12 +471,17 @@
 }
 
 @media (max-width: 640px) {
-  .reservations-body { padding: 20px 16px 60px; max-width: 100%; }
-  .res-card { padding: 16px; }
-  .res-route { flex-direction: column; gap: 8px; }
-  .res-line { display: none; }
-  .res-point.right { text-align: left; }
-  .res-row { flex-direction: column; gap: 8px; }
-  .res-cancel-btn, .res-checkin-btn { width: 100%; text-align: center; }
+  .reservations-body  { padding: 20px 16px 60px; max-width: 100%; }
+  .res-card           { padding: 16px; }
+  .res-route          { flex-direction: column; gap: 8px; }
+  .res-line           { display: none; }
+  .res-point.right    { text-align: left; }
+  .res-row            { flex-direction: column; gap: 8px; }
+  .res-card-footer    { flex-wrap: wrap; gap: 10px; }
+  .res-actions        { flex-wrap: wrap; gap: 6px; }
+  .res-btn            { flex: 1; text-align: center; min-width: 80px; }
   .res-guest-box, .res-claim-box { padding: 16px; }
+  .res-detail-modal   { padding: 20px 16px; }
+  .rdm-route          { padding: 12px; gap: 8px; }
+  .rdm-time           { font-size: 20px; }
 }
