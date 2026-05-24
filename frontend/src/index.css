@@ -55,11 +55,17 @@ img, video, svg, canvas {
 
   /* 모든 페이지 컨테이너 가로 고정 */
   .fs-body, .booking-body, .bf-body, .bf-content,
-  .admin-inner, .cs-inner, .checkin-inner, .checkin-body,
-  .rv-body, .reservations-body, .reservations-inner,
-  .mypage-inner, .notice-inner, .nx-body,
+  .admin-body, .cs-body, .checkin-body,
+  .rv-body, .reservations-body,
+  .mypage-body, .notice-body, .nx-body,
   .home-page, .login-page {
     max-width: 100%;
     overflow-x: hidden;
+  }
+
+  /* 긴 문자열 자동 줄바꿈 (URL, 이메일 등) */
+  p, span, td, th, li, label {
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
 }

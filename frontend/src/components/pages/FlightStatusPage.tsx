@@ -118,11 +118,8 @@ export default function FlightStatusPage() {
   const load = useCallback(async () => {
     try {
       const date = localDateStr()
-      const [dep, arr] = await Promise.all([
-        api.get<RawFlight[]>(`/flights?from_code=ICN&date=${date}&limit=300`),
-        api.get<RawFlight[]>(`/flights?to_code=ICN&date=${date}&limit=300`),
-      ])
-      setFlights([...dep, ...arr])
+      const all = await api.get<RawFlight[]>(`/flights?date=${date}&limit=500`)
+      setFlights(all)
     } catch {
       // 오류 시 기존 데이터 유지
     } finally {
