@@ -135,7 +135,8 @@ export default function AdminPage({ user, onGoLogin }: Props) {
     Promise.all([
       api.get<Stats>('/admin/stats'),
       api.get<Flight[]>('/admin/flights'),
-    ]).then(([s, f]) => { setStats(s); setFlights(f) }).finally(() => setLoading(false))
+      api.get<PopularRoute[]>('/admin/popular-routes'),
+    ]).then(([s, f, p]) => { setStats(s); setFlights(f); setPopular(p) }).finally(() => setLoading(false))
   }, [user])
 
   function loadTab(t: AdminTab) {
