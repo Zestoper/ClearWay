@@ -1601,7 +1601,7 @@
         padding: 10px 0;
         gap: 4px;
     }
-    .bf-price { font-size: 15px; white-space: nowrap; text-align: right; }
+    .bf-price { display: block; width: 100%; font-size: 15px; text-align: right; }
     .bf-route { font-size: 13px; }
     .bf-date  { font-size: 11px; }
     .bf-fare-tag { font-size: 10px; padding: 2px 7px; }
@@ -1615,9 +1615,9 @@
     .bf-step-bar {
         gap: 4px;
     }
-    .bf-step-label {
-        font-size: 10px;
-    }
+    /* 비활성 스텝 레이블 숨김 → 활성만 표시 */
+    .bf-step-label { display: none; }
+    .bf-step-label.active { display: block; font-size: 11px; }
     .bf-row {
         flex-direction: column;
         gap: 10px;
@@ -1670,4 +1670,16 @@
     .bf-step3-layout {
         grid-template-columns: 1fr;
     }
+
+    /* 스테퍼 원형·선 간격 축소 */
+    .bf-stepper-wrap { padding: 12px 16px; }
+    .bf-step-circle { width: 28px; height: 28px; font-size: 12px; }
+    .bf-step-line { margin: 0 6px; }
+
+    /* 좌석 범례: 2줄 wrapping */
+    .seat-legend { flex-wrap: wrap; gap: 8px 12px; font-size: 12px; }
+
+    /* 좌석 헤더 셀 너비를 bf-seat(36px)에 맞춤 */
+    .seat-header-row { padding-left: 32px; }
+    .seat-hcell { width: 36px; }
 }

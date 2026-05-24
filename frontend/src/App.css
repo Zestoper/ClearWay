@@ -21,6 +21,16 @@ body {
   width: 100%;
 }
 
+/* ── 모달이 viewport를 넘지 않도록 ────────────────────────── */
+.guest-modal,
+.mp-modal,
+.res-detail-modal,
+.notice-modal,
+.nl-picker-modal {
+  max-width: min(95vw, var(--modal-max, 560px));
+  box-sizing: border-box;
+}
+
 /* ── Shared page topbar ───────────────────────────────── */
 .page-topbar {
   background: linear-gradient(90deg, #0f172a 0%, #1e3a8a 60%, #1d4ed8 100%);
