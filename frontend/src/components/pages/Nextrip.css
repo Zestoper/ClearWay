@@ -441,12 +441,6 @@
   .nx-summary-card { flex-direction: column; gap: 20px; }
   .nx-plan-topbar-actions { display: none; }
   .nx-custom-inputs { flex-direction: column; }
-
-  /* 가격 비교 배너: 48px 좌우 패딩 → 16px, min-width 해제 */
-  .nx-pricing-banner-inner { padding: 24px 16px; gap: 20px; }
-  .nx-pricing-big { font-size: 22px; }
-  .nx-pricing-left, .nx-pricing-compare { min-width: unset; width: 100%; }
-  .nx-pricing-cta { width: 100%; text-align: center; }
 }
 
 /* ── 가격 callout (hero) ─────────────────────────────────────── */
@@ -916,4 +910,12 @@
   .nx-step-card { padding: 20px 16px; }
   .nx-tl-card { padding: 16px; }
   .nx-summary-card { padding: 20px 16px; }
+}
+
+/* 가격 비교 배너 모바일 (base styles 이후에 위치해야 override 적용) */
+@media (max-width: 640px) {
+  .nx-pricing-banner-inner { padding: 24px 16px; gap: 20px; }
+  .nx-pricing-big { font-size: 22px; }
+  .nx-pricing-left, .nx-pricing-compare { min-width: unset; width: 100%; }
+  .nx-pricing-cta { width: 100%; text-align: center; }
 }
