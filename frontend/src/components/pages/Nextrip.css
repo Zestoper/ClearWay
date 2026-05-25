@@ -912,10 +912,18 @@
   .nx-summary-card { padding: 20px 16px; }
 }
 
-/* 가격 비교 배너 모바일 (base styles 이후에 위치해야 override 적용) */
+/* 가격 비교 배너 모바일 */
 @media (max-width: 640px) {
-  .nx-pricing-banner-inner { padding: 24px 16px; gap: 20px; }
-  .nx-pricing-big { font-size: 22px; }
-  .nx-pricing-left, .nx-pricing-compare { min-width: unset; width: 100%; }
-  .nx-pricing-cta { width: 100%; text-align: center; }
+  .nx-pricing-banner-inner {
+    padding: 28px 20px;
+    gap: 16px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .nx-pricing-left   { flex: none; min-width: unset; }
+  .nx-pricing-compare { flex: none; min-width: unset; }
+  .nx-pricing-big    { font-size: 24px; }
+  .nx-time-savings   { align-self: flex-start; }
+  .nx-pricing-cta    { width: 100%; text-align: center; }
+  .nx-compare-item   { font-size: 13px; }
 }
