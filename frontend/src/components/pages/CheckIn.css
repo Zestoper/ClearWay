@@ -376,6 +376,8 @@
 }
 
 @media (max-width: 600px) {
+  .checkin-page { padding-top: 57px !important; }
+  .checkin-page .page-topbar { position: relative !important; top: 0 !important; }
   .checkin-body { padding: 20px 16px 60px; }
   .checkin-search-card, .checkin-flight-card, .seat-selection-card { padding: 20px 16px; }
   .checkin-form-row { flex-direction: column; gap: 10px; }
