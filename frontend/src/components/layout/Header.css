@@ -423,6 +423,6 @@
   .nav { display: none; }
   .header-right { display: none; }
 
-  .hamburger { display: flex; }
+  .hamburger { display: flex; order: -1; }
   .mobile-menu { display: flex; }
 }

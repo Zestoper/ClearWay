@@ -247,7 +247,7 @@ export default function Nextrip({ user, onGoLogin }: Props) {
         destination: detail.destination,
         days,
         companion: detail.companion,
-        travel_types: detail.travel_types,
+        travel_types: detail.travel_types ?? [],
         budget: detail.budget,
       })
       setPackingData(data)
@@ -1073,7 +1073,7 @@ export default function Nextrip({ user, onGoLogin }: Props) {
                               <button
                                 className="nx-btn-replace"
                                 onClick={() => replaceItem(planDetail.id, item.id)}
-                                disabled={replaceLoading || replaceHints.every(h => !h.trim())}
+                                disabled={replaceLoading}
                               >{replaceLoading ? 'AI 검색 중...' : 'AI로 교체하기'}</button>
                               <button className="nx-btn-ghost sm" onClick={() => setEditItemId(null)} disabled={replaceLoading}>취소</button>
                             </div>
