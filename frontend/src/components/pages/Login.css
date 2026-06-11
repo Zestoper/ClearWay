@@ -273,7 +273,6 @@
 @media (max-width: 480px) {
   .login-card { margin: 16px; padding: 28px 20px; border-radius: 16px; }
   .login-logo { font-size: 22px; }
-  .login-title { font-size: 20px; }
-  .login-field input { font-size: 15px; padding: 12px 14px; }
-  .login-btn { font-size: 15px; padding: 14px; }
+  .lf-field input { font-size: 15px; padding: 12px 14px; }
+  .login-submit { font-size: 15px; padding: 14px; }
 }

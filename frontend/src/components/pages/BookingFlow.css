@@ -1,13 +1,3 @@
-@media (max-width: 900px) {
-    .bf-content {
-        padding: 16px 6px 40px;
-        max-width: 100vw;
-    }
-    .bf-card {
-        padding: 18px 8px;
-        border-radius: 12px;
-    }
-}
 /* ── Page ─────────────────────────────────────────────── */
 .bf-page {
     min-height: 100vh;
@@ -1589,6 +1579,17 @@
     background: #e5e7eb;
     color: #9ca3af;
     cursor: not-allowed;
+}
+
+@media (max-width: 900px) {
+    .bf-content {
+        padding: 16px 6px 40px;
+        max-width: 100vw;
+    }
+    .bf-card {
+        padding: 18px 8px;
+        border-radius: 12px;
+    }
 }
 
 @media (max-width: 640px) {

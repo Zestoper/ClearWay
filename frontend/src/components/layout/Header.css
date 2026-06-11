@@ -31,6 +31,11 @@
   display: flex;
   align-items: center;
   gap: 2px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 0;
 }
 
 .logo-accent {
@@ -39,12 +44,11 @@
 
 .nav {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 16px;
   flex: 1;
-  flex-wrap: nowrap;
   min-width: 0;
-  overflow-x : auto;
+  overflow-x: auto;
 }
 
 .nav a,
@@ -94,14 +98,6 @@
 
 .nav button.active::after {
   transform: scaleX(1);
-}
-
-.logo {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-family: inherit;
-  padding: 0;
 }
 
 .nav-nextrip {
