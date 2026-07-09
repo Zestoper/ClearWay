@@ -100,7 +100,7 @@ Home (메인)
 |------|----------|------|
 | Frontend | React 19 · TypeScript · Vite | SPA UI, 예약 흐름, 반응형 레이아웃 |
 | Backend | FastAPI · SQLAlchemy · Uvicorn | REST API, 비즈니스 로직, JWT 인증 |
-| Database | PostgreSQL | 사용자·항공편·예약·채팅 데이터 저장 |
+| Database | PostgreSQL (Neon) | 사용자·항공편·예약·채팅 데이터 저장 (서버리스 PostgreSQL) |
 | AI | Groq (기본) / Gemini / Anthropic | 리뷰 요약·분석, 챗봇 응답 생성 |
 | Infra | Docker Compose · Nginx | 컨테이너 오케스트레이션, 리버스 프록시 |
 | Deploy | Render | 백엔드(Web Service) + 프론트엔드(Static Site) |
@@ -122,7 +122,7 @@ Client (Browser)
   └── /*      →  React Frontend (Port 3000)
 
                        │
-                  PostgreSQL DB
+              PostgreSQL (Neon Serverless DB)
 ```
 
 ---
@@ -246,7 +246,9 @@ npm install && npm run dev
 ### 환경 변수 (`backend/.env`)
 
 ```env
-DATABASE_URL=postgresql://user:password@localhost:5432/clearway
+# Neon PostgreSQL (프로덕션)
+DATABASE_URL=postgresql://user:password@ep-xxx.us-east-1.aws.neon.tech/neondb?sslmode=require
+
 SECRET_KEY=your-secret-key
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=60
@@ -257,6 +259,7 @@ GROQ_API_KEY=your-groq-api-key
 
 ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173
 ALLOW_ALL_ORIGINS=false
+FRONTEND_URL=https://your-frontend.onrender.com
 ```
 
 > API 문서: 서버 실행 후 [http://localhost:8000/docs](http://localhost:8000/docs)
@@ -304,6 +307,16 @@ ALLOW_ALL_ORIGINS=false
 
 </details>
 
+<details>
+<summary>🗄️ Supabase → Neon 데이터베이스 마이그레이션</summary>
+
+- **원인**: Supabase 무료 플랜 프로젝트 수 초과(3개 제한)로 기존 DB 접근 불가
+- **해결**: Neon 서버리스 PostgreSQL로 전환 — SQLAlchemy `DATABASE_URL`만 교체하면 되는 구조 덕분에 코드 변경 최소화
+- **적용 사항**: `database.py`에 Neon SSL 자동 감지 로직 추가 (`connect_args={"sslmode": "require"}`)
+- **교훈**: 특정 DB 플랫폼 SDK에 의존하지 않고 표준 SQLAlchemy로 구현해 두면 DB 교체 비용이 거의 없음
+
+</details>
+
 ---
 
 ## 🚀 프로젝트 결과
@@ -319,7 +332,7 @@ ALLOW_ALL_ORIGINS=false
 
 - AI 리뷰 분석 정확도 고도화
 - WebSocket 기반 실시간 채팅 확장
-- Render 배포 → 안정적인 클라우드 인프라로 이전
+- 항공편 가격 알림 고도화 (목표가 달성 시 Push / 이메일 알림)
 
 ---
 
