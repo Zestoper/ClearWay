@@ -35,7 +35,7 @@ function isBusinessHours(): boolean {
 interface Props {
   user: User | null
   onGoLogin: () => void
-  /** 어드민 모드이면 roomId를 직접 외부에서 주입 */
+
   adminRoomId?: number
   adminSender?: 'admin'
 }
@@ -76,7 +76,7 @@ export default function ChatWidget({ user, onGoLogin, adminRoomId, adminSender }
       } else if (data.type === 'message') {
         setMessages(prev => [...prev, data])
         scrollBottom()
-        // 상대방 메시지일 때 토스트 알림
+
         const mySender = adminSender ?? 'user'
         if (data.sender !== mySender) {
           toast(isAdmin ? '새 메시지: ' + data.content.slice(0, 40) : '상담사 답변이 도착했습니다.', 'info')
@@ -130,7 +130,6 @@ export default function ChatWidget({ user, onGoLogin, adminRoomId, adminSender }
 
   const outside = !isBusinessHours() && !isAdmin
 
-  // ── 영업시간 외 안내 ──────────────────────────────────────────────────────
   if (outside) {
     return (
       <div className="chat-closed">
@@ -142,7 +141,6 @@ export default function ChatWidget({ user, onGoLogin, adminRoomId, adminSender }
     )
   }
 
-  // ── 채팅방 선택 (phase: select) ───────────────────────────────────────────
   if (phase === 'select') {
     return (
       <div className="chat-select">
@@ -181,7 +179,6 @@ export default function ChatWidget({ user, onGoLogin, adminRoomId, adminSender }
     )
   }
 
-  // ── 이전 상담 목록 (phase: history) ──────────────────────────────────────
   if (phase === 'history') {
     return (
       <div className="chat-history">
@@ -203,7 +200,6 @@ export default function ChatWidget({ user, onGoLogin, adminRoomId, adminSender }
     )
   }
 
-  // ── 채팅방 (phase: chat) ──────────────────────────────────────────────────
   return (
     <div className="chat-room">
       {!isAdmin && (

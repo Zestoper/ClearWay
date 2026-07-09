@@ -31,14 +31,12 @@ export default function MyReservations({ isLoggedIn, onGoLogin, onCancelSuccess,
   const [cancelLoading, setCancelLoading] = useState(false)
   const [cancelResult, setCancelResult] = useState<{ refundAmount: number; refundRate: number } | null>(null)
 
-  // 비회원 조회
   const [guestRef, setGuestRef] = useState(initialRef ?? '')
   const [guestLastName, setGuestLastName] = useState(initialLastName ?? '')
   const [guestResult, setGuestResult] = useState<BookingRecord | null>(null)
   const [guestLoading, setGuestLoading] = useState(false)
   const [guestError, setGuestError] = useState('')
 
-  // 회원: 비회원 예약 가져오기
   const [claimRef, setClaimRef] = useState(isLoggedIn ? (initialRef ?? '') : '')
   const [claimLastName, setClaimLastName] = useState(isLoggedIn ? (initialLastName ?? '') : '')
   const [claimLoading, setClaimLoading] = useState(false)
@@ -56,7 +54,7 @@ export default function MyReservations({ isLoggedIn, onGoLogin, onCancelSuccess,
       .then(setBookings)
       .catch(() => setBookings([]))
       .finally(() => setLoading(false))
-  }, [isLoggedIn]) // eslint-disable-line
+  }, [isLoggedIn])
 
   async function handleGuestLookup() {
     if (!guestRef.trim() || !guestLastName.trim()) return
@@ -92,7 +90,7 @@ export default function MyReservations({ isLoggedIn, onGoLogin, onCancelSuccess,
     <main className="reservations-page">
       <div className="page-topbar"><div className="page-topbar-inner"><h1>내 예약</h1></div></div>
       <div className="reservations-body">
-        {/* 비회원 조회 */}
+
         <div className="res-guest-box">
           <h3>비회원 예약 조회</h3>
           <p>예약번호와 영문 성(last name)을 입력하세요.</p>
@@ -235,7 +233,6 @@ export default function MyReservations({ isLoggedIn, onGoLogin, onCancelSuccess,
           })
         )}
 
-        {/* 비회원 예약 가져오기 */}
         <div className="res-claim-box">
           <h4>비회원으로 예약한 내역 가져오기</h4>
           <p>예약번호와 영문 성을 입력하면 현재 계정에 연결됩니다.</p>
@@ -250,7 +247,6 @@ export default function MyReservations({ isLoggedIn, onGoLogin, onCancelSuccess,
         </div>
       </div>
 
-      {/* 상세보기 모달 */}
       {detail && (() => {
         const f = detail.flight
         const s = STATUS_LABEL[detail.status] ?? { text: detail.status, cls: 'confirmed' }
@@ -264,7 +260,6 @@ export default function MyReservations({ isLoggedIn, onGoLogin, onCancelSuccess,
                 </button>
               </div>
 
-              {/* 상태 + 편명 */}
               <div className="rdm-top">
                 <div className="rdm-brand">
                   <div className="cw-badge-sm">CW</div>
@@ -276,7 +271,6 @@ export default function MyReservations({ isLoggedIn, onGoLogin, onCancelSuccess,
                 <span className={`status-badge ${s.cls}`}>{s.text}</span>
               </div>
 
-              {/* 경로 */}
               <div className="rdm-route">
                 <div className="rdm-point">
                   <span className="rdm-time">{f.depart_time}</span>
@@ -303,7 +297,6 @@ export default function MyReservations({ isLoggedIn, onGoLogin, onCancelSuccess,
                 </div>
               </div>
 
-              {/* 정보 그리드 */}
               <div className="rdm-info-grid">
                 {[
                   { label: '예약 번호', value: detail.booking_ref },
@@ -322,7 +315,6 @@ export default function MyReservations({ isLoggedIn, onGoLogin, onCancelSuccess,
                 ))}
               </div>
 
-              {/* 요금 + 마일리지 */}
               <div className="rdm-price-row">
                 <span>결제 금액</span>
                 <strong>₩{Number(detail.price).toLocaleString()}</strong>
@@ -342,7 +334,6 @@ export default function MyReservations({ isLoggedIn, onGoLogin, onCancelSuccess,
         )
       })()}
 
-      {/* 예약 취소 모달 */}
       {cancelTarget && !cancelResult && (() => {
         const f = cancelTarget.flight
         const departDt = new Date(`${f.date}T${f.depart_time}`)
@@ -418,7 +409,6 @@ export default function MyReservations({ isLoggedIn, onGoLogin, onCancelSuccess,
         )
       })()}
 
-      {/* 취소 완료 모달 */}
       {cancelResult && (
         <div className="res-detail-overlay" onClick={() => { setCancelTarget(null); setCancelResult(null) }}>
           <div className="res-detail-modal" style={{textAlign:'center'}} onClick={e => e.stopPropagation()}>

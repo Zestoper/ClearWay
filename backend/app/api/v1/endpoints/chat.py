@@ -12,9 +12,6 @@ from app.core.security import decode_token
 
 router = APIRouter()
 
-
-# ── WebSocket connection manager ──────────────────────────────────────────────
-
 class ConnectionManager:
     def __init__(self):
         self.connections: Dict[int, List[WebSocket]] = {}
@@ -35,9 +32,7 @@ class ConnectionManager:
             except Exception:
                 pass
 
-
 manager = ConnectionManager()
-
 
 def _msg_to_dict(m: ChatMessage) -> dict:
     return {
@@ -48,7 +43,6 @@ def _msg_to_dict(m: ChatMessage) -> dict:
         "msg_type": m.msg_type,
         "created_at": m.created_at.isoformat() if m.created_at else None,
     }
-
 
 def _room_to_dict(r: ChatRoom) -> dict:
     last = r.messages[-1] if r.messages else None
@@ -68,9 +62,6 @@ def _room_to_dict(r: ChatRoom) -> dict:
         "user_name": r.user.name if r.user else r.guest_name,
     }
 
-
-# ── REST endpoints ────────────────────────────────────────────────────────────
-
 @router.post("/rooms")
 def create_room(
     body: dict,
@@ -88,7 +79,6 @@ def create_room(
     db.refresh(room)
     return _room_to_dict(room)
 
-
 @router.get("/rooms")
 def admin_list_rooms(
     status: Optional[str] = "open",
@@ -100,7 +90,6 @@ def admin_list_rooms(
         q = q.filter(ChatRoom.status == status)
     rooms = q.order_by(ChatRoom.updated_at.desc()).all()
     return [_room_to_dict(r) for r in rooms]
-
 
 @router.get("/rooms/mine")
 def my_rooms(
@@ -116,7 +105,6 @@ def my_rooms(
         .all()
     )
     return [_room_to_dict(r) for r in rooms]
-
 
 @router.get("/rooms/{room_id}/messages")
 def get_messages(
@@ -134,7 +122,6 @@ def get_messages(
     db.commit()
     return [_msg_to_dict(m) for m in room.messages]
 
-
 @router.put("/rooms/{room_id}/close")
 def close_room(
     room_id: int,
@@ -147,16 +134,13 @@ def close_room(
         db.commit()
     return {"ok": True}
 
-
-# ── WebSocket ─────────────────────────────────────────────────────────────────
-
 @router.websocket("/ws/{room_id}")
 async def chat_ws(
     websocket: WebSocket,
     room_id: int,
     token: Optional[str] = Query(default=None),
 ):
-    # Determine sender role from token
+
     sender = "user"
     if token:
         try:
@@ -174,14 +158,13 @@ async def chat_ws(
 
     await manager.connect(websocket, room_id)
 
-    # Send history on connect
     db = SessionLocal()
     try:
         room = db.query(ChatRoom).filter(ChatRoom.id == room_id).first()
         if room:
             history = [_msg_to_dict(m) for m in room.messages]
             await websocket.send_json({"type": "history", "messages": history})
-            # Reset unread for connecting side
+
             if sender == "admin":
                 room.admin_unread = 0
             else:
@@ -212,7 +195,6 @@ async def chat_ws(
                 )
                 db.add(msg)
 
-                # Increment other side's unread
                 if sender == "admin":
                     room.user_unread = (room.user_unread or 0) + 1
                 else:

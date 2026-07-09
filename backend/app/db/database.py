@@ -6,7 +6,6 @@ from app.db.base import Base
 engine = create_engine(settings.DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-
 def get_db():
     db = SessionLocal()
     try:
@@ -14,7 +13,6 @@ def get_db():
     finally:
         db.close()
 
-
 def create_tables():
-    import app.models  # noqa: F401 — ensures all models are registered
+    import app.models
     Base.metadata.create_all(bind=engine)

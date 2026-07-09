@@ -8,11 +8,9 @@ from app.api.v1.deps import get_current_user
 
 router = APIRouter()
 
-
 @router.get("/me", response_model=UserOut)
 def get_me(current_user: User = Depends(get_current_user)):
     return current_user
-
 
 @router.put("/me", response_model=UserOut)
 def update_me(body: UserUpdate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
@@ -26,7 +24,6 @@ def update_me(body: UserUpdate, db: Session = Depends(get_db), current_user: Use
     db.refresh(current_user)
     return current_user
 
-
 @router.put("/me/password")
 def change_password(body: PasswordChange, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     if not verify_password(body.old_password, current_user.hashed_password):
@@ -37,11 +34,9 @@ def change_password(body: PasswordChange, db: Session = Depends(get_db), current
     db.commit()
     return {"message": "비밀번호가 변경되었습니다."}
 
-
 @router.get("/me/newsletter")
 def get_newsletter_subscription(current_user: User = Depends(get_current_user)):
     return {"subscribed": bool(current_user.newsletter_subscribed)}
-
 
 @router.put("/me/newsletter")
 def update_newsletter_subscription(body: dict, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
@@ -49,11 +44,9 @@ def update_newsletter_subscription(body: dict, db: Session = Depends(get_db), cu
     db.commit()
     return {"subscribed": bool(current_user.newsletter_subscribed)}
 
-
 @router.get("/me/email-notifications")
 def get_email_notifications(current_user: User = Depends(get_current_user)):
     return {"enabled": bool(current_user.email_notifications)}
-
 
 @router.put("/me/email-notifications")
 def update_email_notifications(body: dict, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):

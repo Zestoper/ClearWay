@@ -14,7 +14,6 @@ from app.schemas.booking import BookingOut
 from app.api.v1.deps import get_admin_user
 from app.core.config import settings
 
-
 def _send_newsletter_emails(subject: str, html_content: str, emails: list) -> int:
     import smtplib
     from email.mime.text import MIMEText
@@ -34,7 +33,7 @@ def _send_newsletter_emails(subject: str, html_content: str, emails: list) -> in
         return msg
 
     try:
-        # 포트 465: SSL 직접 연결 (네이버), 그 외: STARTTLS (Gmail 등)
+
         if settings.SMTP_PORT == 465:
             with smtplib.SMTP_SSL(settings.SMTP_HOST, settings.SMTP_PORT, timeout=15) as server:
                 server.login(settings.SMTP_USER, settings.SMTP_PASSWORD)
@@ -61,7 +60,6 @@ def _send_newsletter_emails(subject: str, html_content: str, emails: list) -> in
 
 router = APIRouter()
 
-
 class FlightCreate(BaseModel):
     flight_no: str
     from_city: str = "서울"
@@ -79,7 +77,6 @@ class FlightCreate(BaseModel):
     economy_seats: int = 120
     business_seats: int = 20
 
-
 class FlightUpdate(BaseModel):
     economy_price: Optional[float] = None
     business_price: Optional[float] = None
@@ -89,7 +86,6 @@ class FlightUpdate(BaseModel):
     arrival_time: Optional[str] = None
     duration: Optional[str] = None
     is_cancelled: Optional[bool] = None
-
 
 @router.get("/stats")
 def admin_stats(
@@ -115,7 +111,6 @@ def admin_stats(
         "today_bookings": today_bookings,
     }
 
-
 @router.get("/flights", response_model=list[FlightOut])
 def admin_list_flights(
     to_code: Optional[str] = None,
@@ -130,7 +125,6 @@ def admin_list_flights(
         q = q.filter(Flight.date == flight_date)
     return q.order_by(Flight.date, Flight.depart_time).limit(500).all()
 
-
 @router.post("/flights", response_model=FlightOut, status_code=status.HTTP_201_CREATED)
 def admin_create_flight(
     body: FlightCreate,
@@ -144,7 +138,6 @@ def admin_create_flight(
     db.commit()
     db.refresh(flight)
     return flight
-
 
 @router.put("/flights/{flight_id}", response_model=FlightOut)
 def admin_update_flight(
@@ -162,7 +155,6 @@ def admin_update_flight(
     db.refresh(flight)
     return flight
 
-
 @router.delete("/flights/{flight_id}", status_code=status.HTTP_204_NO_CONTENT)
 def admin_delete_flight(
     flight_id: int,
@@ -175,13 +167,12 @@ def admin_delete_flight(
     db.delete(flight)
     db.commit()
 
-
 @router.get("/members")
 def admin_list_members(
     db: Session = Depends(get_db),
     _: User = Depends(get_admin_user),
 ):
-    # 예약 수와 결제 합계를 서브쿼리로 한 번에 조회 (N+1 방지)
+
     booking_counts = dict(
         db.query(Booking.user_id, func.count(Booking.id))
         .group_by(Booking.user_id)
@@ -205,7 +196,6 @@ def admin_list_members(
         for u in users
     ]
 
-
 @router.get("/bookings")
 def admin_list_bookings(
     db: Session = Depends(get_db),
@@ -214,7 +204,6 @@ def admin_list_bookings(
     bookings = db.query(Booking).order_by(Booking.created_at.desc()).limit(200).all()
     return [BookingOut.model_validate(b).model_dump() for b in bookings]
 
-
 @router.get("/revenue-stats")
 def admin_revenue_stats(
     db: Session = Depends(get_db),
@@ -222,7 +211,6 @@ def admin_revenue_stats(
 ):
     today = date.today()
 
-    # Daily: last 30 days
     daily = []
     for i in range(29, -1, -1):
         d = today - timedelta(days=i)
@@ -233,7 +221,6 @@ def admin_revenue_stats(
         ).scalar() or 0
         daily.append({"date": str(d), "revenue": float(rev)})
 
-    # Weekly: last 12 weeks
     weekly = []
     for i in range(11, -1, -1):
         start = today - timedelta(weeks=i + 1)
@@ -245,7 +232,6 @@ def admin_revenue_stats(
         ).scalar() or 0
         weekly.append({"week_start": str(start), "revenue": float(rev)})
 
-    # Monthly: last 12 months (정확한 월 계산)
     monthly = []
     base = today.replace(day=1)
     for i in range(11, -1, -1):
@@ -264,7 +250,6 @@ def admin_revenue_stats(
 
     return {"daily": daily, "weekly": weekly, "monthly": monthly}
 
-
 @router.get("/newsletter")
 def list_newsletters(
     db: Session = Depends(get_db),
@@ -273,7 +258,6 @@ def list_newsletters(
     from app.models.newsletter import NewsletterLog
     return db.query(NewsletterLog).order_by(NewsletterLog.created_at.desc()).limit(50).all()
 
-
 @router.get("/newsletter/subscribers")
 def list_subscribers(
     db: Session = Depends(get_db),
@@ -281,7 +265,7 @@ def list_subscribers(
 ):
     users = (
         db.query(User)
-        .filter(User.is_admin.is_(False))  # noqa
+        .filter(User.is_admin.is_(False))
         .order_by(User.created_at.desc())
         .all()
     )
@@ -289,7 +273,6 @@ def list_subscribers(
         {"id": u.id, "name": u.name, "email": u.email, "tier": u.tier, "created_at": str(u.created_at)}
         for u in users
     ]
-
 
 @router.post("/newsletter")
 def send_newsletter(
@@ -305,7 +288,7 @@ def send_newsletter(
     if not subject or not content:
         raise HTTPException(status_code=400, detail="제목과 내용을 입력해 주세요.")
 
-    q = db.query(User).filter(User.is_admin.is_(False), User.newsletter_subscribed == True, User.email_notifications == True)  # noqa
+    q = db.query(User).filter(User.is_admin.is_(False), User.newsletter_subscribed == True, User.email_notifications == True)
     if tier:
         mile_ranges = {"BLUE": (0, 49999), "RED": (50000, 199999), "RAINBOW": (200000, None)}
         rng = mile_ranges.get(tier)
@@ -341,7 +324,6 @@ def send_newsletter(
         "sent_count": log.sent_count,
         "created_at": str(log.created_at),
     }
-
 
 @router.get("/popular-routes")
 def admin_popular_routes(

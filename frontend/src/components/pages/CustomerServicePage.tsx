@@ -27,7 +27,6 @@ export default function CustomerServicePage({ user, onGoLogin }: Props) {
   const [myInquiries, setMyInquiries] = useState<Inquiry[]>([])
   const [inquiryLoading, setInquiryLoading] = useState(false)
 
-  // AI 챗봇
   const [aiMessages, setAiMessages] = useState<AiMsg[]>([])
   const [aiInput, setAiInput] = useState('')
   const [aiLoading, setAiLoading] = useState(false)
@@ -86,7 +85,6 @@ export default function CustomerServicePage({ user, onGoLogin }: Props) {
           )}
         </div>
 
-        {/* FAQ */}
         {csTab === 'faq' && (
           <div className="cs-section">
             <div className="cs-faq-cats">
@@ -124,7 +122,6 @@ export default function CustomerServicePage({ user, onGoLogin }: Props) {
           </div>
         )}
 
-        {/* AI 챗봇 */}
         {csTab === 'aichat' && (
           <div className="cs-section">
             <div className="aichat-wrap">
@@ -178,12 +175,10 @@ export default function CustomerServicePage({ user, onGoLogin }: Props) {
           </div>
         )}
 
-        {/* 1:1 채팅 상담 */}
         {csTab === 'inquiry' && (
           <ChatWidget user={user} onGoLogin={onGoLogin} />
         )}
 
-        {/* 내 문의 내역 */}
         {csTab === 'myinquiry' && (
           <div className="cs-section">
             <h2 className="cs-form-title">내 문의 내역</h2>

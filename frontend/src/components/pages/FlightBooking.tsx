@@ -95,22 +95,18 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
   const { toast } = useToast()
   const [isRoundtrip, setIsRoundtrip] = useState(searchParams?.tripType === 'roundtrip')
 
-  // Outbound flights
   const [flights, setFlights] = useState<Flight[]>([])
   const [loading, setLoading] = useState(true)
 
-  // Return flights (roundtrip)
   const [bookingStep, setBookingStep] = useState<'outbound' | 'return'>('outbound')
   const [outboundFlight, setOutboundFlight] = useState<Flight | null>(null)
   const [returnFlights, setReturnFlights] = useState<Flight[]>([])
   const [returnLoading, setReturnLoading] = useState(false)
   const [selectedReturnId, setSelectedReturnId] = useState<number | null>(null)
 
-  // 날짜 (로컬 — topbar에서 직접 수정 가능)
   const [localDate, setLocalDate] = useState(searchParams?.date ?? '')
   const [localReturnDate, setLocalReturnDate] = useState(searchParams?.returnDate ?? '')
 
-  // Filters & sort
   const [sortBy, setSortBy] = useState<SortKey>('departure')
   const [sortDir, setSortDir] = useState<SortDir>('asc')
   const [fareClass, setFareClass] = useState<FareClass>('economy')
@@ -122,7 +118,6 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
   const [modalSearch, setModalSearch] = useState('')
   const [selectedId, setSelectedId] = useState<number | null>(null)
 
-  // AI 여행지 추천
   interface RecDest { city: string; city_en: string; country: string; code: string; emoji: string; reason: string; highlight: string; est_budget_per_day: number }
   const [recOpen, setRecOpen] = useState(false)
   const [recDuration, setRecDuration] = useState(5)
@@ -132,7 +127,6 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
   const [recResults, setRecResults] = useState<RecDest[] | null>(null)
   const [recFlightDest, setRecFlightDest] = useState<RecDest | null>(null)
 
-  // AI 항공편 추천
   interface FlightRec { flight_id: number; flight_no: string; from_city: string; from_code: string; to_city: string; to_code: string; date: string; depart_time: string; arrival_time: string; duration: string; economy_price: number; business_price: number; is_direct: boolean; reason: string }
   const [flightRecOpen, setFlightRecOpen] = useState(false)
   const [flightRecQuery, setFlightRecQuery] = useState('')
@@ -179,19 +173,16 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
     }
   }
 
-
   const recDestFlights = recFlightDest
     ? applyFilters(flights.filter(f => f.to_code === recFlightDest.code))
     : []
 
-  // searchParams가 바뀌면 로컬 날짜도 동기화
   useEffect(() => {
     setLocalDate(searchParams?.date ?? '')
     setLocalReturnDate(searchParams?.returnDate ?? '')
     setIsRoundtrip(searchParams?.tripType === 'roundtrip')
   }, [searchParams])
 
-  // 날짜(로컬) 또는 searchParams 변경 시 항공편 재조회
   useEffect(() => {
     setLoading(true)
     setBookingStep('outbound')
@@ -201,13 +192,13 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
     fetchFlights(searchParams ? { ...searchParams, date: localDate || searchParams.date } : { date: localDate } as never)
       .then(setFlights)
       .finally(() => setLoading(false))
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, [localDate, searchParams])
 
   function toggleTripType() {
     setIsRoundtrip(prev => {
       if (prev) {
-        // 왕복 → 편도: 오는편 상태 초기화
+
         setBookingStep('outbound')
         setOutboundFlight(null)
         setSelectedReturnId(null)
@@ -352,7 +343,6 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
   return (
     <main className="booking-page">
 
-      {/* 상단 경로 바 */}
       <div className="booking-topbar">
         <div className="booking-topbar-inner">
           <div className="booking-route">
@@ -377,11 +367,9 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
 
       <div className="booking-body">
 
-        {/* 필터 */}
         <aside className="filter-panel">
           <h3 className="filter-title">필터</h3>
 
-          {/* 날짜 */}
           <div className="filter-section">
             <h4>출발일</h4>
             <input
@@ -483,7 +471,6 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
           )}
         </aside>
 
-        {/* 결과 */}
         <section className="flight-results">
 
           {stepLabel && (
@@ -497,7 +484,6 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
             </div>
           )}
 
-          {/* ── AI 배너 ── */}
           {bookingStep === 'outbound' && (
             <div className="rec-banner">
               <span>어디로 갈지 모르겠다면?</span>
@@ -510,7 +496,6 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
             </div>
           )}
 
-          {/* ── 여행지 칩 필터 바 ── */}
           {bookingStep === 'outbound' && uniqueDests.length > 0 && (
             <div className="dest-chip-bar">
               <button
@@ -630,7 +615,6 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
         </section>
       </div>
 
-      {/* 하단 예약 진행 바 — 편도 또는 왕복 오는편 선택 후 */}
       {(() => {
         if (isRoundtrip) {
           if (bookingStep === 'return' && selectedReturnId && outboundFlight) {
@@ -684,7 +668,6 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
         )
       })()}
 
-      {/* ── 여행지 선택 모달 ── */}
       {destModalOpen && (() => {
         const modalDests = uniqueDests.filter(d => {
           const matchRegion = !countryFilter || (COUNTRY_GROUPS.find(g => g.label === countryFilter)?.codes.includes(d.code) ?? false)
@@ -748,7 +731,6 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
         )
       })()}
 
-      {/* ── AI 항공편 추천 모달 ── */}
       {flightRecOpen && (
         <div className="rec-overlay" onClick={() => setFlightRecOpen(false)}>
           <div className="rec-modal" onClick={e => e.stopPropagation()}>
@@ -820,7 +802,6 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
         </div>
       )}
 
-      {/* ── AI 여행지 추천 모달 ── */}
       {recOpen && (
         <div className="rec-overlay" onClick={() => { setRecOpen(false); setRecFlightDest(null) }}>
           <div className="rec-modal" onClick={e => e.stopPropagation()}>

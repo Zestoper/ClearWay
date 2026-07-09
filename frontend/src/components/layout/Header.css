@@ -125,7 +125,6 @@
   background: #1e40af;
 }
 
-/* ── Avatar ───────────────────────────────────────────── */
 .avatar-wrap {
   position: relative;
   flex-shrink: 0;
@@ -152,7 +151,6 @@
   box-shadow: 0 0 0 3px #1d4ed8;
 }
 
-/* ── Dropdown ─────────────────────────────────────────── */
 .avatar-dropdown {
   position: absolute;
   top: calc(100% + 10px);
@@ -262,12 +260,10 @@
 .dropdown-admin svg { color: #7c3aed; }
 .dropdown-admin:hover { background: #f5f3ff; color: #6d28d9; }
 
-/* ── Header right ─────────────────────────────────────── */
 .header-right {
   flex-shrink: 0;
 }
 
-/* ── Hamburger ────────────────────────────────────────── */
 .hamburger {
   display: none;
   flex-direction: column;
@@ -296,7 +292,6 @@
 .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
 .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-/* ── Mobile menu ──────────────────────────────────────── */
 .mobile-menu {
   display: none;
   position: fixed;
@@ -410,7 +405,6 @@
 
 .mobile-login-btn:hover { background: #1e40af; }
 
-/* ── Responsive ───────────────────────────────────────── */
 @media (max-width: 768px) {
   .header-inner {
     padding: 10px 16px;

@@ -3,7 +3,6 @@ from datetime import datetime
 from decimal import Decimal
 from app.schemas.flight import FlightOut
 
-
 class BookingCreate(BaseModel):
     flight_id: int
     fare_class: str
@@ -14,7 +13,6 @@ class BookingCreate(BaseModel):
     passport_no: str
     email: str
     phone: str
-
 
 class BookingOut(BaseModel):
     booking_ref: str

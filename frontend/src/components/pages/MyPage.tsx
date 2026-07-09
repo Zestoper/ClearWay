@@ -218,7 +218,6 @@ export default function MyPage({ user, onGoLogin, onUpdateUser }: Props) {
         </div>
       </div>
 
-      {/* ── 내 예약 내역 모달 ── */}
       {activeModal === 'reservations' && (
         <div className="mp-modal-overlay" onClick={closeModal}>
           <div className="mp-modal" onClick={e => e.stopPropagation()}>
@@ -252,13 +251,10 @@ export default function MyPage({ user, onGoLogin, onUpdateUser }: Props) {
         </div>
       )}
 
-      {/* ── 개인정보 수정 모달 ── */}
       {activeModal === 'profile' && <ProfileModal user={user} onClose={closeModal} onUpdateUser={onUpdateUser} />}
 
-      {/* ── 비밀번호 변경 모달 ── */}
       {activeModal === 'password' && <PasswordModal onClose={closeModal} />}
 
-      {/* ── 멤버십 혜택 모달 ── */}
       {activeModal === 'membership' && (
         <div className="mp-modal-overlay" onClick={closeModal}>
           <div className="mp-modal" onClick={e => e.stopPropagation()}>
@@ -293,7 +289,6 @@ export default function MyPage({ user, onGoLogin, onUpdateUser }: Props) {
         </div>
       )}
 
-      {/* ── 이용 내역 모달 ── */}
       {activeModal === 'history' && (
         <div className="mp-modal-overlay" onClick={closeModal}>
           <div className="mp-modal" onClick={e => e.stopPropagation()}>
@@ -332,19 +327,15 @@ export default function MyPage({ user, onGoLogin, onUpdateUser }: Props) {
         </div>
       )}
 
-      {/* ── 알림 설정 모달 ── */}
       {activeModal === 'notifications' && <NotificationsModal onClose={closeModal} />}
 
-      {/* ── 가격 알림 모달 ── */}
       {activeModal === 'alerts' && <PriceAlertsModal onClose={closeModal} />}
 
-      {/* ── 내 후기 관리 모달 ── */}
       {activeModal === 'my-reviews' && <MyReviewsModal user={user} onClose={closeModal} />}
     </main>
   )
 }
 
-/* ── 개인정보 수정 모달 컴포넌트 ── */
 function ProfileModal({ user, onClose, onUpdateUser }: { user: User; onClose: () => void; onUpdateUser?: (u: User) => void }) {
   const [name, setName] = useState(user.name)
   const [email, setEmail] = useState(user.email)
@@ -397,7 +388,6 @@ function ProfileModal({ user, onClose, onUpdateUser }: { user: User; onClose: ()
   )
 }
 
-/* ── 비밀번호 변경 모달 컴포넌트 ── */
 function PasswordModal({ onClose }: { onClose: () => void }) {
   const [cur, setCur] = useState('')
   const [next, setNext] = useState('')
@@ -457,9 +447,7 @@ function PasswordModal({ onClose }: { onClose: () => void }) {
   )
 }
 
-/* ── 알림 설정 모달 컴포넌트 ── */
 type PriceAlert = { id: string; from: string; to: string; targetPrice: number; currentPrice: number; active: boolean }
-
 
 const ALERT_AIRPORTS: { region: string; airports: { code: string; label: string }[] }[] = [
   { region: '출발지', airports: [{ code: 'ICN', label: '서울 (ICN) 인천국제공항' }] },
@@ -535,7 +523,6 @@ function PriceAlertsModal({ onClose }: { onClose: () => void }) {
   const [preview, setPreview] = useState<number | null>(null)
   const [fetching, setFetching] = useState(false)
 
-  // 노선 선택 시 실제 최저가 미리보기
   useEffect(() => {
     if (!from || !to) return
     setPreview(null)
@@ -543,7 +530,6 @@ function PriceAlertsModal({ onClose }: { onClose: () => void }) {
     fetchMinPrice(from, to).then(p => { setPreview(p); setFetching(false) })
   }, [from, to])
 
-  // 모달 열릴 때 기존 알림 가격 일괄 갱신
   useEffect(() => {
     if (!alerts.length) return
     Promise.all(alerts.map(a =>
@@ -555,7 +541,7 @@ function PriceAlertsModal({ onClose }: { onClose: () => void }) {
         toast(`${airportLabel(a.from).split('(')[0].trim()} → ${airportLabel(a.to).split('(')[0].trim()} 목표가 달성! 현재 ₩${a.currentPrice.toLocaleString()}`, 'success')
       })
     })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, [])
 
   function persist(next: PriceAlert[]) {
@@ -720,7 +706,6 @@ function NotificationsModal({ onClose }: { onClose: () => void }) {
   )
 }
 
-/* ── 내 후기 관리 모달 컴포넌트 ── */
 interface MyReview {
   id: number
   user_name: string

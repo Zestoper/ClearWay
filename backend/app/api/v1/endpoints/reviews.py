@@ -9,7 +9,6 @@ from app.api.v1.deps import get_optional_user, get_current_user
 
 router = APIRouter()
 
-
 class ReviewCreate(BaseModel):
     user_name: str
     route: Optional[str] = None
@@ -19,11 +18,9 @@ class ReviewCreate(BaseModel):
     booking_ref: Optional[str] = None
     plan_destination: Optional[str] = None
 
-
 class ReviewUpdate(BaseModel):
     rating: int
     text: str
-
 
 def _review_dict(r: Review) -> dict:
     return {
@@ -39,18 +36,16 @@ def _review_dict(r: Review) -> dict:
         "created_at": str(r.created_at),
     }
 
-
 @router.get("")
 def list_reviews(limit: int = 20, db: Session = Depends(get_db)):
     reviews = (
         db.query(Review)
-        .filter(Review.is_visible == True)  # noqa
+        .filter(Review.is_visible == True)
         .order_by(Review.created_at.desc())
         .limit(limit)
         .all()
     )
     return [_review_dict(r) for r in reviews]
-
 
 @router.get("/me")
 def my_reviews(
@@ -64,7 +59,6 @@ def my_reviews(
         .all()
     )
     return [_review_dict(r) for r in reviews]
-
 
 @router.post("", status_code=status.HTTP_201_CREATED)
 def create_review(
@@ -93,7 +87,6 @@ def create_review(
     db.refresh(review)
     return {"id": review.id, "message": "후기가 등록되었습니다."}
 
-
 @router.put("/{review_id}")
 def update_review(
     review_id: int,
@@ -113,7 +106,6 @@ def update_review(
     db.commit()
     db.refresh(review)
     return _review_dict(review)
-
 
 @router.delete("/{review_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_review(

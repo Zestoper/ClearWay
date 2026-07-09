@@ -3,7 +3,6 @@ body {
     background: #fff;
 }
 
-/* ── 모든 페이지 가로 고정 (iOS Safari 포함) ──────────────── */
 .home-page, .login-page,
 .booking-page, .bf-page, .fs-page,
 .admin-page, .cs-page, .checkin-page,
@@ -14,7 +13,6 @@ body {
   width: 100%;
 }
 
-/* ── 모달이 viewport를 넘지 않도록 ────────────────────────── */
 .guest-modal,
 .mp-modal,
 .res-detail-modal,
@@ -24,7 +22,6 @@ body {
   box-sizing: border-box;
 }
 
-/* ── Shared page topbar ───────────────────────────────── */
 .page-topbar {
   background: linear-gradient(90deg, #0f172a 0%, #1e3a8a 60%, #1d4ed8 100%);
   padding: 0 32px;
@@ -45,4 +42,3 @@ body {
   color: #fff;
   letter-spacing: -0.3px;
 }
-

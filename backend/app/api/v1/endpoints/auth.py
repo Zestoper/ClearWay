@@ -9,7 +9,6 @@ from app.api.v1.deps import get_current_user
 
 router = APIRouter()
 
-
 def _send_welcome_email(name: str, email: str) -> None:
     import smtplib
     from email.mime.text import MIMEText
@@ -51,7 +50,6 @@ def _send_welcome_email(name: str, email: str) -> None:
         import logging
         logging.getLogger(__name__).warning("Welcome email failed for %s: %s", email, e)
 
-
 @router.post("/signup", response_model=Token, status_code=status.HTTP_201_CREATED)
 def signup(body: UserCreate, db: Session = Depends(get_db)):
     if db.query(User).filter(User.email == body.email).first():
@@ -69,7 +67,6 @@ def signup(body: UserCreate, db: Session = Depends(get_db)):
     token = create_access_token({"sub": str(user.id)})
     return Token(access_token=token, user=UserOut.model_validate(user))
 
-
 @router.post("/login", response_model=Token)
 def login(body: UserLogin, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == body.email).first()
@@ -77,7 +74,6 @@ def login(body: UserLogin, db: Session = Depends(get_db)):
         raise HTTPException(status_code=401, detail="이메일 또는 비밀번호가 올바르지 않습니다.")
     token = create_access_token({"sub": str(user.id)})
     return Token(access_token=token, user=UserOut.model_validate(user))
-
 
 @router.get("/me", response_model=UserOut)
 def me(current_user: User = Depends(get_current_user)):

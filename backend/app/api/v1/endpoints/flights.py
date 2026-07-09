@@ -10,7 +10,6 @@ from app.schemas.flight import FlightOut
 
 router = APIRouter()
 
-
 @router.get("", response_model=list[FlightOut])
 def list_flights(
     from_code: Optional[str] = Query(None),
@@ -29,14 +28,12 @@ def list_flights(
         q = q.filter(Flight.date == date)
     return q.order_by(Flight.depart_time).offset(offset).limit(limit).all()
 
-
 @router.get("/{flight_id}", response_model=FlightOut)
 def get_flight(flight_id: int, db: Session = Depends(get_db)):
     flight = db.query(Flight).filter(Flight.id == flight_id).first()
     if not flight:
         raise HTTPException(status_code=404, detail="항공편을 찾을 수 없습니다.")
     return flight
-
 
 @router.get("/{flight_id}/seats")
 def get_occupied_seats(flight_id: int, fare_class: str = Query(...), db: Session = Depends(get_db)):

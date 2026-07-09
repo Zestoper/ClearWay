@@ -12,14 +12,12 @@ from app.core.config import settings
 
 router = APIRouter()
 
-
 @router.get("/faqs")
 def list_faqs(category: Optional[str] = None, db: Session = Depends(get_db)):
     q = db.query(FAQ)
     if category:
         q = q.filter(FAQ.category == category)
     return q.order_by(FAQ.category, FAQ.order_num).all()
-
 
 @router.post("/inquiries", status_code=status.HTTP_201_CREATED)
 def create_inquiry(
@@ -40,7 +38,6 @@ def create_inquiry(
     db.refresh(inq)
     return inq
 
-
 @router.get("/inquiries/me")
 def my_inquiries(
     db: Session = Depends(get_db),
@@ -55,14 +52,12 @@ def my_inquiries(
         .all()
     )
 
-
 @router.get("/inquiries")
 def admin_list_inquiries(
     db: Session = Depends(get_db),
     _: User = Depends(get_admin_user),
 ):
     return db.query(Inquiry).order_by(Inquiry.created_at.desc()).all()
-
 
 @router.put("/inquiries/{inq_id}/answer")
 def answer_inquiry(
@@ -81,7 +76,6 @@ def answer_inquiry(
     db.refresh(inq)
     return inq
 
-
 _CS_SYSTEM = """당신은 CLEARWAY 항공사의 AI 고객상담원입니다. 친절하고 간결하게 한국어로 답변하세요.
 - CLEARWAY는 인천국제공항(ICN) 허브 항공사입니다.
 - 무료취소: 출발 72시간 전까지. 이후 위약금 발생.
@@ -91,14 +85,12 @@ _CS_SYSTEM = """당신은 CLEARWAY 항공사의 AI 고객상담원입니다. 친
 - 정확히 알 수 없는 정보는 "더 자세한 안내는 '1:1 채팅 상담' 탭에서 상담사와 직접 대화해 보세요."라고 안내하세요. 절대 '고객센터에 문의하세요'라는 표현은 사용하지 마세요.
 - 200자 이내로 핵심만 답변하세요."""
 
-
 class AIChatMsg(BaseModel):
     role: str
     content: str
 
 class AIChatRequest(BaseModel):
     messages: List[AIChatMsg]
-
 
 @router.post("/ai-chat")
 def ai_chat(body: AIChatRequest):

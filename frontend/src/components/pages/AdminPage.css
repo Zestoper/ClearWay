@@ -46,7 +46,6 @@
     gap: 24px;
 }
 
-/* Stats */
 .admin-stats-row {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -73,7 +72,6 @@
     margin: 0;
 }
 
-/* Section */
 .admin-section {
     background: #fff;
     border: 1.5px solid #e5e7eb;
@@ -121,7 +119,6 @@
     border-color: #1d4ed8;
 }
 
-/* Buttons */
 .admin-btn {
     height: 36px;
     padding: 0 16px;
@@ -179,7 +176,6 @@
     font-size: 14px;
 }
 
-/* Table */
 .admin-table-wrap {
     overflow-x: auto;
 }
@@ -256,7 +252,6 @@
     background: #fff7f7;
 }
 
-/* Status badge */
 .status-badge {
     display: inline-block;
     padding: 3px 10px;
@@ -286,7 +281,6 @@
     color: #374151;
 }
 
-/* Admin tabs bar */
 .admin-tabs-bar {
     background: #fff;
     border-bottom: 1px solid #e5e7eb;
@@ -341,7 +335,6 @@
     margin-left: 6px;
 }
 
-/* Count badge */
 .admin-count {
     display: inline-block;
     font-size: 11px;
@@ -355,7 +348,6 @@
     vertical-align: middle;
 }
 
-/* Tier badge */
 .admin-tier-badge {
     display: inline-block;
     font-size: 11px;
@@ -365,7 +357,6 @@
     padding: 2px 10px;
 }
 
-/* Period toggle */
 .admin-period-toggle {
     display: flex;
     border: 1.5px solid #e5e7eb;
@@ -396,7 +387,6 @@
     background: #f8fafc;
 }
 
-/* Revenue total box */
 .rev-total-box {
     display: flex;
     align-items: center;
@@ -416,7 +406,6 @@
     color: #0f172a;
 }
 
-/* Revenue chart */
 .rev-chart {
     padding: 16px 24px;
     display: flex;
@@ -460,7 +449,6 @@
     text-align: right;
 }
 
-/* Popular routes */
 .admin-popular-routes {
     padding: 12px 24px 20px;
     display: flex;
@@ -512,7 +500,6 @@
     white-space: nowrap;
 }
 
-/* ── 뉴스레터 ────────────────────────────────────────────────── */
 .nl-form {
     padding: 0 24px 24px;
     display: flex;
@@ -563,7 +550,6 @@
     margin: 0 0 12px 24px;
 }
 
-/* ── 채팅 관리 ───────────────────────────────────────────────── */
 .admin-chat-layout {
     display: flex;
     gap: 0;
@@ -714,7 +700,6 @@
     color: #94a3b8;
 }
 
-/* ── Newsletter Sub-tabs ─────────────────────────────────── */
 .nl-sub-tabs {
     display: flex;
     gap: 4px;
@@ -754,7 +739,6 @@
     border-radius: 20px;
 }
 
-/* ── Tier chips in tables ─────────────────────────────────── */
 .tier-chip {
     display: inline-block;
     font-size: 11px;
@@ -775,7 +759,6 @@
     color: #7c3aed;
 }
 
-/* ── Newsletter Notice Picker ─────────────────────────────── */
 .nl-import-btn {
     white-space: nowrap;
     flex-shrink: 0;
@@ -915,7 +898,6 @@
     line-height: 1.5;
 }
 
-/* ── 공지/이벤트 관리 ── */
 .admin-input {
     width: 100%;
     padding: 9px 12px;

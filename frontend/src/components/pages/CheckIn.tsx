@@ -39,7 +39,7 @@ export default function CheckIn({ isLoggedIn, onGoLogin, initialRef, initialLast
     if (initialRef?.trim() && initialLastName?.trim()) {
       doLookup(initialRef, initialLastName)
     }
-  }, []) // eslint-disable-line
+  }, [])
 
   async function handleSearch(e: { preventDefault(): void }) {
     e.preventDefault()
