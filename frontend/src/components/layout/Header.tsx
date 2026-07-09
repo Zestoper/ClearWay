@@ -56,7 +56,6 @@ export default function Header({ currentPage, onNavigate, user, onGoLogin, onLog
           CLEAR<span className="logo-accent">WAY</span>
         </button>
 
-        {/* Desktop nav */}
         <nav className="nav">
           {navItems.map(({ page, label, className }) => (
             <button
@@ -69,7 +68,6 @@ export default function Header({ currentPage, onNavigate, user, onGoLogin, onLog
           ))}
         </nav>
 
-        {/* Desktop right */}
         <div className="header-right">
           {isLoggedIn ? (
             <div className="avatar-wrap" ref={dropdownRef}>
@@ -124,7 +122,6 @@ export default function Header({ currentPage, onNavigate, user, onGoLogin, onLog
           )}
         </div>
 
-        {/* Hamburger */}
         <button
           className={`hamburger ${mobileMenuOpen ? 'open' : ''}`}
           onClick={() => setMobileMenuOpen(prev => !prev)}
@@ -136,7 +133,6 @@ export default function Header({ currentPage, onNavigate, user, onGoLogin, onLog
 
     </header>
 
-      {/* Mobile menu - outside header to avoid z-index stacking context */}
       {mobileMenuOpen && (
         <div className="mobile-menu">
           <nav className="mobile-nav">

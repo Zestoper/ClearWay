@@ -58,20 +58,17 @@ DEPART_SLOTS = [
 
 DOMESTIC = {"CJU", "PUS", "TAE", "KWJ"}
 
-
 def add_minutes(t: str, m: int) -> str:
     h, mn = map(int, t.split(":"))
     total = h * 60 + mn + m
     return f"{(total // 60) % 24:02d}:{total % 60:02d}"
 
-
 def fmt_dur(m: int) -> str:
     return f"{m // 60}h {m % 60:02d}m"
 
-
 db = SessionLocal()
 try:
-    # 기존 최대 번호 조회
+
     row = db.execute(text("SELECT MAX(CAST(SUBSTRING(flight_no, 3) AS INTEGER)) FROM flights")).fetchone()
     counter = (row[0] or 0) + 1
     print(f"기존 최대 번호: CW{counter-1:05d} → CW{counter:05d}부터 시작")
@@ -86,7 +83,6 @@ try:
         for (to_city, to_code, to_airport, dur_min, dur_max,
              extra_min, via, eco_min, eco_max, biz_ratio) in ROUTES:
 
-            # 직항 1편
             slot = random.choice(DEPART_SLOTS)
             dur = random.randint(dur_min, dur_max)
             eco = round(random.randint(eco_min, eco_max) / 1000) * 1000
@@ -107,7 +103,6 @@ try:
             ))
             counter += 1
 
-            # 경유편 (국내 제외, 50% 확률)
             if to_code not in DOMESTIC and random.random() < 0.5:
                 slot2 = random.choice(DEPART_SLOTS)
                 via_dur = dur + extra_min
@@ -129,7 +124,6 @@ try:
                 ))
                 counter += 1
 
-            # 귀국편 (목적지 → ICN) 직항 1편
             ret_slot = random.choice(DEPART_SLOTS)
             ret_dur = random.randint(dur_min, dur_max)
             ret_eco = round(random.randint(round(eco_min * 0.95), round(eco_max * 1.05)) / 1000) * 1000

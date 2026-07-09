@@ -184,7 +184,7 @@ export default function SearchBar({ onSearch, onGoMyTrips, onGoCheckin, isLogged
     return (
         <section className="search-section" onClick={closeDropdowns}>
             <div className="search-widget" onClick={(e) => e.stopPropagation()}>
-                {/* Tabs */}
+
                 <div className="search-tabs">
                     <button
                         className={`search-tab ${activeTab === 'booking' ? 'active' : ''}`}
@@ -238,9 +238,8 @@ export default function SearchBar({ onSearch, onGoMyTrips, onGoCheckin, isLogged
                     </button>
                 </div>
 
-                {/* Body */}
                 <div className="search-body">
-                    {/* ── 항공권 예매 탭 ── */}
+
                     {activeTab === 'booking' && (
                         <>
                             <div className="search-suboptions">
@@ -275,9 +274,9 @@ export default function SearchBar({ onSearch, onGoMyTrips, onGoCheckin, isLogged
                             </div>
 
                             <div className="search-fields">
-                                {/* Airport selector */}
+
                                 <div className="airport-selector">
-                                    {/* From */}
+
                                     <div
                                         className="airport-field"
                                         onClick={() => {
@@ -328,7 +327,6 @@ export default function SearchBar({ onSearch, onGoMyTrips, onGoCheckin, isLogged
                                         </svg>
                                     </button>
 
-                                    {/* To */}
                                     <div
                                         className="airport-field"
                                         onClick={() => {
@@ -348,7 +346,6 @@ export default function SearchBar({ onSearch, onGoMyTrips, onGoCheckin, isLogged
 
                                 <div className="field-divider" />
 
-                                {/* Date */}
                                 <div className="search-field date-field">
                                     <label>출발일</label>
                                     <div className="field-value">
@@ -370,7 +367,6 @@ export default function SearchBar({ onSearch, onGoMyTrips, onGoCheckin, isLogged
 
                                 <div className="field-divider" />
 
-                                {/* Passengers */}
                                 <div
                                     className="search-field passenger-field"
                                     style={{ position: 'relative' }}
@@ -453,7 +449,6 @@ export default function SearchBar({ onSearch, onGoMyTrips, onGoCheckin, isLogged
 
                                 <div className="field-divider" />
 
-                                {/* Class */}
                                 <div
                                     className="search-field class-field"
                                     style={{ position: 'relative' }}
@@ -511,7 +506,6 @@ export default function SearchBar({ onSearch, onGoMyTrips, onGoCheckin, isLogged
                         </>
                     )}
 
-                    {/* ── 나의 여행 탭 ── */}
                     {activeTab === 'mytrip' && (
                         <div className="tab-lookup-body">
                             <div className="tab-lookup-icon">
@@ -563,7 +557,6 @@ export default function SearchBar({ onSearch, onGoMyTrips, onGoCheckin, isLogged
                         </div>
                     )}
 
-                    {/* ── 체크인 탭 ── */}
                     {activeTab === 'checkin' && (
                         <div className="tab-lookup-body">
                             <div className="tab-lookup-icon">
@@ -603,7 +596,6 @@ export default function SearchBar({ onSearch, onGoMyTrips, onGoCheckin, isLogged
                 </div>
             </div>
 
-            {/* Destination Modal */}
             {showDestModal && (
                 <div className="dest-modal-overlay" onClick={() => setShowDestModal(false)}>
                     <div className="dest-modal" onClick={(e) => e.stopPropagation()}>

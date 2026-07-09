@@ -43,7 +43,6 @@
 
 .res-tab.active .tab-count { background: rgba(255,255,255,0.25); }
 
-/* Card */
 .res-card {
   background: #fff;
   border: 1.5px solid #e5e7eb;
@@ -96,7 +95,6 @@
 .status-badge.checkin    { background: #ecfdf5; color: #059669; }
 .status-badge.completed  { background: #f3f4f6; color: #6b7280; }
 
-/* Route reuse */
 .res-route {
   display: flex;
   align-items: center;
@@ -118,7 +116,6 @@
 .res-dash  { flex: 1; height: 1.5px; background: #1d4ed8; }
 .res-date  { font-size: 12px; color: #6b7280; font-weight: 500; }
 
-/* Footer */
 .res-card-footer {
   display: flex;
   align-items: center;
@@ -167,7 +164,6 @@
 .res-empty svg { width: 48px; height: 48px; }
 .res-empty p { font-size: 15px; }
 
-/* ── Detail Modal ── */
 .res-detail-overlay {
   position: fixed;
   inset: 0;
@@ -247,7 +243,6 @@
 .rdm-flight-no { font-size: 15px; font-weight: 700; color: #0f172a; margin: 0 0 2px; }
 .rdm-airline   { font-size: 12px; color: #9ca3af; margin: 0; }
 
-/* Route */
 .rdm-route {
   display: flex;
   align-items: center;
@@ -270,7 +265,6 @@
 .rdm-duration { font-size: 11px; color: #6b7280; font-weight: 600; }
 .rdm-direct   { font-size: 11px; color: #9ca3af; }
 
-/* Info grid */
 .rdm-info-grid {
   border: 1px solid #f3f4f6;
   border-radius: 12px;
@@ -292,7 +286,6 @@
 .rdm-info-label { color: #6b7280; flex-shrink: 0; }
 .rdm-info-value { font-weight: 600; color: #0f172a; text-align: right; word-break: break-all; }
 
-/* Price */
 .rdm-price-row {
   display: flex;
   justify-content: space-between;
@@ -338,7 +331,6 @@
 
 .rdm-close-btn:hover { background: #f3f4f6; }
 
-/* ── Cancel Modal ── */
 .cancel-flight-info {
   display: flex;
   align-items: center;
@@ -418,7 +410,6 @@
   color: #16a34a;
 }
 
-/* ── 비회원 조회 / 가져오기 ──────────────────────────────────── */
 .res-guest-box {
   background: #fff;
   border: 1.5px solid #e5e7eb;

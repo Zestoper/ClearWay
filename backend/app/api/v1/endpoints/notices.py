@@ -9,14 +9,12 @@ from app.models.user import User
 
 router = APIRouter()
 
-
 class NoticeCreate(BaseModel):
     category: str
     title: str
     content: str
     badge: Optional[str] = None
     is_active: bool = True
-
 
 class NoticeUpdate(BaseModel):
     category: Optional[str] = None
@@ -25,16 +23,14 @@ class NoticeUpdate(BaseModel):
     badge: Optional[str] = None
     is_active: Optional[bool] = None
 
-
 @router.get("")
 def list_notices(category: Optional[str] = None, show_all: bool = False, db: Session = Depends(get_db)):
     q = db.query(Notice)
     if not show_all:
-        q = q.filter(Notice.is_active == True)  # noqa
+        q = q.filter(Notice.is_active == True)
     if category:
         q = q.filter(Notice.category == category)
     return q.order_by(Notice.created_at.desc()).all()
-
 
 @router.get("/{notice_id}")
 def get_notice(notice_id: int, db: Session = Depends(get_db)):
@@ -42,7 +38,6 @@ def get_notice(notice_id: int, db: Session = Depends(get_db)):
     if not n:
         raise HTTPException(status_code=404, detail="공지사항을 찾을 수 없습니다.")
     return n
-
 
 @router.post("", status_code=status.HTTP_201_CREATED)
 def create_notice(
@@ -55,7 +50,6 @@ def create_notice(
     db.commit()
     db.refresh(n)
     return n
-
 
 @router.put("/{notice_id}")
 def update_notice(
@@ -72,7 +66,6 @@ def update_notice(
     db.commit()
     db.refresh(n)
     return n
-
 
 @router.delete("/{notice_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_notice(

@@ -1,11 +1,9 @@
-/* ── Page ─────────────────────────────────────────────── */
 .bf-page {
     min-height: 100vh;
     background: #f8fafc;
     padding-top: 64px;
 }
 
-/* ── Passenger tabs ────────────────────────────────────── */
 .pax-tab-bar {
     display: flex;
     gap: 8px;
@@ -49,7 +47,6 @@
     font-weight: 700;
 }
 
-/* ── Top flight summary bar ───────────────────────────── */
 .bf-topbar {
     background: #1e3a8a;
     padding: 0 32px;
@@ -72,13 +69,11 @@
     min-width: 0;
 }
 
-/* 데스크탑: 두 sub-row를 flat하게 펼침 */
 .bf-summary-row1,
 .bf-summary-row2 {
     display: contents;
 }
 
-/* 모바일에서만 실제 행으로 전환 */
 @media (max-width: 640px) {
   .bf-flight-summary {
     flex-direction: column;
@@ -137,7 +132,6 @@
     letter-spacing: -0.5px;
 }
 
-/* ── Stepper ──────────────────────────────────────────── */
 .bf-stepper-wrap {
     background: #fff;
     border-bottom: 1px solid #e5e7eb;
@@ -215,14 +209,12 @@
     background: #16a34a;
 }
 
-/* ── Content wrapper ──────────────────────────────────── */
 .bf-content {
     max-width: 1000px;
     margin: 0 auto;
     padding: 32px 24px 80px;
 }
 
-/* ── Card ─────────────────────────────────────────────── */
 .bf-card {
     background: #fff;
     border: 1.5px solid #e5e7eb;
@@ -243,7 +235,6 @@
     margin: 0 0 28px;
 }
 
-/* ── Form grid ────────────────────────────────────────── */
 .bf-form-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -320,7 +311,6 @@
     flex-shrink: 0;
 }
 
-/* ── Booking info card ────────────────────────────────── */
 .booking-info-card {
     background: #fff;
     border: 1.5px solid #e5e7eb;
@@ -329,7 +319,6 @@
     margin-bottom: 16px;
 }
 
-/* Route row */
 .bi-route-row {
     display: flex;
     align-items: center;
@@ -433,7 +422,6 @@
     margin: 24px 0;
 }
 
-/* Details grid */
 .bi-details {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -472,7 +460,6 @@
     color: #0f172a;
 }
 
-/* Policy */
 .bi-policy-title {
     display: flex;
     align-items: center;
@@ -520,7 +507,6 @@
     color: #dc2626;
 }
 
-/* ── Terms ────────────────────────────────────────────── */
 .terms-wrap {
     margin-top: 32px;
     border: 1.5px solid #e5e7eb;
@@ -615,7 +601,6 @@
     color: #1d4ed8;
 }
 
-/* ── Round-trip sub-step indicator ───────────────────── */
 .seat-substep-bar {
     display: flex;
     align-items: center;
@@ -699,7 +684,6 @@
     background: #16a34a;
 }
 
-/* ── Seat tab toggle (roundtrip) ─────────────────────── */
 .seat-tab-toggle {
     display: flex;
     gap: 4px;
@@ -741,7 +725,6 @@
     border-radius: 8px;
 }
 
-/* ── Seat map ─────────────────────────────────────────── */
 .seat-legend {
     display: flex;
     gap: 20px;
@@ -909,7 +892,6 @@
     font-weight: 800;
 }
 
-/* ── Step 3 layout ────────────────────────────────────── */
 .bf-step3-layout {
     display: grid;
     grid-template-columns: 1fr 340px;
@@ -917,7 +899,6 @@
     align-items: start;
 }
 
-/* Payment methods */
 .pay-methods {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -949,7 +930,6 @@
     font-weight: 700;
 }
 
-/* Credit card visual */
 .credit-card-visual {
     background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 60%, #0ea5e9 100%);
     border-radius: 16px;
@@ -1006,7 +986,6 @@
     font-weight: 700;
 }
 
-/* Pay simple */
 .pay-simple {
     display: flex;
     flex-direction: column;
@@ -1031,7 +1010,6 @@
     font-size: 13px;
 }
 
-/* Order summary */
 .order-summary h3 {
     font-size: 16px;
     font-weight: 700;
@@ -1101,7 +1079,6 @@
     letter-spacing: -0.5px;
 }
 
-/* ── Confirm ──────────────────────────────────────────── */
 .confirm-card {
     text-align: center;
 }
@@ -1240,7 +1217,6 @@
     color: #1d4ed8;
 }
 
-/* ── NEXTRIP 광고 배너 ─────────────────────────────────── */
 .nextrip-ad-banner {
     display: flex;
     align-items: stretch;
@@ -1375,7 +1351,6 @@
     }
 }
 
-/* ── Guest modal ──────────────────────────────────────── */
 .guest-modal-overlay {
     position: fixed;
     inset: 0;
@@ -1497,7 +1472,6 @@
     color: #6b7280;
 }
 
-/* ── Guest notice & miles earned ──────────────────────── */
 .bi-guest-notice {
     margin-top: 16px;
     padding: 12px 16px;
@@ -1536,7 +1510,6 @@
     color: #059669;
 }
 
-/* ── Bottom navigation ────────────────────────────────── */
 .bf-nav {
     display: flex;
     justify-content: space-between;
@@ -1593,7 +1566,7 @@
 }
 
 @media (max-width: 640px) {
-    /* 상단 예약 요약 바 */
+
     .bf-topbar { padding: 0 16px; }
     .bf-topbar-inner {
         height: auto;
@@ -1616,7 +1589,7 @@
     .bf-step-bar {
         gap: 4px;
     }
-    /* 비활성 스텝 레이블 숨김 → 활성만 표시 */
+
     .bf-step-label { display: none; }
     .bf-step-label.active { display: block; font-size: 11px; }
     .bf-row {
@@ -1645,18 +1618,15 @@
         font-size: 10px;
     }
 
-    /* 승객 정보 폼 1컬럼 */
     .bf-form-grid {
         grid-template-columns: 1fr;
         gap: 14px;
     }
 
-    /* 항공편 상세 정보 1컬럼 */
     .bi-details {
         grid-template-columns: 1fr;
     }
 
-    /* 환불 정책 테이블 스크롤 */
     .bi-policy-grid {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
@@ -1667,20 +1637,16 @@
         font-size: 11px;
     }
 
-    /* Step3 결제 레이아웃 1컬럼 */
     .bf-step3-layout {
         grid-template-columns: 1fr;
     }
 
-    /* 스테퍼 원형·선 간격 축소 */
     .bf-stepper-wrap { padding: 12px 16px; }
     .bf-step-circle { width: 28px; height: 28px; font-size: 12px; }
     .bf-step-line { margin: 0 6px; }
 
-    /* 좌석 범례: 2줄 wrapping */
     .seat-legend { flex-wrap: wrap; gap: 8px 12px; font-size: 12px; }
 
-    /* 좌석 헤더 셀 너비를 bf-seat(36px)에 맞춤 */
     .seat-header-row { padding-left: 32px; }
     .seat-hcell { width: 36px; }
 }

@@ -17,9 +17,8 @@ interface RawFlight {
   economy_seats: number
 }
 
-// 출발편 상태
 type DepStatus = 'ontime' | 'boarding' | 'departed' | 'cancelled'
-// 도착편 상태
+
 type ArrStatus = 'scheduled' | 'in_flight' | 'arriving' | 'arrived' | 'cancelled'
 
 const DEP_STATUS_META: Record<DepStatus, { label: string }> = {
@@ -110,9 +109,8 @@ export default function FlightStatusPage() {
   const [arrFilter, setArrFilter] = useState<ArrStatus | ''>('')
   const [flights, setFlights] = useState<RawFlight[]>([])
   const [loading, setLoading] = useState(true)
-  const [, setTick] = useState(0) // 매분 강제 리렌더
+  const [, setTick] = useState(0)
 
-  // 렌더마다 항상 최신 현재 시각 계산 (stale state 방지)
   const now = getNow()
 
   const load = useCallback(async () => {
@@ -121,7 +119,7 @@ export default function FlightStatusPage() {
       const all = await api.get<RawFlight[]>(`/flights?date=${date}&limit=500`)
       setFlights(all)
     } catch {
-      // 오류 시 기존 데이터 유지
+
     } finally {
       setLoading(false)
     }
@@ -144,14 +142,12 @@ export default function FlightStatusPage() {
   const depFlights = flights.filter(f => f.from_code === 'ICN')
   const arrFlights = flights.filter(f => f.to_code === 'ICN')
 
-  // 출발편 상태 계산
   const depWithStatus = depFlights.map(f => ({
     ...f,
     _status: computeDepStatus(f.depart_time, f.is_cancelled, now),
     _gate: getDepGate(f),
   }))
 
-  // 도착편 상태 계산 — depart_time(출발 시각), arrival_time(인천 도착 시각) 기준
   const arrWithStatus = arrFlights.map(f => ({
     ...f,
     _status: computeArrStatus(f.depart_time, f.arrival_time, f.is_cancelled, now),
@@ -166,7 +162,6 @@ export default function FlightStatusPage() {
     .filter(f => arrFilter ? f._status === arrFilter : true)
     .sort((a, b) => a.arrival_time.localeCompare(b.arrival_time))
 
-  // 헤더 요약 — 현재 탭 기준
   const depCounts = {
     ontime:   depWithStatus.filter(f => f._status === 'ontime').length,
     boarding: depWithStatus.filter(f => f._status === 'boarding').length,

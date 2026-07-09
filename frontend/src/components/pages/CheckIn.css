@@ -9,7 +9,6 @@
   gap: 20px;
 }
 
-/* Search card */
 .checkin-search-card {
   background: #fff;
   border: 1.5px solid #e5e7eb;
@@ -77,7 +76,6 @@
 
 .checkin-search-btn:hover { background: #1e40af; }
 
-/* Flight found card */
 .checkin-flight-card {
   background: #fff;
   border: 1.5px solid #e5e7eb;
@@ -101,7 +99,6 @@
 
 .checkin-route { display: flex; align-items: center; gap: 16px; }
 
-/* Seat map */
 .seat-selection-card {
   background: #fff;
   border: 1.5px solid #e5e7eb;
@@ -236,7 +233,6 @@
 
 .checkin-confirm-btn:not(:disabled):hover { background: #1e40af; }
 
-/* Boarding pass */
 .boarding-pass {
   background: #fff;
   border: 1.5px solid #e5e7eb;
@@ -299,7 +295,6 @@
 
 .bp-note { font-size: 12px; color: #9ca3af; }
 
-/* ── 예약 좌석 확인 ──────────────────────────────────────────── */
 .checkin-seat-confirm-info {
   display: flex;
   align-items: center;
@@ -354,7 +349,6 @@
   font-size: 15px;
 }
 
-/* ── 에러 메시지 ─────────────────────────────────────────────── */
 .checkin-error {
   display: flex;
   align-items: flex-start;
@@ -387,7 +381,6 @@
   .bp-code { font-size: 32px; }
   .bp-details { grid-template-columns: 1fr 1fr; }
 
-  /* 좌석 맵: 34px 너비로 축소 → 320px 폰에서도 수용 */
   .seat-col-label       { width: 34px; font-size: 11px; }
   .seat-col-label.aisle { width: 14px; }
   .seat-col-labels      { padding-left: 28px; gap: 3px; }

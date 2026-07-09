@@ -2,7 +2,6 @@ from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Bool
 from sqlalchemy.sql import func
 from app.db.base import Base
 
-
 class Review(Base):
     __tablename__ = "reviews"
 

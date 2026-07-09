@@ -5,7 +5,7 @@ from app.models.inquiry import FAQ, Inquiry
 create_tables()
 db = SessionLocal()
 try:
-    # FAQs
+
     if db.query(FAQ).count() == 0:
         faqs = [
             FAQ(category="예약", question="예약 후 변경이 가능한가요?", answer="예약 후 출발 24시간 전까지 변경 가능합니다. 변경 수수료가 발생할 수 있습니다.", order_num=1),
@@ -27,7 +27,6 @@ try:
     else:
         print("FAQ 데이터가 이미 존재합니다. 건너뜁니다.")
 
-    # Notices
     if db.query(Notice).count() == 0:
         notices = [
             Notice(category="promotion", title="얼리버드 특가! 여름 성수기 항공권 최대 40% 할인", content="2026년 여름 성수기(7~8월) 항공권을 지금 예약하시면 최대 40% 할인 혜택을 받으실 수 있습니다.\n\n· 대상 노선: 전 노선\n· 할인율: 최대 40%\n· 예약 기간: 2026.05.04 ~ 2026.05.31\n· 탑승 기간: 2026.07.01 ~ 2026.08.31\n\n선착순 한정 수량이오니 서두르세요!", badge="HOT", is_active=True),

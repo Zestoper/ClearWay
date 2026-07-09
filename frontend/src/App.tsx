@@ -38,14 +38,12 @@ function App() {
   const [reservationsInitial, setReservationsInitial] = useState<{ ref: string; lastName: string } | null>(null)
   const [checkinInitial, setCheckinInitial] = useState<{ ref: string; lastName: string } | null>(null)
 
-  // ── 새로고침 시 토큰으로 사용자 복원 ─────────────────────────
   useEffect(() => {
     const token = localStorage.getItem('token')
     if (!token) return
     fetchMe().then(setUser).catch(() => localStorage.removeItem('token'))
   }, [])
 
-  // ── 브라우저 뒤로가기 지원 ────────────────────────────────────
   useEffect(() => {
     const handlePop = (e: PopStateEvent) => {
       const p = (e.state?.page as Page) || 'home'

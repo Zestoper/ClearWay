@@ -238,7 +238,6 @@ def create_plan(
 
     return {"id": plan.id, "title": plan.title, "status": plan.status}
 
-
 @router.get("/plans")
 def list_plans(
     db: Session = Depends(get_db),
@@ -257,7 +256,6 @@ def list_plans(
         }
         for p in plans
     ]
-
 
 @router.get("/plans/{plan_id}")
 def get_plan(
@@ -282,7 +280,6 @@ def get_plan(
         "created_at": str(plan.created_at),
     }
 
-
 @router.delete("/plans/{plan_id}", status_code=204)
 def delete_plan(
     plan_id: int,
@@ -294,7 +291,6 @@ def delete_plan(
         raise HTTPException(status_code=404, detail="여행 계획을 찾을 수 없습니다.")
     db.delete(plan)
     db.commit()
-
 
 class PackingRequest(BaseModel):
     destination: str
@@ -329,7 +325,6 @@ def get_packing_list(body: PackingRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-
 @router.post("/recommend")
 def recommend_destination(body: RecommendRequest):
     budget_kr = {"budget": "저예산(1인당 하루 5만원 이하)", "normal": "일반(1인당 하루 10~15만원)", "premium": "프리미엄(1인당 하루 20만원 이상)"}.get(body.budget, body.budget)
@@ -346,7 +341,6 @@ def recommend_destination(body: RecommendRequest):
         return json.loads(_strip_fences(raw))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
 
 def _call_flight_rec_ai(prompt: str) -> str:
     """항공편 추천용: 가벼운 모델 우선 시도, 실패시 기본 모델."""
@@ -375,7 +369,6 @@ def _call_flight_rec_ai(prompt: str) -> str:
                 continue
         raise ValueError("Groq API 호출 실패 (rate limit 또는 오류)")
     return _call_ai(prompt, _SIMPLE_SYSTEM)
-
 
 class FlightRecommendRequest(BaseModel):
     query: str
@@ -514,7 +507,6 @@ JSON:
     result.sort(key=lambda x: x["economy_price"])
     return {"message": data.get("message", ""), "flights": result}
 
-
 @router.patch("/plans/{plan_id}/items/{item_id}")
 def update_plan_item(
     plan_id: int,
@@ -545,7 +537,6 @@ def update_plan_item(
     flag_modified(plan, "plan_data")
     db.commit()
     return {"ok": True}
-
 
 # ── 일정 항목 삭제 ─────────────────────────────────────────────────────────────
 
@@ -578,7 +569,6 @@ def delete_plan_item(
     from sqlalchemy.orm.attributes import flag_modified
     flag_modified(plan, "plan_data")
     db.commit()
-
 
 # ── 일정 항목 AI 교체 ─────────────────────────────────────────────────────────
 

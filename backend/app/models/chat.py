@@ -3,7 +3,6 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.db.base import Base
 
-
 class ChatRoom(Base):
     __tablename__ = "chat_rooms"
 
@@ -21,15 +20,14 @@ class ChatRoom(Base):
     messages = relationship("ChatMessage", back_populates="room", order_by="ChatMessage.created_at")
     user = relationship("User", foreign_keys=[user_id])
 
-
 class ChatMessage(Base):
     __tablename__ = "chat_messages"
 
     id = Column(Integer, primary_key=True, index=True)
     room_id = Column(Integer, ForeignKey("chat_rooms.id"), nullable=False)
-    sender = Column(String(20), nullable=False)   # "user" | "admin"
+    sender = Column(String(20), nullable=False)
     content = Column(Text, nullable=False)
-    msg_type = Column(String(20), nullable=False, default="text")  # "text" | "image"
+    msg_type = Column(String(20), nullable=False, default="text")
     created_at = Column(DateTime, server_default=func.now())
 
     room = relationship("ChatRoom", back_populates="messages")

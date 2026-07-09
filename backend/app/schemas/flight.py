@@ -2,7 +2,6 @@ from pydantic import BaseModel
 from datetime import date
 from decimal import Decimal
 
-
 class FlightOut(BaseModel):
     id: int
     flight_no: str

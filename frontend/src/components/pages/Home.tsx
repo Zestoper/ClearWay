@@ -154,7 +154,6 @@ export default function Home({ onGoNextrip, onGoBooking, onGoNotice, onGoReview,
   return (
     <main className="home-page">
 
-      {/* 1. Hero */}
       <section className="hero-section" style={{ background: slide.bg }}>
         <div className="hero-inner">
           <div className="hero-content">
@@ -194,7 +193,6 @@ export default function Home({ onGoNextrip, onGoBooking, onGoNotice, onGoReview,
         </div>
       </section>
 
-      {/* 2. 서비스 강점 — 왜 CLEARWAY? */}
       <section className="hp-section hp-section--gray">
         <div className="hp-inner">
           <div className="benefit-grid">
@@ -211,7 +209,6 @@ export default function Home({ onGoNextrip, onGoBooking, onGoNotice, onGoReview,
         </div>
       </section>
 
-      {/* 3. 인기 여행지 */}
       <section className="hp-section">
         <div className="hp-inner">
           <div className="hp-head">
@@ -244,12 +241,10 @@ export default function Home({ onGoNextrip, onGoBooking, onGoNotice, onGoReview,
         </div>
       </section>
 
-      {/* 5. 이벤트 & 인기 검색 */}
       <section className="hp-section">
         <div className="hp-inner">
           <div className="split-grid">
 
-            {/* 이벤트 */}
             <div>
               <div className="hp-head" style={{ marginBottom: 20 }}>
                 <div>
@@ -282,7 +277,6 @@ export default function Home({ onGoNextrip, onGoBooking, onGoNotice, onGoReview,
               )}
             </div>
 
-            {/* 실시간 인기 검색 */}
             <div className="split-card">
               <div className="split-head">
                 <h2 className="hp-title">🔥 실시간 인기 검색</h2>
@@ -304,7 +298,6 @@ export default function Home({ onGoNextrip, onGoBooking, onGoNotice, onGoReview,
         </div>
       </section>
 
-      {/* 6. 이용 후기 */}
       <section className="hp-section hp-section--gray">
         <div className="hp-inner">
           <div className="hp-head">
@@ -338,7 +331,6 @@ export default function Home({ onGoNextrip, onGoBooking, onGoNotice, onGoReview,
         </div>
       </section>
 
-      {/* 7. FAQ */}
       <section className="hp-section">
         <div className="hp-inner faq-inner">
           <div className="hp-head center">

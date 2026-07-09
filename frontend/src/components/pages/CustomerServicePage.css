@@ -26,7 +26,6 @@
   padding: 32px 24px 80px;
 }
 
-/* Tabs */
 .cs-tabs {
   display: flex;
   border-bottom: 2px solid #e5e7eb;
@@ -58,7 +57,6 @@
   overflow: hidden;
 }
 
-/* FAQ */
 .cs-faq-cats {
   display: flex;
   gap: 6px;
@@ -171,7 +169,6 @@
   font-size: 14px;
 }
 
-/* Inquiry form */
 .cs-inquiry-form {
   padding: 32px;
   display: flex;
@@ -243,7 +240,6 @@
   padding: 0;
 }
 
-/* Buttons */
 .cs-btn {
   height: 44px;
   padding: 0 24px;
@@ -260,7 +256,6 @@
 .cs-btn.primary:disabled { opacity: 0.6; cursor: not-allowed; }
 .cs-btn.full { width: 100%; }
 
-/* Done state */
 .cs-done-box {
   padding: 60px 32px;
   text-align: center;
@@ -298,7 +293,6 @@
   line-height: 1.7;
 }
 
-/* My inquiries */
 .cs-empty-box {
   padding: 48px 32px;
   text-align: center;
@@ -400,7 +394,6 @@
   .cs-inquiry-form { padding: 20px; }
 }
 
-/* ── AI 챗봇 ── */
 .aichat-wrap {
   max-width: 680px; margin: 0 auto;
   display: flex; flex-direction: column; gap: 0;

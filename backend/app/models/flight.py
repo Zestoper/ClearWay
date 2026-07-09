@@ -2,7 +2,6 @@ from sqlalchemy import Column, Integer, String, Date, Numeric, Boolean
 from sqlalchemy.orm import relationship
 from app.db.base import Base
 
-
 class Flight(Base):
     __tablename__ = "flights"
 

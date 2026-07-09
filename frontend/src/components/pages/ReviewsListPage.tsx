@@ -67,7 +67,7 @@ export default function ReviewsListPage({ onGoHome, onGoWrite }: Props) {
       </div>
 
       <div className="rl-body">
-        {/* 요약 */}
+
         <div className="rl-summary">
           <div className="rl-summary-item">
             <span className="rl-summary-num">{filtered.length}</span>
@@ -86,7 +86,6 @@ export default function ReviewsListPage({ onGoHome, onGoWrite }: Props) {
           <button className="rl-write-btn" onClick={onGoWrite}>후기 작성</button>
         </div>
 
-        {/* 필터 */}
         <div className="rl-filter-bar">
           {(['all', 'general', 'ai'] as const).map(f => (
             <button
@@ -102,7 +101,6 @@ export default function ReviewsListPage({ onGoHome, onGoWrite }: Props) {
           ))}
         </div>
 
-        {/* 목록 */}
         {loading ? (
           <div className="rl-loading">후기를 불러오는 중...</div>
         ) : paginated.length === 0 ? (
@@ -139,7 +137,6 @@ export default function ReviewsListPage({ onGoHome, onGoWrite }: Props) {
           </div>
         )}
 
-        {/* 페이지네이션 */}
         {totalPages > 1 && (
           <div className="rl-pagination">
             <button className="rl-page-btn" disabled={page === 1} onClick={() => setPage(p => p - 1)}>← 이전</button>

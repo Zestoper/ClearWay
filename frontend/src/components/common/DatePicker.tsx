@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import './DatePicker.css'
 
 interface Props {
-  value: string        // YYYY-MM-DD
+  value: string
   onChange: (v: string) => void
   minDate?: string
   showPrices?: boolean

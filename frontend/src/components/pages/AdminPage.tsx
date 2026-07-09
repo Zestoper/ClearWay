@@ -96,7 +96,6 @@ export default function AdminPage({ user, onGoLogin }: Props) {
   const [revPeriod, setRevPeriod] = useState<'daily' | 'weekly' | 'monthly'>('monthly')
   const [saveMsg, setSaveMsg] = useState('')
 
-  // newsletter
   const [nlSubject, setNlSubject]   = useState('')
   const [nlContent, setNlContent]   = useState('')
   const [nlTier, setNlTier]         = useState('')
@@ -108,7 +107,6 @@ export default function AdminPage({ user, onGoLogin }: Props) {
   const [nlNotices, setNlNotices]   = useState<{ id: number; category: string; title: string; content: string; badge: string | null }[]>([])
   const [nlPickerFilter, setNlPickerFilter] = useState('')
 
-  // notices
   interface NoticeItem { id: number; category: string; title: string; content: string; badge: string | null; is_active: boolean; created_at: string }
   const BLANK_NOTICE = { category: 'notice', title: '', content: '', badge: '', is_active: true }
   const [noticeList, setNoticeList]       = useState<NoticeItem[]>([])
@@ -116,12 +114,10 @@ export default function AdminPage({ user, onGoLogin }: Props) {
   const [editingNoticeId, setEditingNoticeId] = useState<number | null>(null)
   const [noticeSaving, setNoticeSaving]   = useState(false)
 
-  // chat
   const [chatRooms, setChatRooms]       = useState<{ id: number; user_name: string; category: string; status: string; admin_unread: number; last_message: string | null; updated_at: string }[]>([])
   const [activeChatRoom, setActiveChatRoom] = useState<number | null>(null)
   const [chatFilter, setChatFilter]     = useState<'open' | 'closed' | 'all'>('open')
 
-  // 채팅 미읽음 폴링 (30초마다, 어느 탭에 있든)
   useEffect(() => {
     if (!user?.is_admin) return
     const id = setInterval(() => {
@@ -277,7 +273,6 @@ export default function AdminPage({ user, onGoLogin }: Props) {
         </div>
       </div>
 
-      {/* 탭 */}
       <div className="admin-tabs-bar">
         <div className="admin-tabs">
           {([
@@ -307,7 +302,6 @@ export default function AdminPage({ user, onGoLogin }: Props) {
 
       <div className="admin-body">
 
-        {/* ── 대시보드 탭 ── */}
         {tab === 'dashboard' && (
           <>
             {stats && (
@@ -347,7 +341,6 @@ export default function AdminPage({ user, onGoLogin }: Props) {
           </>
         )}
 
-        {/* ── 항공편 관리 탭 ── */}
         {tab === 'flights' && (
           <div className="admin-section">
             <div className="admin-section-header">
@@ -408,7 +401,6 @@ export default function AdminPage({ user, onGoLogin }: Props) {
           </div>
         )}
 
-        {/* ── 회원 관리 탭 ── */}
         {tab === 'members' && (
           <div className="admin-section">
             <div className="admin-section-header">
@@ -436,7 +428,6 @@ export default function AdminPage({ user, onGoLogin }: Props) {
           </div>
         )}
 
-        {/* ── 예약 관리 탭 ── */}
         {tab === 'bookings' && (
           <div className="admin-section">
             <div className="admin-section-header">
@@ -465,7 +456,6 @@ export default function AdminPage({ user, onGoLogin }: Props) {
           </div>
         )}
 
-        {/* ── 매출 통계 탭 ── */}
         {tab === 'revenue' && (
           <>
             <div className="admin-section">
@@ -522,7 +512,6 @@ export default function AdminPage({ user, onGoLogin }: Props) {
           </>
         )}
 
-        {/* ── 뉴스레터 탭 ── */}
         {tab === 'newsletter' && (
           <div className="admin-section">
             <div className="admin-section-header"><h2>뉴스레터</h2></div>
@@ -572,7 +561,6 @@ export default function AdminPage({ user, onGoLogin }: Props) {
                   </button>
                 </div>
 
-                {/* ── 공지/이벤트 picker 모달 ── */}
                 {nlPickerOpen && (
                   <div className="nl-picker-overlay" onClick={() => setNlPickerOpen(false)}>
                     <div className="nl-picker-modal" onClick={e => e.stopPropagation()}>
@@ -686,7 +674,6 @@ export default function AdminPage({ user, onGoLogin }: Props) {
           </div>
         )}
 
-        {/* ── 공지/이벤트 관리 탭 ── */}
         {tab === 'notices' && (
           <div className="admin-section">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
@@ -696,7 +683,6 @@ export default function AdminPage({ user, onGoLogin }: Props) {
               )}
             </div>
 
-            {/* 등록/수정 폼 */}
             {(editingNoticeId !== null) && (
               <div className="notice-form-box">
                 <h3 className="notice-form-title">{editingNoticeId === 0 ? '새 공지 등록' : '공지 수정'}</h3>
@@ -736,7 +722,6 @@ export default function AdminPage({ user, onGoLogin }: Props) {
               </div>
             )}
 
-            {/* 목록 */}
             <div className="admin-table-wrap">
               <table className="admin-table">
                 <thead>
@@ -786,7 +771,6 @@ export default function AdminPage({ user, onGoLogin }: Props) {
           </div>
         )}
 
-        {/* ── 채팅 관리 탭 ── */}
         {tab === 'chat' && (
           <div className="admin-chat-layout">
             <div className="admin-chat-sidebar">

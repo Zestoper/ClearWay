@@ -107,7 +107,6 @@ export default function BookingFlow({ flight, user, onGoReservations, onGoHome, 
   const [touched, setTouched] = useState<Record<string, boolean>[]>(() => Array.from({ length: paxCount }, () => ({})))
   const [terms, setTerms] = useState({ transport: false, privacy: false, thirdParty: false, marketing: false })
 
-  // Seats: [paxIdx] → seat string | null
   const [seats, setSeats] = useState<(string | null)[]>(() => Array(paxCount).fill(null))
   const [seatSurcharges, setSeatSurcharges] = useState<number[]>(() => Array(paxCount).fill(0))
   const [returnSeats, setReturnSeats] = useState<(string | null)[]>(() => Array(paxCount).fill(null))
@@ -216,7 +215,6 @@ export default function BookingFlow({ flight, user, onGoReservations, onGoHome, 
     }
   }
 
-  // ── 비회원 선택 모달 ──────────────────────────────────────────
   if (showGuestModal && !continueAsGuest) {
     return (
       <main className="bf-page">
@@ -242,7 +240,7 @@ export default function BookingFlow({ flight, user, onGoReservations, onGoHome, 
 
   return (
     <main className="bf-page">
-      {/* 상단 항공편 요약 */}
+
       <div className="bf-topbar">
         <div className="bf-topbar-inner">
           <div className="bf-flight-summary">
@@ -262,7 +260,6 @@ export default function BookingFlow({ flight, user, onGoReservations, onGoHome, 
         </div>
       </div>
 
-      {/* 스테퍼 */}
       <div className="bf-stepper-wrap">
         <div className="bf-stepper">
           {STEPS.map((label, i) => {
@@ -284,7 +281,6 @@ export default function BookingFlow({ flight, user, onGoReservations, onGoHome, 
 
       <div className="bf-content">
 
-        {/* ── STEP 1: 승객 정보 ── */}
         {step === 1 && (
           <>
             <div className="booking-info-card">
@@ -337,7 +333,6 @@ export default function BookingFlow({ flight, user, onGoReservations, onGoHome, 
               )}
             </div>
 
-            {/* 승객 탭 */}
             {paxCount > 1 && (
               <div className="pax-tab-bar">
                 {Array.from({ length: paxCount }, (_, i) => (
@@ -451,12 +446,10 @@ export default function BookingFlow({ flight, user, onGoReservations, onGoHome, 
           </>
         )}
 
-        {/* ── STEP 2: 좌석 선택 ── */}
         {step === 2 && (
           <div className="bf-card">
             <h2 className="bf-card-title">좌석 선택</h2>
 
-            {/* 승객 탭 */}
             {paxCount > 1 && (
               <div className="pax-tab-bar">
                 {Array.from({ length: paxCount }, (_, i) => {
@@ -625,7 +618,6 @@ export default function BookingFlow({ flight, user, onGoReservations, onGoHome, 
           </div>
         )}
 
-        {/* ── STEP 3: 결제 ── */}
         {step === 3 && (
           <div className="bf-step3-layout">
             <div className="bf-card pay-card">
@@ -718,7 +710,6 @@ export default function BookingFlow({ flight, user, onGoReservations, onGoHome, 
           </div>
         )}
 
-        {/* ── STEP 4: 예약 완료 ── */}
         {step === 4 && (
           <div className="bf-card confirm-card">
             <div className="confirm-icon">
@@ -789,7 +780,6 @@ export default function BookingFlow({ flight, user, onGoReservations, onGoHome, 
           </div>
         )}
 
-        {/* 이전 / 다음 네비 */}
         {step < 4 && (
           <div className="bf-nav">
             {step > 1

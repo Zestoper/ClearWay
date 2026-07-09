@@ -4,13 +4,11 @@ from sqlalchemy.sql import func
 from app.db.base import Base
 import enum
 
-
 class BookingStatus(str, enum.Enum):
     confirmed = "confirmed"
     checked_in = "checked_in"
     completed = "completed"
     cancelled = "cancelled"
-
 
 class Booking(Base):
     __tablename__ = "bookings"
@@ -18,7 +16,7 @@ class Booking(Base):
     id = Column(Integer, primary_key=True, index=True)
     booking_ref = Column(String(12), unique=True, nullable=False, index=True)
 
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)  # nullable = 비회원 예약 허용
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
     flight_id = Column(Integer, ForeignKey("flights.id"), nullable=False)
 
     fare_class = Column(Enum("economy", "business", name="fare_class_enum"), nullable=False)

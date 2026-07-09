@@ -1,13 +1,10 @@
-/* ── Base ─────────────────────────────────────────────────── */
 .nx-page { min-height: 100vh; background: #f8fafc; padding-top: 64px; }
 
-/* ── Cost badges ───────────────────────────────────────────── */
 .nx-cost-badge { font-size: 12px; font-weight: 600; color: #059669; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 2px 8px; }
 .nx-day-cost { margin-left: auto; font-size: 13px; font-weight: 600; color: #059669; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 4px 12px; }
 .nx-total-cost { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; padding-top: 10px; border-top: 1px solid #e2e8f0; font-size: 14px; color: #374151; }
 .nx-total-cost strong { font-size: 16px; color: #059669; font-weight: 700; }
 
-/* ── Hero ─────────────────────────────────────────────────── */
 .nx-hero {
   background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 45%, #1d4ed8 100%);
   padding: 56px 24px 60px;
@@ -46,7 +43,6 @@
 .nx-demo-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #e2e8f0; }
 .nx-demo-item small { font-size: 11px; color: #f59e0b; margin-left: auto; }
 
-/* ── Buttons ──────────────────────────────────────────────── */
 .nx-btn-primary {
   display: inline-flex; align-items: center; gap: 6px;
   height: 44px; padding: 0 24px; background: #4f46e5; color: #fff;
@@ -73,14 +69,12 @@
 .nx-btn-ghost:hover { background: #e5e7eb; }
 .nx-btn-ghost.sm { height: 32px; font-size: 12px; padding: 0 12px; }
 
-/* ── Body ─────────────────────────────────────────────────── */
 .nx-body { max-width: 1100px; margin: 0 auto; padding: 40px 24px 100px; display: flex; flex-direction: column; gap: 40px; }
 
 .nx-section-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; gap: 12px; }
 .nx-section-head h2 { font-size: 20px; font-weight: 800; color: #0f172a; margin: 0 0 4px; }
 .nx-section-head p  { font-size: 13px; color: #6b7280; margin: 0; }
 
-/* ── Plans grid ───────────────────────────────────────────── */
 .nx-plan-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
 
 .nx-plan-card {
@@ -113,7 +107,6 @@
 }
 .nx-plan-view-btn:hover { background: #e0e7ff; }
 
-/* ── Empty / Login prompt ─────────────────────────────────── */
 .nx-empty { text-align: center; padding: 60px 24px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
 .nx-empty-icon { font-size: 40px; }
 .nx-empty p { color: #6b7280; font-size: 15px; margin: 0; }
@@ -127,7 +120,6 @@
 .nx-login-prompt h3 { font-size: 20px; font-weight: 800; margin: 0; }
 .nx-login-prompt p  { color: #94a3b8; font-size: 14px; margin: 0; }
 
-/* ── Bookings grid ────────────────────────────────────────── */
 .nx-booking-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
 
 .nx-booking-card { background: #fff; border: 1.5px solid #e5e7eb; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 6px; }
@@ -144,7 +136,6 @@
 }
 .nx-booking-plan-btn:hover { opacity: 0.9; transform: translateY(-1px); }
 
-/* ── Features ─────────────────────────────────────────────── */
 .nx-features { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
 
 .nx-feature-card { background: #fff; border: 1.5px solid #e5e7eb; border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 10px; }
@@ -152,7 +143,6 @@
 .nx-feature-card h3 { font-size: 15px; font-weight: 800; color: #0f172a; margin: 0; }
 .nx-feature-card p  { font-size: 13px; color: #6b7280; margin: 0; line-height: 1.6; }
 
-/* ── Survey ───────────────────────────────────────────────── */
 .nx-survey-wrap {
   max-width: 640px; margin: 0 auto; padding: 24px 24px 120px;
   display: flex; flex-direction: column; min-height: calc(100vh - 64px);
@@ -174,7 +164,6 @@
 .nx-survey-step h2 { font-size: 26px; font-weight: 900; color: #0f172a; margin: 0; line-height: 1.3; }
 .nx-step-desc { font-size: 14px; color: #6b7280; margin: 0; }
 
-/* Destination */
 .nx-dest-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
 .nx-dest-btn { background: #fff; border: 1.5px solid #e5e7eb; border-radius: 14px; padding: 16px 12px; cursor: pointer; transition: all 0.15s; display: flex; flex-direction: column; align-items: center; gap: 6px; }
 .nx-dest-btn:hover { border-color: #4f46e5; }
@@ -187,7 +176,6 @@
 .nx-custom-dest p { font-size: 13px; color: #6b7280; margin: 0; }
 .nx-custom-inputs { display: flex; gap: 10px; }
 
-/* Inputs */
 .nx-input {
   width: 100%; padding: 12px 14px; border: 1.5px solid #e5e7eb; border-radius: 10px;
   font-size: 14px; color: #0f172a; background: #fff; outline: none;
@@ -200,7 +188,6 @@
 .nx-form-group { display: flex; flex-direction: column; gap: 6px; }
 .nx-form-group label { font-size: 13px; font-weight: 600; color: #374151; }
 
-/* Booking picker (step 2) */
 .nx-booking-pick { display: flex; flex-direction: column; gap: 10px; }
 .nx-booking-pick-label { font-size: 13px; font-weight: 600; color: #4f46e5; margin: 0; }
 
@@ -249,17 +236,14 @@
   font-size: 13px; color: #4f46e5; font-weight: 800;
 }
 
-/* Dates */
 .nx-date-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .nx-date-hint { font-size: 12px; color: #f59e0b; margin: 4px 0 0; }
 .nx-duration-badge { display: inline-block; background: #eff6ff; color: #4f46e5; font-size: 13px; font-weight: 700; border-radius: 99px; padding: 6px 16px; align-self: flex-start; }
 
-/* Hotel */
 .nx-hotel-examples { display: flex; gap: 8px; flex-wrap: wrap; }
 .nx-example-chip { background: #f3f4f6; color: #374151; border: none; border-radius: 99px; padding: 6px 14px; font-size: 13px; cursor: pointer; transition: all 0.15s; }
 .nx-example-chip:hover { background: #e5e7eb; }
 
-/* Style cards */
 .nx-style-cards { display: flex; flex-direction: column; gap: 10px; }
 .nx-style-card { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 18px 20px; background: #fff; border: 1.5px solid #e5e7eb; border-radius: 14px; cursor: pointer; transition: all 0.15s; text-align: left; }
 .nx-style-card:hover { border-color: #4f46e5; }
@@ -268,16 +252,13 @@
 .nx-style-card strong { font-size: 15px; color: #0f172a; }
 .nx-style-card p { font-size: 13px; color: #6b7280; margin: 0; }
 
-/* Type */
 .nx-type-grid { display: flex; flex-wrap: wrap; gap: 10px; }
 .nx-type-btn { height: 44px; padding: 0 20px; background: #fff; border: 1.5px solid #e5e7eb; border-radius: 99px; font-size: 14px; font-weight: 600; color: #374151; cursor: pointer; transition: all 0.15s; }
 .nx-type-btn:hover { border-color: #4f46e5; }
 .nx-type-btn.selected { background: #4f46e5; color: #fff; border-color: #4f46e5; }
 
-/* Food */
 .nx-food-groups { display: flex; flex-direction: column; gap: 14px; }
 
-/* Choice */
 .nx-choice-section { display: flex; flex-direction: column; gap: 10px; }
 .nx-choice-section h3 { font-size: 15px; font-weight: 700; color: #0f172a; margin: 0; }
 .nx-choice-row { display: flex; gap: 10px; flex-wrap: wrap; }
@@ -289,7 +270,6 @@
 .nx-choice-btn.wide small  { font-size: 11px; color: #9ca3af; }
 .nx-choice-btn.wide.selected small { color: #6366f1; }
 
-/* Companion */
 .nx-companion-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .nx-companion-btn { padding: 20px; background: #fff; border: 1.5px solid #e5e7eb; border-radius: 16px; cursor: pointer; transition: all 0.15s; display: flex; flex-direction: column; align-items: center; gap: 8px; }
 .nx-companion-btn:hover { border-color: #4f46e5; }
@@ -297,16 +277,13 @@
 .nx-companion-icon { font-size: 32px; }
 .nx-companion-btn strong { font-size: 15px; color: #0f172a; }
 
-/* Survey summary */
 .nx-survey-summary { background: #f8fafc; border: 1.5px solid #e5e7eb; border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 10px; }
 .nx-survey-summary h4 { font-size: 13px; font-weight: 700; color: #4f46e5; margin: 0; }
 .nx-summary-grid { display: flex; flex-direction: column; gap: 6px; }
 .nx-summary-grid span { font-size: 13px; color: #374151; }
 
-/* Survey nav */
 .nx-survey-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #e5e7eb; padding: 16px 24px; z-index: 50; }
 
-/* ── Generating ────────────────────────────────────────────── */
 .nx-generating { display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #0f172a, #1e1b4b, #1d4ed8); }
 
 .nx-gen-inner { max-width: 480px; width: 100%; text-align: center; padding: 48px 24px; color: #fff; position: relative; display: flex; flex-direction: column; align-items: center; gap: 16px; }
@@ -332,7 +309,6 @@
 
 .nx-gen-note { font-size: 12px; color: #475569; margin: 0; }
 
-/* ── Plan view ─────────────────────────────────────────────── */
 .nx-plan-topbar { position: sticky; top: 64px; z-index: 20; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-bottom: 1px solid #e5e7eb; display: flex; align-items: center; gap: 16px; padding: 12px 24px; }
 
 .nx-plan-back { background: none; border: none; font-size: 14px; font-weight: 600; color: #6b7280; cursor: pointer; white-space: nowrap; }
@@ -348,7 +324,6 @@
 
 .nx-plan-body { max-width: 840px; margin: 0 auto; padding: 32px 24px 100px; display: flex; flex-direction: column; gap: 32px; }
 
-/* Summary card */
 .nx-summary-card { background: linear-gradient(135deg, #1e1b4b, #1d4ed8); border-radius: 20px; padding: 32px; display: flex; gap: 32px; flex-wrap: wrap; color: #fff; }
 .nx-summary-left { flex: 1; min-width: 240px; display: flex; flex-direction: column; gap: 12px; }
 .nx-plan-heading { font-size: 24px; font-weight: 900; margin: 0; }
@@ -361,14 +336,12 @@
 .nx-summary-highlights h4 { font-size: 12px; font-weight: 800; color: #a5b4fc; letter-spacing: 1px; margin: 0 0 10px; }
 .nx-summary-highlights p  { font-size: 13px; color: #cbd5e1; margin: 0 0 6px; line-height: 1.6; }
 
-/* Day section */
 .nx-day-section { display: flex; flex-direction: column; gap: 20px; }
 .nx-day-header { display: flex; align-items: center; gap: 16px; padding-bottom: 12px; border-bottom: 2px solid #e5e7eb; }
 .nx-day-badge { width: 52px; height: 52px; border-radius: 14px; background: #4f46e5; color: #fff; font-size: 11px; font-weight: 800; letter-spacing: 1px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .nx-day-title { font-size: 18px; font-weight: 800; color: #0f172a; margin: 0 0 2px; }
 .nx-day-date  { font-size: 13px; color: #6b7280; }
 
-/* Timeline */
 .nx-timeline { display: flex; flex-direction: column; gap: 0; }
 .nx-tl-row   { display: flex; gap: 16px; }
 
@@ -401,16 +374,13 @@
 .nx-maps-btn { font-size: 12px; font-weight: 600; color: #1d4ed8; text-decoration: none; border-bottom: 1px dashed #93c5fd; padding-bottom: 1px; transition: color 0.15s; }
 .nx-maps-btn:hover { color: #1e40af; }
 
-/* Edit form */
 .nx-edit-form { display: flex; flex-direction: column; gap: 10px; }
 .nx-edit-row { display: flex; align-items: center; gap: 10px; }
 .nx-edit-row label { font-size: 13px; font-weight: 600; color: #374151; width: 32px; flex-shrink: 0; }
 .nx-edit-actions { display: flex; gap: 8px; }
 
-/* Print header (hidden on screen) */
 .nx-print-header { display: none; }
 
-/* ── Print styles ──────────────────────────────────────────── */
 @media print {
   .nx-plan-topbar, .no-print, .nx-edit-btn, .nx-maps-btn, .nx-plan-action-btn { display: none !important; }
   .nx-page { padding-top: 0; }
@@ -425,7 +395,6 @@
   .nx-tl-card { break-inside: avoid; }
 }
 
-/* ── Responsive ────────────────────────────────────────────── */
 @media (max-width: 900px) {
   .nx-hero { flex-direction: column; text-align: center; padding: 48px 24px 52px; }
   .nx-hero-inner h1 { font-size: 30px; }
@@ -443,7 +412,6 @@
   .nx-custom-inputs { flex-direction: column; }
 }
 
-/* ── 가격 callout (hero) ─────────────────────────────────────── */
 .nx-price-callout {
   background: rgba(255,255,255,0.07);
   border: 1px solid rgba(255,255,255,0.15);
@@ -489,7 +457,6 @@
   line-height: 1.5;
 }
 
-/* ── 가격 비교 배너 ──────────────────────────────────────────── */
 .nx-pricing-banner {
   margin: 0 0 40px;
 }
@@ -588,7 +555,6 @@
   transform: translateY(-2px);
 }
 
-/* ── 절약 시간 배지 ──────────────────────────────────────────── */
 .nx-time-savings {
   display: flex;
   align-items: center;
@@ -613,11 +579,9 @@
   letter-spacing: -0.02em;
 }
 
-/* ── 짐 리스트 버튼 ── */
 .nx-plan-action-btn.packing { background: #f0fdf4; color: #16a34a; border-color: #bbf7d0; }
 .nx-plan-action-btn.packing:hover { background: #dcfce7; }
 
-/* ── 짐 리스트 모달 ── */
 .packing-overlay {
   position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 1000;
   display: flex; align-items: center; justify-content: center; padding: 20px;
@@ -661,7 +625,6 @@
   .packing-categories { grid-template-columns: 1fr; }
 }
 
-/* ── 아이템 액션 버튼 (수정/교체/삭제) ───────────────────────────── */
 .nx-item-actions {
   display: flex;
   gap: 4px;
@@ -690,7 +653,6 @@
 .nx-action-btn.replace:hover { background: #f0fdf4; border-color: #86efac; }
 .nx-action-btn.delete:hover { background: #fff1f2; border-color: #fca5a5; }
 
-/* ── 수정 폼 구분선 ───────────────────────────────────────────────── */
 .nx-edit-divider {
   display: flex;
   align-items: center;
@@ -709,7 +671,6 @@
   background: #e5e7eb;
 }
 
-/* ── 시간 수정 행 ─────────────────────────────────────────────────── */
 .nx-edit-row {
   display: flex;
   align-items: center;
@@ -724,7 +685,6 @@
   width: 28px;
 }
 
-/* ── 교체 조건 목록 ───────────────────────────────────────────────── */
 .nx-conditions-list {
   display: flex;
   flex-direction: column;
@@ -773,7 +733,6 @@
 .nx-add-condition:hover { border-color: #1d4ed8; color: #1d4ed8; background: #eff6ff; }
 .nx-add-condition:disabled { opacity: 0.4; cursor: not-allowed; }
 
-/* ── 교체 하단 버튼 영역 ──────────────────────────────────────────── */
 .nx-edit-bottom {
   display: flex;
   align-items: center;
@@ -798,7 +757,6 @@
 .nx-btn-replace:hover:not(:disabled) { background: #dcfce7; }
 .nx-btn-replace:disabled { opacity: 0.4; cursor: not-allowed; }
 
-/* ── 추천 근거 ────────────────────────────────────────────────────── */
 .nx-reason-wrap {
   display: flex;
   flex-direction: column;
@@ -848,7 +806,6 @@
   border-color: #bfdbfe;
 }
 
-/* ── 총 예산 선택 (설문 Step 7) ──────────────────────────────────── */
 .nx-optional-label {
   font-size: 12px;
   font-weight: 400;
@@ -912,7 +869,6 @@
   .nx-summary-card { padding: 20px 16px; }
 }
 
-/* 가격 비교 배너 모바일 */
 @media (max-width: 640px) {
   .nx-pricing-banner-inner {
     padding: 28px 20px;

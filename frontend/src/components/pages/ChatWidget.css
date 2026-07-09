@@ -12,7 +12,7 @@
         padding: 8px 6px;
     }
 }
-/* ── 영업시간 외 ─────────────────────────────────────────────── */
+
 .chat-closed {
     text-align: center;
     padding: 60px 24px;
@@ -39,7 +39,6 @@
     margin-top: 12px !important;
 }
 
-/* ── 채팅 시작 화면 ──────────────────────────────────────────── */
 .chat-select {
     padding: 24px;
     max-width: 520px;
@@ -156,7 +155,6 @@
     padding: 0;
 }
 
-/* ── 이전 상담 목록 ──────────────────────────────────────────── */
 .chat-history {
     padding: 24px;
 }
@@ -221,7 +219,6 @@
     padding: 40px 0;
 }
 
-/* ── 채팅방 ──────────────────────────────────────────────────── */
 .chat-room {
     display: flex;
     flex-direction: column;
@@ -321,7 +318,6 @@
     margin-bottom: 2px;
 }
 
-/* ── 입력창 ──────────────────────────────────────────────────── */
 .chat-input-row {
     display: flex;
     align-items: flex-end;
