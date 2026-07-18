@@ -103,6 +103,13 @@ def _strip_fences(raw: str) -> str:
 
 _SIMPLE_SYSTEM = "You are a helpful JSON assistant. Respond with valid JSON only — no markdown, no explanation. All text values in the JSON must be written in Korean (한국어) only — never use Japanese, Chinese, or any other language."
 
+_RATE_LIMIT_MSG = "AI 서버 요청이 많아 일시적으로 응답이 지연되고 있습니다. 잠시 후 다시 시도해주세요."
+
+def _raise_for_status_friendly(resp: httpx.Response) -> None:
+    if resp.status_code == 429:
+        raise ValueError(_RATE_LIMIT_MSG)
+    resp.raise_for_status()
+
 def _call_groq(prompt: str, system: str = SYSTEM_PROMPT) -> str:
     if not settings.GROQ_API_KEY:
         raise ValueError("GROQ_API_KEY가 설정되지 않았습니다.\nhttps://console.groq.com 에서 무료 API 키를 발급받아 .env에 추가하세요.")
@@ -121,7 +128,7 @@ def _call_groq(prompt: str, system: str = SYSTEM_PROMPT) -> str:
         },
         timeout=120.0,
     )
-    resp.raise_for_status()
+    _raise_for_status_friendly(resp)
     return resp.json()["choices"][0]["message"]["content"]
 
 def _call_gemini(prompt: str, system: str = SYSTEM_PROMPT) -> str:
@@ -136,7 +143,7 @@ def _call_gemini(prompt: str, system: str = SYSTEM_PROMPT) -> str:
         },
         timeout=120.0,
     )
-    resp.raise_for_status()
+    _raise_for_status_friendly(resp)
     return resp.json()["candidates"][0]["content"]["parts"][0]["text"]
 
 def _call_anthropic(prompt: str, system: str = SYSTEM_PROMPT) -> str:
@@ -144,18 +151,46 @@ def _call_anthropic(prompt: str, system: str = SYSTEM_PROMPT) -> str:
         raise ValueError("ANTHROPIC_API_KEY가 설정되지 않았습니다.")
     import anthropic as ant
     client = ant.Anthropic(api_key=settings.ANTHROPIC_API_KEY)
-    msg = client.messages.create(
-        model="claude-haiku-4-5-20251001",
-        max_tokens=16000,
-        system=system,
-        messages=[{"role": "user", "content": prompt}],
-    )
+    try:
+        msg = client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=16000,
+            system=system,
+            messages=[{"role": "user", "content": prompt}],
+        )
+    except ant.RateLimitError:
+        raise ValueError(_RATE_LIMIT_MSG)
     return msg.content[0].text
+
+def _call_cerebras(prompt: str, system: str = SYSTEM_PROMPT) -> str:
+    if not settings.CEREBRAS_API_KEY:
+        raise ValueError("CEREBRAS_API_KEY가 설정되지 않았습니다.\nhttps://cloud.cerebras.ai 에서 무료 API 키를 발급받아 .env에 추가하세요.")
+    resp = httpx.post(
+        "https://api.cerebras.ai/v1/chat/completions",
+        headers={"Authorization": f"Bearer {settings.CEREBRAS_API_KEY}"},
+        json={
+            "model": "gpt-oss-120b",
+            "messages": [
+                {"role": "system", "content": system},
+                {"role": "user",   "content": prompt},
+            ],
+            "temperature": 0.7,
+            "response_format": {"type": "json_object"},
+        },
+        timeout=120.0,
+    )
+    _raise_for_status_friendly(resp)
+    return resp.json()["choices"][0]["message"]["content"]
 
 def _call_ai(prompt: str, system: str = SYSTEM_PROMPT) -> str:
     provider = settings.AI_PROVIDER.lower()
     if provider == "groq":
-        return _call_groq(prompt, system)
+        try:
+            return _call_groq(prompt, system)
+        except Exception:
+            if not settings.CEREBRAS_API_KEY:
+                raise
+            return _call_cerebras(prompt, system)
     elif provider == "gemini":
         return _call_gemini(prompt, system)
     elif provider == "anthropic":

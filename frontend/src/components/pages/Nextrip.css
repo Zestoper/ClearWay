@@ -392,7 +392,8 @@
   .nx-plan-heading { color: #0f172a !important; }
   .nx-plan-summary-text, .nx-summary-highlights p { color: #374151 !important; }
   .nx-badge { background: #f3f4f6 !important; color: #374151 !important; }
-  .nx-tl-card { break-inside: avoid; }
+  .nx-timeline { display: block; }
+  .nx-tl-card { display: block; break-inside: avoid; page-break-inside: avoid; }
 }
 
 @media (max-width: 900px) {

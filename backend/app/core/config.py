@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     FRONTEND_URL: str = "http://localhost:5173"
     AI_PROVIDER: str = "groq"
     GROQ_API_KEY: str = ""
+    CEREBRAS_API_KEY: str = ""
     GOOGLE_API_KEY: str = ""
     ANTHROPIC_API_KEY: str = ""
     SMTP_HOST: str = "smtp.naver.com"
@@ -19,6 +20,7 @@ class Settings(BaseSettings):
     SMTP_USER: str = ""
     SMTP_PASSWORD: str = ""
     SMTP_FROM_EMAIL: str = ""
+    AERODATABOX_API_KEY: str = ""
 
     class Config:
         env_file = ".env"

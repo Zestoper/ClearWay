@@ -1,280 +1,249 @@
 import { useState, useEffect, useCallback } from 'react'
 import './FlightStatusPage.css'
 import { api } from '../../services/api'
+import DatePicker from '../common/DatePicker'
+import { FROM_AIRPORTS, DOMESTIC, INTL_REGIONS } from '../common/SearchBar'
 
-interface RawFlight {
-  id: number
-  flight_no: string
-  from_city: string; from_code: string; from_airport: string
-  to_city: string;   to_code: string;   to_airport: string
-  date: string
-  depart_time: string
-  arrival_time: string
-  duration: string
-  is_direct: boolean
-  via_city: string | null
+interface StatusFlight {
+  flight_no: string | null
+  airline: string | null
+  status: string | null
   is_cancelled: boolean
-  economy_seats: number
+  is_codeshare: boolean
+  other_code: string | null
+  other_city: string | null
+  scheduled_local: string | null
+  revised_local: string | null
+  actual_local: string | null
+  terminal: string | null
+  gate: string | null
 }
 
-type DepStatus = 'ontime' | 'boarding' | 'departed' | 'cancelled'
-
-type ArrStatus = 'scheduled' | 'in_flight' | 'arriving' | 'arrived' | 'cancelled'
-
-const DEP_STATUS_META: Record<DepStatus, { label: string }> = {
-  ontime:    { label: '정시 출발' },
-  boarding:  { label: '탑승 중'   },
-  departed:  { label: '출발 완료' },
-  cancelled: { label: '결항'      },
+interface StatusResponse {
+  date: string
+  airport_code: string
+  departures: StatusFlight[]
+  arrivals: StatusFlight[]
 }
 
-const ARR_STATUS_META: Record<ArrStatus, { label: string }> = {
-  scheduled: { label: '출발 전'   },
-  in_flight: { label: '비행 중'   },
-  arriving:  { label: '도착 예정' },
-  arrived:   { label: '도착 완료' },
-  cancelled: { label: '결항'      },
-}
-
-const DEP_FILTERS: Array<{ key: DepStatus | ''; label: string }> = [
-  { key: '',          label: '전체'     },
-  { key: 'ontime',    label: '정시 출발' },
-  { key: 'boarding',  label: '탑승 중'  },
-  { key: 'departed',  label: '출발 완료' },
-  { key: 'cancelled', label: '결항'     },
+const AIRPORT_OPTIONS: Array<{ code: string; label: string; group: string }> = [
+  ...FROM_AIRPORTS.map(a => ({ code: a.code, label: `${a.city} · ${a.name}`, group: '출발' })),
+  ...DOMESTIC.map(a => ({ code: a.code, label: `${a.city} · ${a.name}`, group: '국내' })),
+  ...INTL_REGIONS.flatMap(({ region, airports }) =>
+    airports.map(a => ({ code: a.code, label: `${a.city} · ${a.name}`, group: region }))
+  ),
 ]
 
-const ARR_FILTERS: Array<{ key: ArrStatus | ''; label: string }> = [
-  { key: '',          label: '전체'     },
-  { key: 'scheduled', label: '출발 전'  },
-  { key: 'in_flight', label: '비행 중'  },
-  { key: 'arriving',  label: '도착 예정' },
-  { key: 'arrived',   label: '도착 완료' },
-  { key: 'cancelled', label: '결항'     },
-]
-
-const DOMESTIC = new Set(['CJU', 'PUS', 'TAE', 'KWJ', 'RSU', 'YNY', 'CJJ'])
-
-function toMins(t: string): number {
-  const [h, m] = t.split(':').map(Number)
-  return h * 60 + m
+const STATUS_LABELS: Record<string, string> = {
+  Unknown: '정보 없음',
+  Expected: '출발 예정',
+  Scheduled: '출발 예정',
+  EnRoute: '비행 중',
+  CheckIn: '체크인 중',
+  Boarding: '탑승 중',
+  GateClosed: '탑승 마감',
+  Departed: '출발 완료',
+  Delayed: '지연',
+  Approaching: '도착 예정',
+  Landed: '착륙',
+  Arrived: '도착 완료',
+  Canceled: '결항',
+  Cancelled: '결항',
+  Diverted: '회항',
 }
 
-function computeDepStatus(depart: string, isCancelled: boolean, now: number): DepStatus {
-  if (isCancelled) return 'cancelled'
-  const dep = toMins(depart)
-  if (now >= dep) return 'departed'
-  if (now >= dep - 40) return 'boarding'
-  return 'ontime'
+const STATUS_CSS: Record<string, string> = {
+  Expected: 'scheduled',
+  Scheduled: 'scheduled',
+  CheckIn: 'ontime',
+  Boarding: 'boarding',
+  GateClosed: 'boarding',
+  Departed: 'departed',
+  EnRoute: 'in_flight',
+  Approaching: 'arriving',
+  Landed: 'arrived',
+  Arrived: 'arrived',
+  Delayed: 'delayed',
+  Diverted: 'delayed',
 }
 
-function computeArrStatus(depart: string, arrival: string, isCancelled: boolean, now: number): ArrStatus {
-  if (isCancelled) return 'cancelled'
-  const dep = toMins(depart)
-  const arr = toMins(arrival)
-  if (now >= arr) return 'arrived'
-  if (now >= arr - 30) return 'arriving'
-  if (now >= dep) return 'in_flight'
-  return 'scheduled'
+function statusLabel(f: StatusFlight): string {
+  if (f.is_cancelled) return '결항'
+  if (!f.status) return '정보 없음'
+  return STATUS_LABELS[f.status] ?? f.status
 }
 
-function getDepGate(flight: RawFlight): string {
-  if (flight.is_cancelled) return '—'
-  if (DOMESTIC.has(flight.to_code)) return `T2-${((flight.id * 3) % 12) + 1}`
-  return `A${((flight.id * 7 + 5) % 50) + 1}`
+function statusCss(f: StatusFlight): string {
+  if (f.is_cancelled) return 'cancelled'
+  if (!f.status) return 'scheduled'
+  return STATUS_CSS[f.status] ?? 'scheduled'
 }
 
-function getArrGate(flight: RawFlight): string {
-  if (flight.is_cancelled) return '—'
-  if (DOMESTIC.has(flight.from_code)) return `T2-${((flight.id * 5) % 10) + 1}`
-  return `B${((flight.id * 11 + 3) % 40) + 1}`
+function fmtTime(iso: string | null): string {
+  if (!iso) return '-'
+  const t = iso.split('T')[1]
+  return t ? t.slice(0, 5) : '-'
 }
 
-function getNow() {
-  const n = new Date()
-  return n.getHours() * 60 + n.getMinutes()
+function movementTime(f: StatusFlight): { label: string; changed: boolean } {
+  if (f.actual_local) return { label: fmtTime(f.actual_local), changed: false }
+  if (f.revised_local && f.revised_local !== f.scheduled_local) {
+    return { label: fmtTime(f.revised_local), changed: true }
+  }
+  return { label: '-', changed: false }
 }
 
-function localDateStr(): string {
+function todayStr(): string {
   const d = new Date()
-  const y = d.getFullYear()
-  const m = String(d.getMonth() + 1).padStart(2, '0')
-  const day = String(d.getDate()).padStart(2, '0')
-  return `${y}-${m}-${day}`
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
 }
 
 export default function FlightStatusPage() {
-  const [tab, setTab]       = useState<'dep' | 'arr'>('dep')
-  const [depFilter, setDepFilter] = useState<DepStatus | ''>('')
-  const [arrFilter, setArrFilter] = useState<ArrStatus | ''>('')
-  const [flights, setFlights] = useState<RawFlight[]>([])
+  const [airportCode, setAirportCode] = useState('ICN')
+  const [date, setDate] = useState(todayStr)
+  const [tab, setTab] = useState<'dep' | 'arr'>('dep')
+  const [data, setData] = useState<StatusResponse | null>(null)
   const [loading, setLoading] = useState(true)
-  const [, setTick] = useState(0)
+  const [error, setError] = useState<string | null>(null)
+  const [hideCodeshare, setHideCodeshare] = useState(true)
 
-  const now = getNow()
-
-  const load = useCallback(async () => {
+  const load = useCallback(async (code: string, d: string) => {
+    setLoading(true)
+    setError(null)
     try {
-      const date = localDateStr()
-      const all = await api.get<RawFlight[]>(`/flights?date=${date}&limit=500`)
-      setFlights(all)
-    } catch {
-
+      const res = await api.get<StatusResponse>(`/flight-status?code=${code}&date=${d}`)
+      setData(res)
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : '운항 현황을 불러오지 못했습니다.'
+      setError(msg)
+      setData(null)
     } finally {
       setLoading(false)
     }
   }, [])
 
   useEffect(() => {
-    load()
-    const tickInterval  = setInterval(() => setTick(t => t + 1), 60_000)
-    const reloadInterval = setInterval(load, 5 * 60_000)
-    return () => { clearInterval(tickInterval); clearInterval(reloadInterval) }
-  }, [load])
+    load(airportCode, date)
+  }, [load, airportCode, date])
 
-  const today = new Date().toLocaleDateString('ko-KR', {
-    year: 'numeric', month: 'long', day: 'numeric', weekday: 'short',
-  })
-  const currentTime = new Date().toLocaleTimeString('ko-KR', {
-    hour: '2-digit', minute: '2-digit',
-  })
+  useEffect(() => {
+    const interval = setInterval(() => load(airportCode, date), 5 * 60_000)
+    return () => clearInterval(interval)
+  }, [load, airportCode, date])
 
-  const depFlights = flights.filter(f => f.from_code === 'ICN')
-  const arrFlights = flights.filter(f => f.to_code === 'ICN')
+  const airportLabel = AIRPORT_OPTIONS.find(a => a.code === airportCode)?.label ?? airportCode
 
-  const depWithStatus = depFlights.map(f => ({
-    ...f,
-    _status: computeDepStatus(f.depart_time, f.is_cancelled, now),
-    _gate: getDepGate(f),
-  }))
+  const applyCodeshareFilter = (list: StatusFlight[]) =>
+    hideCodeshare ? list.filter(f => !f.is_codeshare) : list
 
-  const arrWithStatus = arrFlights.map(f => ({
-    ...f,
-    _status: computeArrStatus(f.depart_time, f.arrival_time, f.is_cancelled, now),
-    _gate: getArrGate(f),
-  }))
+  const departures = applyCodeshareFilter(data?.departures ?? [])
+  const arrivals = applyCodeshareFilter(data?.arrivals ?? [])
 
-  const depFiltered = depWithStatus
-    .filter(f => depFilter ? f._status === depFilter : true)
-    .sort((a, b) => a.depart_time.localeCompare(b.depart_time))
-
-  const arrFiltered = arrWithStatus
-    .filter(f => arrFilter ? f._status === arrFilter : true)
-    .sort((a, b) => a.arrival_time.localeCompare(b.arrival_time))
-
-  const depCounts = {
-    ontime:   depWithStatus.filter(f => f._status === 'ontime').length,
-    boarding: depWithStatus.filter(f => f._status === 'boarding').length,
-    departed: depWithStatus.filter(f => f._status === 'departed').length,
-    cancelled: depWithStatus.filter(f => f._status === 'cancelled').length,
+  const counts = {
+    dep: departures.length,
+    arr: arrivals.length,
+    cancelled: (tab === 'dep' ? departures : arrivals).filter(f => f.is_cancelled).length,
+    delayed: (tab === 'dep' ? departures : arrivals).filter(f => statusCss(f) === 'delayed').length,
   }
-  const arrCounts = {
-    scheduled: arrWithStatus.filter(f => f._status === 'scheduled').length,
-    in_flight: arrWithStatus.filter(f => f._status === 'in_flight').length,
-    arriving:  arrWithStatus.filter(f => f._status === 'arriving').length,
-    arrived:   arrWithStatus.filter(f => f._status === 'arrived').length,
-    cancelled: arrWithStatus.filter(f => f._status === 'cancelled').length,
+
+  const rows = [...(tab === 'dep' ? departures : arrivals)].sort((a, b) =>
+    (a.scheduled_local ?? '').localeCompare(b.scheduled_local ?? '')
+  )
+
+  function handleSearch(e: React.FormEvent) {
+    e.preventDefault()
+    load(airportCode, date)
   }
 
   return (
     <main className="fs-page">
       <div className="fs-hero">
         <div className="fs-hero-inner">
-          <h1>항공편 현황</h1>
-          <p>{today} · 현재 {currentTime} 기준 자동 업데이트</p>
+          <h1>운항 현황</h1>
+          <p>실시간 데이터 · AeroDataBox 제공</p>
 
-          {tab === 'dep' ? (
-            <div className="fs-summary">
-              <div className="fs-summary-item"><span className="fs-summary-num">{depCounts.ontime}</span><span>정시</span></div>
-              <div className="fs-summary-item boarding"><span className="fs-summary-num">{depCounts.boarding}</span><span>탑승 중</span></div>
-              <div className="fs-summary-item departed"><span className="fs-summary-num">{depCounts.departed}</span><span>출발 완료</span></div>
-              <div className="fs-summary-item cancelled"><span className="fs-summary-num">{depCounts.cancelled}</span><span>결항</span></div>
+          <form className="fs-search-form" onSubmit={handleSearch}>
+            <select
+              className="fs-search-select"
+              value={airportCode}
+              onChange={e => setAirportCode(e.target.value)}
+            >
+              {['출발', '국내', ...INTL_REGIONS.map(r => r.region)].map(group => (
+                <optgroup key={group} label={group}>
+                  {AIRPORT_OPTIONS.filter(a => a.group === group).map(a => (
+                    <option key={a.code} value={a.code}>{a.code} · {a.label}</option>
+                  ))}
+                </optgroup>
+              ))}
+            </select>
+            <div className="fs-search-date">
+              <DatePicker value={date} onChange={setDate} />
             </div>
-          ) : (
-            <div className="fs-summary">
-              <div className="fs-summary-item scheduled"><span className="fs-summary-num">{arrCounts.scheduled}</span><span>출발 전</span></div>
-              <div className="fs-summary-item in-flight"><span className="fs-summary-num">{arrCounts.in_flight}</span><span>비행 중</span></div>
-              <div className="fs-summary-item arriving"><span className="fs-summary-num">{arrCounts.arriving}</span><span>도착 예정</span></div>
-              <div className="fs-summary-item arrived"><span className="fs-summary-num">{arrCounts.arrived}</span><span>도착 완료</span></div>
-              <div className="fs-summary-item cancelled"><span className="fs-summary-num">{arrCounts.cancelled}</span><span>결항</span></div>
-            </div>
-          )}
+            <button type="submit" className="fs-search-btn" disabled={loading}>조회</button>
+          </form>
+
+          <div className="fs-summary">
+            <div className="fs-summary-item"><span className="fs-summary-num">{tab === 'dep' ? counts.dep : counts.arr}</span><span>전체</span></div>
+            <div className="fs-summary-item"><span className="fs-summary-num">{counts.delayed}</span><span>지연</span></div>
+            <div className="fs-summary-item cancelled"><span className="fs-summary-num">{counts.cancelled}</span><span>결항</span></div>
+          </div>
         </div>
       </div>
 
       <div className="fs-body">
         <div className="fs-tabs">
           <button className={`fs-tab${tab === 'dep' ? ' active' : ''}`} onClick={() => setTab('dep')}>
-            ✈ 출발편 <span className="fs-tab-count">{depFlights.length}</span>
+            ✈ 출발편 <span className="fs-tab-count">{departures.length}</span>
           </button>
           <button className={`fs-tab${tab === 'arr' ? ' active' : ''}`} onClick={() => setTab('arr')}>
-            🛬 도착편 <span className="fs-tab-count">{arrFlights.length}</span>
+            🛬 도착편 <span className="fs-tab-count">{arrivals.length}</span>
           </button>
         </div>
 
-        {tab === 'dep' ? (
-          <>
-            <div className="fs-filters">
-              {DEP_FILTERS.map(s => (
-                <button key={s.key} className={`fs-filter${depFilter === s.key ? ' active' : ''}`}
-                  onClick={() => setDepFilter(s.key)}>{s.label}</button>
-              ))}
-            </div>
+        <div className="fs-airport-row">
+          <p className="fs-airport-label">{airportCode} · {airportLabel} · {date}</p>
+          <label className="fs-codeshare-toggle">
+            <input
+              type="checkbox"
+              checked={hideCodeshare}
+              onChange={e => setHideCodeshare(e.target.checked)}
+            />
+            코드셰어 편 숨기기
+          </label>
+        </div>
 
-            <div className="fs-table-wrap">
-            <div className="fs-table">
-              <div className="fs-table-head">
-                <span>편명</span><span>목적지</span><span>출발</span><span>도착(현지)</span><span>상태</span><span>게이트</span>
-              </div>
-              {loading ? (
-                <div className="fs-empty">불러오는 중...</div>
-              ) : depFiltered.length === 0 ? (
-                <div className="fs-empty">해당 조건의 항공편이 없습니다.</div>
-              ) : depFiltered.map(f => (
-                <div key={f.id} className={`fs-row${f._status === 'cancelled' ? ' cancelled' : ''}${f._status === 'departed' ? ' departed-row' : ''}`}>
-                  <span className="fs-no">{f.flight_no}</span>
-                  <span className="fs-dest">{f.to_city} <em>{f.to_code}</em></span>
-                  <span className="fs-time">{f.depart_time}</span>
-                  <span className="fs-time">{f.arrival_time}</span>
-                  <span><span className={`fs-status fs-status--${f._status}`}>{DEP_STATUS_META[f._status].label}</span></span>
-                  <span className="fs-gate">{f._gate}</span>
+        <div className="fs-table-wrap">
+          <div className="fs-table">
+            <div className="fs-table-head">
+              <span>편명</span>
+              <span>{tab === 'dep' ? '목적지' : '출발지'}</span>
+              <span>예정</span>
+              <span>변경/실제</span>
+              <span>상태</span>
+              <span>터미널/게이트</span>
+            </div>
+            {loading ? (
+              <div className="fs-empty">불러오는 중...</div>
+            ) : error ? (
+              <div className="fs-empty fs-error">{error}</div>
+            ) : rows.length === 0 ? (
+              <div className="fs-empty">해당 조건의 항공편이 없습니다.</div>
+            ) : rows.map((f, i) => {
+              const mv = movementTime(f)
+              const gateInfo = [f.terminal, f.gate].filter(Boolean).join(' / ') || '정보 없음'
+              return (
+                <div key={`${f.flight_no}-${i}`} className={`fs-row${f.is_cancelled ? ' cancelled' : ''}`}>
+                  <span className="fs-no">{f.flight_no ?? '-'}<br /><em className="fs-airline">{f.airline}</em></span>
+                  <span className="fs-dest">{f.other_city ?? '-'} <em>{f.other_code ?? ''}</em></span>
+                  <span className="fs-time">{fmtTime(f.scheduled_local)}</span>
+                  <span className={`fs-time${mv.changed ? ' fs-arr-time' : ''}`}>{mv.label}</span>
+                  <span><span className={`fs-status fs-status--${statusCss(f)}`}>{statusLabel(f)}</span></span>
+                  <span className="fs-gate">{gateInfo}</span>
                 </div>
-              ))}
-            </div>
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="fs-filters">
-              {ARR_FILTERS.map(s => (
-                <button key={s.key} className={`fs-filter${arrFilter === s.key ? ' active' : ''}`}
-                  onClick={() => setArrFilter(s.key)}>{s.label}</button>
-              ))}
-            </div>
-
-            <div className="fs-table-wrap">
-            <div className="fs-table">
-              <div className="fs-table-head">
-                <span>편명</span><span>출발지</span><span>현지 출발</span><span>인천 도착</span><span>상태</span><span>게이트</span>
-              </div>
-              {loading ? (
-                <div className="fs-empty">불러오는 중...</div>
-              ) : arrFiltered.length === 0 ? (
-                <div className="fs-empty">해당 조건의 항공편이 없습니다.</div>
-              ) : arrFiltered.map(f => (
-                <div key={f.id} className={`fs-row${f._status === 'cancelled' ? ' cancelled' : ''}${f._status === 'arrived' ? ' departed-row' : ''}`}>
-                  <span className="fs-no">{f.flight_no}</span>
-                  <span className="fs-dest">{f.from_city} <em>{f.from_code}</em></span>
-                  <span className="fs-time">{f.depart_time}</span>
-                  <span className="fs-time fs-arr-time">{f.arrival_time}</span>
-                  <span><span className={`fs-status fs-status--${f._status}`}>{ARR_STATUS_META[f._status].label}</span></span>
-                  <span className="fs-gate">{f._gate}</span>
-                </div>
-              ))}
-            </div>
-            </div>
-          </>
-        )}
+              )
+            })}
+          </div>
+        </div>
       </div>
     </main>
   )
