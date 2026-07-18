@@ -881,9 +881,33 @@ export default function Nextrip({ user, onGoLogin }: Props) {
     const summary = planDetail.plan_data?.summary ?? ''
     const recommendationBasis = planDetail.plan_data?.recommendation_basis ?? []
 
+    function fallbackCopy(url: string): boolean {
+      const textarea = document.createElement('textarea')
+      textarea.value = url
+      textarea.style.position = 'fixed'
+      textarea.style.opacity = '0'
+      document.body.appendChild(textarea)
+      textarea.select()
+      let ok = false
+      try { ok = document.execCommand('copy') } catch { ok = false }
+      document.body.removeChild(textarea)
+      return ok
+    }
+
+    function notifyCopyResult(ok: boolean) {
+      toast(ok ? '링크가 복사되었습니다!' : '링크 복사에 실패했습니다. 주소창 URL을 직접 복사해주세요.', ok ? 'success' : 'error')
+    }
+
     function handleShare() {
-      navigator.clipboard.writeText(window.location.href).catch(() => {})
-      toast('링크가 복사되었습니다!', 'success')
+      const url = window.location.href
+      if (navigator.clipboard?.writeText) {
+        navigator.clipboard.writeText(url).then(
+          () => notifyCopyResult(true),
+          () => notifyCopyResult(fallbackCopy(url)),
+        )
+      } else {
+        notifyCopyResult(fallbackCopy(url))
+      }
     }
 
     return (

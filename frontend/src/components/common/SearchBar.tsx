@@ -4,9 +4,9 @@ import DatePicker from './DatePicker';
 import type { SearchParams } from '../../types';
 import { useToast } from './ToastProvider';
 
-const FROM_AIRPORTS = [{ code: 'ICN', city: '서울', name: '인천국제공항' }];
+export const FROM_AIRPORTS = [{ code: 'ICN', city: '서울', name: '인천국제공항' }];
 
-const DOMESTIC = [
+export const DOMESTIC = [
     { code: 'GMP', city: '서울', name: '김포국제공항' },
     { code: 'CJU', city: '제주', name: '제주국제공항' },
     { code: 'PUS', city: '부산', name: '김해국제공항' },
@@ -16,7 +16,7 @@ const DOMESTIC = [
     { code: 'RSU', city: '여수', name: '여수공항' },
 ];
 
-const INTL_REGIONS = [
+export const INTL_REGIONS = [
     {
         region: '아시아',
         airports: [
@@ -76,7 +76,7 @@ const INTL_REGIONS = [
     },
 ];
 
-type Airport = { code: string; city: string; name: string; country?: string };
+export type Airport = { code: string; city: string; name: string; country?: string };
 
 function findAirport(code: string): Airport | null {
     const from = FROM_AIRPORTS.find((a) => a.code === code);
