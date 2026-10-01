@@ -4,9 +4,24 @@ from app.core.config import settings
 from app.api.v1 import api_router
 from app.db.database import create_tables
 
-app = FastAPI(title=settings.PROJECT_NAME)
+import logging
+from contextlib import asynccontextmanager
 
-create_tables()
+logger = logging.getLogger(__name__)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # 예전에는 모듈을 불러오는 순간 테이블 생성(DB 접속)을 해서 DB가 잠깐만 안 돼도 서버 자체가 뜨지 않았다.
+    # 이제 서버 시작 단계에서 시도하고, 실패해도 서버는 띄운 채 로그만 남긴다 (/health 등은 정상 응답).
+    try:
+        create_tables()
+    except Exception as e:
+        logger.error("DB 테이블 생성/연결 실패 — DB 설정을 확인하세요: %r", e)
+    yield
+
+
+app = FastAPI(title=settings.PROJECT_NAME, lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
