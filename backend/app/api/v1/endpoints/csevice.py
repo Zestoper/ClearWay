@@ -127,7 +127,7 @@ def ai_chat(body: AIChatRequest):
             raise HTTPException(status_code=500, detail="GOOGLE_API_KEY 미설정")
         contents = [{"role": "user" if m["role"] == "user" else "model", "parts": [{"text": m["content"]}]} for m in msgs]
         resp = httpx.post(
-            f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={settings.GOOGLE_API_KEY}",
+            f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key={settings.GOOGLE_API_KEY}",
             json={"contents": contents, "systemInstruction": {"parts": [{"text": _CS_SYSTEM}]}},
             timeout=30.0,
         )

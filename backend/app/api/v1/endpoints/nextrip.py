@@ -137,7 +137,7 @@ def _call_gemini(prompt: str, system: str = SYSTEM_PROMPT) -> str:
         raise ValueError("GOOGLE_API_KEY가 설정되지 않았습니다.\nhttps://aistudio.google.com 에서 무료 API 키를 발급받아 .env에 추가하세요.")
     full_prompt = f"{system}\n\n{prompt}"
     resp = httpx.post(
-        f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={settings.GOOGLE_API_KEY}",
+        f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key={settings.GOOGLE_API_KEY}",
         json={
             "contents": [{"parts": [{"text": full_prompt}]}],
             "generationConfig": {"responseMimeType": "application/json", "maxOutputTokens": 32768},
