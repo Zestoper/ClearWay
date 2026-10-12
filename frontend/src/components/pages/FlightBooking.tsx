@@ -7,6 +7,7 @@ import type { Flight } from '../../services/flights'
 import type { User } from '../../services/auth'
 import { api } from '../../services/api'
 import { useToast } from '../common/ToastProvider'
+import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, Bot, Check, MapPin, MessageSquare, Plane, X } from 'lucide-react'
 
 type SortKey = 'price' | 'departure' | 'duration'
 type SortDir = 'asc' | 'desc'
@@ -54,35 +55,6 @@ function countryOf(code: string): string {
   return COUNTRY_MAP[code] ?? ''
 }
 
-const FLAG_MAP: Record<string, string> = {
-  ICN: '🇰🇷', GMP: '🇰🇷', PUS: '🇰🇷', CJU: '🇰🇷',
-  NRT: '🇯🇵', HND: '🇯🇵', KIX: '🇯🇵', FUK: '🇯🇵', OKA: '🇯🇵', NGO: '🇯🇵', CTS: '🇯🇵',
-  PEK: '🇨🇳', PVG: '🇨🇳', CAN: '🇨🇳', CTU: '🇨🇳', XIY: '🇨🇳',
-  TPE: '🇹🇼', HKG: '🇭🇰',
-  BKK: '🇹🇭', DMK: '🇹🇭',
-  SIN: '🇸🇬',
-  MNL: '🇵🇭', CEB: '🇵🇭',
-  KUL: '🇲🇾',
-  HAN: '🇻🇳', SGN: '🇻🇳', DAD: '🇻🇳',
-  DPS: '🇮🇩', CGK: '🇮🇩',
-  LAX: '🇺🇸', JFK: '🇺🇸', SFO: '🇺🇸', ORD: '🇺🇸', SEA: '🇺🇸',
-  YVR: '🇨🇦', YYZ: '🇨🇦',
-  LHR: '🇬🇧',
-  CDG: '🇫🇷',
-  FRA: '🇩🇪',
-  AMS: '🇳🇱',
-  FCO: '🇮🇹',
-  MAD: '🇪🇸', BCN: '🇪🇸',
-  SYD: '🇦🇺', MEL: '🇦🇺',
-  AKL: '🇳🇿',
-  DXB: '🇦🇪',
-  DOH: '🇶🇦',
-  NBO: '🇰🇪',
-}
-
-function flagOf(code: string): string {
-  return FLAG_MAP[code] ?? '✈️'
-}
 
 interface Props {
   onBook: (flight: BookingFlight) => void
@@ -359,7 +331,7 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
           </div>
           {isRoundtrip && bookingStep === 'return' && (
             <button className="route-back-btn" onClick={() => { setBookingStep('outbound'); setSelectedReturnId(null) }}>
-              ← 가는 편 다시 선택
+             <ArrowLeft size="1em" /> 가는 편 다시 선택
             </button>
           )}
         </div>
@@ -405,7 +377,7 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9l6 6 6-6"/></svg>
                 </button>
                 {destFilter && (
-                  <button className="dest-modal-clear" onClick={() => setDestFilter('')}>✕ 선택 해제</button>
+                  <button className="dest-modal-clear" onClick={() => setDestFilter('')}><X size="1em" /> 선택 해제</button>
                 )}
               </div>
             </>
@@ -423,7 +395,7 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
               <button className={isRoundtrip ? 'active' : ''} onClick={toggleTripType}>왕복</button>
             </div>
             {isRoundtrip && !!outboundFlight && !selectedReturnId && (
-              <p className="roundtrip-required-notice">✈ 왕복 예약 — 오는편도 선택해주세요</p>
+              <p className="roundtrip-required-notice"><Plane size="1em" /> 왕복 예약 — 오는편도 선택해주세요</p>
             )}
           </div>
 
@@ -488,10 +460,10 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
             <div className="rec-banner">
               <span>어디로 갈지 모르겠다면?</span>
               <button className="rec-banner-btn" onClick={() => { setRecResults(null); setRecOpen(true) }}>
-                🤖 AI 여행지 추천받기
+               <Bot size="1em" /> AI 여행지 추천받기
               </button>
               <button className="rec-banner-btn flight-rec-btn" onClick={() => { setFlightRecResults(null); setFlightRecQuery(''); setFlightRecOpen(true) }}>
-                ✈️ AI 항공편 추천
+               <Plane size="1em" /> AI 항공편 추천
               </button>
             </div>
           )}
@@ -510,7 +482,7 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
                   className={`dest-chip ${destFilter === d.code ? 'active' : ''}`}
                   onClick={() => setDestFilter(prev => prev === d.code ? '' : d.code)}
                 >
-                  <span className="dest-chip-flag">{flagOf(d.code)}</span>
+                  
                   {d.city}
                   <span className="dest-chip-code">{d.code}</span>
                 </button>
@@ -530,7 +502,7 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
                   onClick={() => toggleSort(key)}
                 >
                   {key === 'departure' ? '출발시간' : key === 'price' ? '가격' : '소요시간'}
-                  {sortBy === key && <span className="sort-arrow">{sortDir === 'asc' ? ' ↑' : ' ↓'}</span>}
+                  {sortBy === key && <span className="sort-arrow">{sortDir === 'asc' ? <ArrowUp size="1em" /> : <ArrowDown size="1em" />}</span>}
                 </button>
               ))}
             </div>
@@ -561,7 +533,7 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
                   <div className="route-point">
                     <span className="flight-time">{flight.depart_time}</span>
                     <span className="flight-city">{flight.from_code}</span>
-                    <span className="flight-airport"><span className="flight-flag">{flagOf(flight.from_code)}</span>{flight.from_airport}</span>
+                    <span className="flight-airport">{flight.from_airport}</span>
                   </div>
 
                   <div className="route-line">
@@ -583,7 +555,7 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
                   <div className="route-point right">
                     <span className="flight-time">{flight.arrival_time}</span>
                     <span className="flight-city">{flight.to_code}</span>
-                    <span className="flight-airport">{flight.to_airport}<span className="flight-flag">{flagOf(flight.to_code)}</span></span>
+                    <span className="flight-airport">{flight.to_airport}</span>
                   </div>
                 </div>
 
@@ -606,7 +578,7 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
                       }
                     }}
                   >
-                    {isSelected ? '선택됨 ✓' : (isRoundtrip && bookingStep === 'outbound' ? '이 편 선택' : '선택')}
+                    {isSelected ? <>선택됨 <Check size="1em" /></> : (isRoundtrip && bookingStep === 'outbound' ? '이 편 선택' : '선택')}
                   </button>
                 </div>
               </div>
@@ -636,7 +608,7 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
                   </div>
                   <div className="booking-bar-right">
                     <span className="bb-price">₩{total.toLocaleString()}</span>
-                    <button className="bb-btn" onClick={handleBook}>예약 진행 →</button>
+                    <button className="bb-btn" onClick={handleBook}>예약 진행 <ArrowRight size="1em" /></button>
                   </div>
                 </div>
               </div>
@@ -661,7 +633,7 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
               </div>
               <div className="booking-bar-right">
                 <span className="bb-price">₩{price(f).toLocaleString()}</span>
-                <button className="bb-btn" onClick={handleBook}>예약 진행 →</button>
+                <button className="bb-btn" onClick={handleBook}>예약 진행 <ArrowRight size="1em" /></button>
               </div>
             </div>
           </div>
@@ -684,7 +656,7 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
             <div className="dest-modal" onClick={e => e.stopPropagation()}>
               <div className="dest-modal-header">
                 <h3>여행지 선택</h3>
-                <button className="dest-modal-close" onClick={() => setDestModalOpen(false)}>✕</button>
+                <button className="dest-modal-close" onClick={() => setDestModalOpen(false)}><X size="1em" /></button>
               </div>
               <div className="dest-modal-search-wrap">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
@@ -695,12 +667,12 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
                   onChange={e => setModalSearch(e.target.value)}
                   autoFocus
                 />
-                {modalSearch && <button className="dest-modal-search-clear" onClick={() => setModalSearch('')}>✕</button>}
+                {modalSearch && <button className="dest-modal-search-clear" onClick={() => setModalSearch('')}><X size="1em" /></button>}
               </div>
               <div className="dest-modal-body">
                 {destFilter && (
                   <button className="dest-modal-reset" onClick={() => { setDestFilter(''); setDestModalOpen(false) }}>
-                    ✕ 선택 해제 — 전체 보기
+                   <X size="1em" /> 선택 해제 — 전체 보기
                   </button>
                 )}
                 {groupedDests.length === 0 ? (
@@ -716,7 +688,7 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
                             className={`dest-modal-item ${destFilter === d.code ? 'active' : ''}`}
                             onClick={() => { setDestFilter(d.code); setDestModalOpen(false) }}
                           >
-                            <span className="dest-modal-flag">{flagOf(d.code)}</span>
+                            
                             <span className="dest-modal-city">{d.city}</span>
                             <span className="dest-modal-code">{d.code}</span>
                           </button>
@@ -735,8 +707,8 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
         <div className="rec-overlay" onClick={() => setFlightRecOpen(false)}>
           <div className="rec-modal" onClick={e => e.stopPropagation()}>
             <div className="rec-modal-head">
-              <h2>✈️ AI 항공편 추천</h2>
-              <button className="rec-close" onClick={() => setFlightRecOpen(false)}>✕</button>
+              <h2><Plane size="1em" /> AI 항공편 추천</h2>
+              <button className="rec-close" onClick={() => setFlightRecOpen(false)}><X size="1em" /></button>
             </div>
 
             {!flightRecResults ? (
@@ -756,7 +728,7 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
                   onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); fetchFlightRecommend() } }}
                 />
                 <button className="rec-submit" onClick={fetchFlightRecommend} disabled={flightRecLoading || !flightRecQuery.trim()}>
-                  {flightRecLoading ? 'AI가 추천 중...' : '✨ 추천받기'}
+                  {flightRecLoading ? 'AI가 추천 중...' : '추천받기'}
                 </button>
               </div>
             ) : (
@@ -789,13 +761,13 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
                       <span className="flight-rec-date">{r.date}</span>
                       <span className="flight-rec-price">₩{r.economy_price.toLocaleString()}</span>
                     </div>
-                    <p className="flight-rec-reason">💬 {r.reason}</p>
+                    <p className="flight-rec-reason"><MessageSquare size="1em" /> {r.reason}</p>
                     <button className="rec-apply" onClick={() => { setDestFilter(r.to_code); setFlightRecOpen(false) }}>
                       이 항공편 보기
                     </button>
                   </div>
                 ))}
-                <button className="rec-retry" onClick={() => setFlightRecResults(null)}>← 다시 입력</button>
+                <button className="rec-retry" onClick={() => setFlightRecResults(null)}><ArrowLeft size="1em" /> 다시 입력</button>
               </div>
             )}
           </div>
@@ -806,8 +778,8 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
         <div className="rec-overlay" onClick={() => { setRecOpen(false); setRecFlightDest(null) }}>
           <div className="rec-modal" onClick={e => e.stopPropagation()}>
             <div className="rec-modal-head">
-              <h2>🤖 AI 여행지 추천</h2>
-              <button className="rec-close" onClick={() => { setRecOpen(false); setRecFlightDest(null) }}>✕</button>
+              <h2><Bot size="1em" /> AI 여행지 추천</h2>
+              <button className="rec-close" onClick={() => { setRecOpen(false); setRecFlightDest(null) }}><X size="1em" /></button>
             </div>
 
             {!recResults ? (
@@ -823,7 +795,7 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
                 <div className="rec-field">
                   <label>예산 수준</label>
                   <div className="rec-chips">
-                    {[['budget', '💰 저예산'], ['normal', '💳 일반'], ['premium', '💎 프리미엄']].map(([v, l]) => (
+                    {[['budget', '저예산'], ['normal', '일반'], ['premium', '프리미엄']].map(([v, l]) => (
                       <button key={v} className={`rec-chip ${recBudget === v ? 'active' : ''}`} onClick={() => setRecBudget(v)}>{l}</button>
                     ))}
                   </div>
@@ -831,27 +803,27 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
                 <div className="rec-field">
                   <label>여행 테마 <span>(복수 선택)</span></label>
                   <div className="rec-chips">
-                    {[['자연/힐링','🌿'],['맛집탐방','🍜'],['문화/역사','🏛'],['액티비티','🎯'],['해변/휴양','🏖'],['쇼핑','🛍'],['야경','🌃']].map(([v, e]) => (
+                    {['자연/힐링','맛집탐방','문화/역사','액티비티','해변/휴양','쇼핑','야경'].map((v) => (
                       <button
                         key={v}
                         className={`rec-chip ${recVibes.includes(v) ? 'active' : ''}`}
                         onClick={() => setRecVibes(prev => prev.includes(v) ? prev.filter(x => x !== v) : [...prev, v])}
-                      >{e} {v}</button>
+                      >{v}</button>
                     ))}
                   </div>
                 </div>
                 <button className="rec-submit" onClick={fetchRecommend} disabled={recLoading}>
-                  {recLoading ? 'AI가 추천 중...' : '✨ 추천받기'}
+                  {recLoading ? 'AI가 추천 중...' : '추천받기'}
                 </button>
               </div>
             ) : recFlightDest ? (
               <div className="rec-results">
-                <button className="rec-retry" onClick={() => setRecFlightDest(null)}>← 다른 여행지 보기</button>
+                <button className="rec-retry" onClick={() => setRecFlightDest(null)}><ArrowLeft size="1em" /> 다른 여행지 보기</button>
                 <div className="rec-dest-header">
-                  <span className="rec-dest-emoji">{recFlightDest.emoji}</span>
+                  <span className="rec-dest-emoji"><MapPin size="1em" /></span>
                   <div>
                     <p className="rec-dest-name">{recFlightDest.city} <span className="rec-card-country">{recFlightDest.country}</span></p>
-                    <p className="rec-card-highlight">✦ {recFlightDest.highlight}</p>
+                    <p className="rec-card-highlight">{recFlightDest.highlight}</p>
                   </div>
                 </div>
                 {recDestFlights.length === 0 ? (
@@ -899,11 +871,11 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
                 {recResults.map((r, i) => (
                   <div key={i} className="rec-card">
                     <div className="rec-card-left">
-                      <span className="rec-emoji">{r.emoji}</span>
+                      <span className="rec-emoji"><MapPin size="1em" /></span>
                       <div>
                         <div className="rec-card-city">{r.city} <span className="rec-card-country">{r.country}</span></div>
                         <div className="rec-card-reason">{r.reason}</div>
-                        <div className="rec-card-highlight">✦ {r.highlight}</div>
+                        <div className="rec-card-highlight">{r.highlight}</div>
                       </div>
                     </div>
                     <div className="rec-card-right">
@@ -912,7 +884,7 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
                     </div>
                   </div>
                 ))}
-                <button className="rec-retry" onClick={() => setRecResults(null)}>← 다시 선택</button>
+                <button className="rec-retry" onClick={() => setRecResults(null)}><ArrowLeft size="1em" /> 다시 선택</button>
               </div>
             )}
           </div>

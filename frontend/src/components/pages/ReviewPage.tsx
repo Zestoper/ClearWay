@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import './ReviewPage.css'
 import { api } from '../../services/api'
 import type { User } from '../../services/auth'
+import { ArrowLeft, Check, Plane, Star } from 'lucide-react'
 
 interface Props {
   user: User | null
@@ -27,7 +28,7 @@ function Stars({ value, onChange }: { value: number; onChange?: (n: number) => v
           onMouseEnter={() => onChange && setHover(n)}
           onMouseLeave={() => onChange && setHover(0)}
           onClick={() => onChange?.(n)}
-        >★</button>
+        ><Star size="1em" fill="currentColor" /></button>
       ))}
       <span className="rv-stars-label">
         {value === 1 ? '매우 불만족' : value === 2 ? '불만족' : value === 3 ? '보통' : value === 4 ? '만족' : value === 5 ? '매우 만족' : ''}
@@ -102,7 +103,7 @@ export default function ReviewPage({ user, onGoLogin, onGoHome }: Props) {
       <div className="rv-topbar"><div className="rv-topbar-inner"><h1>후기 작성</h1></div></div>
       <div className="rv-body">
         <div className="rv-card rv-done-card">
-          <div className="rv-done-icon">✓</div>
+          <div className="rv-done-icon"><Check size="1em" /></div>
           <h2>후기가 등록되었습니다!</h2>
           <p>소중한 의견 감사합니다. 더 나은 서비스를 위해 노력하겠습니다.</p>
           <button className="rv-submit-btn" onClick={onGoHome}>홈으로 돌아가기</button>
@@ -115,14 +116,14 @@ export default function ReviewPage({ user, onGoLogin, onGoHome }: Props) {
     <main className="rv-page">
       <div className="rv-topbar">
         <div className="rv-topbar-inner">
-          <button className="rv-back-btn" onClick={onGoHome}>← 홈으로</button>
+          <button className="rv-back-btn" onClick={onGoHome}><ArrowLeft size="1em" /> 홈으로</button>
           <h1>이용 후기 작성</h1>
         </div>
       </div>
       <div className="rv-body">
         <div className="rv-card">
           <div className="rv-card-header">
-            <span className="rv-card-icon">✈️</span>
+            <span className="rv-card-icon"><Plane size="1em" /></span>
             <div>
               <h2>항공편 후기 작성</h2>
               <p>탑승하신 항공편을 선택하고 후기를 남겨주세요.</p>
@@ -131,7 +132,7 @@ export default function ReviewPage({ user, onGoLogin, onGoHome }: Props) {
 
           {!loadingBookings && bookings.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '40px 0', color: '#6b7280' }}>
-              <p style={{ fontSize: 36, marginBottom: 12 }}>✈️</p>
+              <p style={{ fontSize: 36, marginBottom: 12 }}><Plane size="1em" /></p>
               <p style={{ fontWeight: 700, marginBottom: 8 }}>탑승 내역이 없습니다</p>
               <p style={{ fontSize: 14, marginBottom: 24 }}>CLEARWAY를 이용하신 후 후기를 남겨주세요.</p>
               <button className="rv-submit-btn" style={{ width: 'auto', padding: '10px 28px' }} onClick={onGoHome}>항공편 예약하러 가기</button>

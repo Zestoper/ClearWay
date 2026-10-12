@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import './NoticeEventPage.css'
 import { api } from '../../services/api'
+import { X } from 'lucide-react'
 
 interface Notice {
   id: number
@@ -98,7 +99,7 @@ export default function NoticeEventPage() {
       {selected && (
         <div className="notice-modal-overlay" onClick={() => setSelected(null)}>
           <div className="notice-modal" onClick={e => e.stopPropagation()}>
-            <button className="notice-modal-close" onClick={() => setSelected(null)}>✕</button>
+            <button className="notice-modal-close" onClick={() => setSelected(null)}><X size="1em" /></button>
             <div className="notice-modal-top">
               {selected.badge && (
                 <span className="notice-badge" style={badgeStyle(selected.badge)}>{selected.badge}</span>

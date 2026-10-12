@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import './ReviewPage.css'
 import './ReviewsListPage.css'
 import { api } from '../../services/api'
+import { ArrowLeft, ArrowRight, Bot, Star, User } from 'lucide-react'
 
 interface Props {
   onGoHome: () => void
@@ -25,7 +26,7 @@ function Stars({ value }: { value: number }) {
   return (
     <span className="rl-stars">
       {[1,2,3,4,5].map(n => (
-        <span key={n} className={n <= value ? 'rl-star filled' : 'rl-star'}>★</span>
+        <span key={n} className={n <= value ? 'rl-star filled' : 'rl-star'}><Star size="1em" fill="currentColor" /></span>
       ))}
     </span>
   )
@@ -61,7 +62,7 @@ export default function ReviewsListPage({ onGoHome, onGoWrite }: Props) {
     <main className="rv-page">
       <div className="rv-topbar">
         <div className="rv-topbar-inner" style={{ maxWidth: 900 }}>
-          <button className="rv-back-btn" onClick={onGoHome}>← 홈으로</button>
+          <button className="rv-back-btn" onClick={onGoHome}><ArrowLeft size="1em" /> 홈으로</button>
           <h1>이용 후기</h1>
         </div>
       </div>
@@ -113,7 +114,7 @@ export default function ReviewsListPage({ onGoHome, onGoWrite }: Props) {
             {paginated.map(r => (
               <div key={r.id} className="rl-card">
                 <div className="rl-card-top">
-                  <span className="rl-avatar">{r.review_type === 'ai' ? '🤖' : '👤'}</span>
+                  <span className="rl-avatar">{r.review_type === 'ai' ? <Bot size="1em" /> : <User size="1em" />}</span>
                   <div className="rl-card-meta">
                     <span className="rl-user">{r.user_name}</span>
                     {r.review_type === 'ai'
@@ -128,7 +129,7 @@ export default function ReviewsListPage({ onGoHome, onGoWrite }: Props) {
                 </div>
                 {(r.route || r.plan_destination) && (
                   <p className="rl-route">
-                    {r.review_type === 'ai' ? `✈ ${r.plan_destination}` : `✈ ${r.route}`}
+                    {r.review_type === 'ai' ? `${r.plan_destination}` : `${r.route}`}
                   </p>
                 )}
                 <p className="rl-text">{r.text}</p>
@@ -139,11 +140,11 @@ export default function ReviewsListPage({ onGoHome, onGoWrite }: Props) {
 
         {totalPages > 1 && (
           <div className="rl-pagination">
-            <button className="rl-page-btn" disabled={page === 1} onClick={() => setPage(p => p - 1)}>← 이전</button>
+            <button className="rl-page-btn" disabled={page === 1} onClick={() => setPage(p => p - 1)}><ArrowLeft size="1em" /> 이전</button>
             {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
               <button key={p} className={`rl-page-btn ${page === p ? 'active' : ''}`} onClick={() => setPage(p)}>{p}</button>
             ))}
-            <button className="rl-page-btn" disabled={page === totalPages} onClick={() => setPage(p => p + 1)}>다음 →</button>
+            <button className="rl-page-btn" disabled={page === totalPages} onClick={() => setPage(p => p + 1)}>다음 <ArrowRight size="1em" /></button>
           </div>
         )}
       </div>

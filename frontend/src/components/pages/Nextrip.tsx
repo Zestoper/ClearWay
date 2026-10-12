@@ -3,6 +3,8 @@ import './Nextrip.css'
 import { api } from '../../services/api'
 import type { User } from '../../services/auth'
 import { useToast } from '../common/ToastProvider'
+import { ArrowLeft, ArrowRight, Backpack, BadgeCheck, Calendar, Castle, Check, ChevronDown, ChevronUp, Coffee, Compass, CornerDownLeft, Fish, Heart, Hotel, House, Landmark, Lightbulb, Link2, Luggage, MapIcon, MapPin, Moon, NotebookPen, Pencil, Plane, Printer, Route, Ruler, Scale, ShoppingBag, Soup, Square, Star, StarHalf, Target, TrainFront, TreePalm, Users, UtensilsCrossed, Wallet, X, Zap } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 
 interface Props { user: User | null; onGoLogin: () => void }
 type NextripView = 'home' | 'survey' | 'generating' | 'plan'
@@ -57,13 +59,13 @@ interface SurveyForm {
 }
 
 const DESTINATIONS = [
-  { city: '도쿄', city_en: 'Tokyo', code: 'NRT', emoji: '🗼' },
-  { city: '오사카', city_en: 'Osaka', code: 'KIX', emoji: '🏯' },
-  { city: '후쿠오카', city_en: 'Fukuoka', code: 'FUK', emoji: '⛩️' },
-  { city: '방콕', city_en: 'Bangkok', code: 'BKK', emoji: '🛕' },
-  { city: '싱가포르', city_en: 'Singapore', code: 'SIN', emoji: '🌴' },
-  { city: '파리', city_en: 'Paris', code: 'CDG', emoji: '🗼' },
-  { city: '뉴욕', city_en: 'New York', code: 'JFK', emoji: '🗽' },
+  { city: '도쿄', city_en: 'Tokyo', code: 'NRT', icon: Landmark },
+  { city: '오사카', city_en: 'Osaka', code: 'KIX', icon: Castle },
+  { city: '후쿠오카', city_en: 'Fukuoka', code: 'FUK', icon: Landmark },
+  { city: '방콕', city_en: 'Bangkok', code: 'BKK', icon: Landmark },
+  { city: '싱가포르', city_en: 'Singapore', code: 'SIN', icon: TreePalm },
+  { city: '파리', city_en: 'Paris', code: 'CDG', icon: Landmark },
+  { city: '뉴욕', city_en: 'New York', code: 'JFK', icon: Landmark },
 ]
 
 const CITY_EN: Record<string, string> = {
@@ -78,22 +80,22 @@ const CITY_EN: Record<string, string> = {
 }
 
 const TRAVEL_TYPES = [
-  { id: 'food',     label: '🍜 맛집' },
-  { id: 'activity', label: '🎯 액티비티' },
-  { id: 'nature',   label: '🌿 자연/힐링' },
-  { id: 'shopping', label: '🛍 쇼핑' },
-  { id: 'history',  label: '🏛 역사/유적' },
-  { id: 'night',    label: '🌃 야경' },
+  { id: 'food',     label: '맛집' },
+  { id: 'activity', label: '액티비티' },
+  { id: 'nature',   label: '자연/힐링' },
+  { id: 'shopping', label: '쇼핑' },
+  { id: 'history',  label: '역사/유적' },
+  { id: 'night',    label: '야경' },
 ]
 
-const CAT_META: Record<string, { color: string; bg: string; icon: string }> = {
-  restaurant:    { color: '#ea580c', bg: '#fff7ed', icon: '🍽' },
-  cafe:          { color: '#7c3aed', bg: '#f5f3ff', icon: '☕' },
-  attraction:    { color: '#1d4ed8', bg: '#eff6ff', icon: '📍' },
-  transport:     { color: '#4b5563', bg: '#f9fafb', icon: '🚇' },
-  accommodation: { color: '#059669', bg: '#f0fdf4', icon: '🏨' },
-  shopping:      { color: '#db2777', bg: '#fdf2f8', icon: '🛍' },
-  activity:      { color: '#dc2626', bg: '#fef2f2', icon: '⚡' },
+const CAT_META: Record<string, { color: string; bg: string; icon: LucideIcon }> = {
+  restaurant:    { color: '#ea580c', bg: '#fff7ed', icon: UtensilsCrossed },
+  cafe:          { color: '#7c3aed', bg: '#f5f3ff', icon: Coffee },
+  attraction:    { color: '#1d4ed8', bg: '#eff6ff', icon: MapPin },
+  transport:     { color: '#4b5563', bg: '#f9fafb', icon: TrainFront },
+  accommodation: { color: '#059669', bg: '#f0fdf4', icon: Hotel },
+  shopping:      { color: '#db2777', bg: '#fdf2f8', icon: ShoppingBag },
+  activity:      { color: '#dc2626', bg: '#fef2f2', icon: Zap },
 }
 
 const STYLE_LABEL: Record<string, string> = { relaxed: '여유로운', normal: '일반', tight: '타이트한' }
@@ -130,7 +132,11 @@ function Stars({ rating }: { rating: number | null }) {
   const half = rating - full >= 0.5
   return (
     <span className="nx-stars">
-      {'★'.repeat(full)}{half ? '½' : ''}{'☆'.repeat(5 - full - (half ? 1 : 0))}
+      {[0, 1, 2, 3, 4].map(i => i < full
+        ? <Star key={i} size="1em" fill="currentColor" />
+        : i === full && half
+          ? <StarHalf key={i} size="1em" fill="currentColor" />
+          : <Star key={i} size="1em" />)}
       <span className="nx-rating-num">{rating.toFixed(1)}</span>
     </span>
   )
@@ -346,7 +352,7 @@ export default function Nextrip({ user, onGoLogin }: Props) {
     <main className="nx-page">
       <section className="nx-hero">
         <div className="nx-hero-inner">
-          <span className="nx-hero-badge">✦ NEXTRIP AI</span>
+          <span className="nx-hero-badge">NEXTRIP AI</span>
           <h1>AI가 설계하는<br />나만의 완벽한 여행</h1>
           <p>목적지·기간·취향만 알려주세요.<br />AI가 동선 최적화된 세세한 일정을 완성해 드립니다.</p>
           <div className="nx-price-callout">
@@ -356,28 +362,28 @@ export default function Nextrip({ user, onGoLogin }: Props) {
             </div>
             <ul className="nx-price-perks">
               <li>⏱ 직접 짜면 3~5시간 → AI는 <strong>30초</strong></li>
-              <li>✓ 커피 한 잔 값으로 완성하는 완벽한 여행</li>
-              <li>✓ 맛집·관광지·동선 모두 AI가 최적화</li>
+              <li><Check size="1em" /> 커피 한 잔 값으로 완성하는 완벽한 여행</li>
+              <li><Check size="1em" /> 맛집·관광지·동선 모두 AI가 최적화</li>
             </ul>
           </div>
           <div className="nx-hero-actions">
             <button className="nx-btn-primary" onClick={() => user ? startSurvey() : onGoLogin()}>
-              ✦ 여행 계획 시작하기 — ₩3,900
+              여행 계획 시작하기 — ₩3,900
             </button>
           </div>
         </div>
         <div className="nx-hero-cards-demo">
           <div className="nx-demo-card">
             <span className="nx-demo-day">DAY 1</span>
-            <div className="nx-demo-item">🗼 <span>아사쿠사 센소지</span><small>4.7★</small></div>
-            <div className="nx-demo-item">🍜 <span>이치란 라멘</span><small>4.3★</small></div>
-            <div className="nx-demo-item">🌃 <span>시부야 스크램블</span><small>4.8★</small></div>
+            <div className="nx-demo-item"><Landmark size="1em" /> <span>아사쿠사 센소지</span><small>4.7<Star size="1em" fill="currentColor" /></small></div>
+            <div className="nx-demo-item"><Soup size="1em" /> <span>이치란 라멘</span><small>4.3<Star size="1em" fill="currentColor" /></small></div>
+            <div className="nx-demo-item"><Moon size="1em" /> <span>시부야 스크램블</span><small>4.8<Star size="1em" fill="currentColor" /></small></div>
           </div>
           <div className="nx-demo-card nx-demo-card-2">
             <span className="nx-demo-day">DAY 2</span>
-            <div className="nx-demo-item">🏯 <span>메이지 신궁</span><small>4.5★</small></div>
-            <div className="nx-demo-item">🛍 <span>하라주쿠 타케시타</span><small>4.2★</small></div>
-            <div className="nx-demo-item">🍣 <span>츠키지 수산시장</span><small>4.6★</small></div>
+            <div className="nx-demo-item"><Castle size="1em" /> <span>메이지 신궁</span><small>4.5<Star size="1em" fill="currentColor" /></small></div>
+            <div className="nx-demo-item"><ShoppingBag size="1em" /> <span>하라주쿠 타케시타</span><small>4.2<Star size="1em" fill="currentColor" /></small></div>
+            <div className="nx-demo-item"><Fish size="1em" /> <span>츠키지 수산시장</span><small>4.6<Star size="1em" fill="currentColor" /></small></div>
           </div>
         </div>
       </section>
@@ -395,7 +401,7 @@ export default function Nextrip({ user, onGoLogin }: Props) {
             </div>
             {plans.length === 0 ? (
               <div className="nx-empty">
-                <div className="nx-empty-icon">✈</div>
+                <div className="nx-empty-icon"><Plane size="1em" /></div>
                 <p>아직 여행 계획이 없습니다.</p>
                 <button className="nx-btn-primary sm" onClick={() => startSurvey()}>첫 번째 여행 계획 만들기</button>
               </div>
@@ -413,7 +419,7 @@ export default function Nextrip({ user, onGoLogin }: Props) {
                     <p className="nx-plan-dates">{p.arrival_date} ~ {p.departure_date}</p>
                     <p className="nx-plan-meta">{COMPANION_LABEL[p.companion]} · {STYLE_LABEL[p.travel_style]} 여행</p>
                     {p.status === 'done' && (
-                      <button className="nx-plan-view-btn" onClick={() => openPlan(p.id)}>일정 보기 →</button>
+                      <button className="nx-plan-view-btn" onClick={() => openPlan(p.id)}>일정 보기 <ArrowRight size="1em" /></button>
                     )}
                     {p.status === 'generating' && (
                       <p className="nx-plan-wait">AI가 일정을 생성하고 있습니다...</p>
@@ -426,7 +432,7 @@ export default function Nextrip({ user, onGoLogin }: Props) {
         ) : (
           <section className="nx-section">
             <div className="nx-login-prompt">
-              <div className="nx-login-icon">✦</div>
+              <div className="nx-login-icon"><Compass size="1em" /></div>
               <h3>로그인하고 나만의 AI 여행 계획을 시작하세요</h3>
               <p>예약된 항공권과 연동하여 맞춤 여행 일정을 생성합니다.</p>
               <button className="nx-btn-primary" onClick={onGoLogin}>로그인하기</button>
@@ -461,7 +467,7 @@ export default function Nextrip({ user, onGoLogin }: Props) {
                       arrival_time: b.flight.arrival_time,
                       booking_ref: b.booking_ref,
                     })}
-                  >✦ AI 여행 계획 만들기</button>
+                  >AI 여행 계획 만들기</button>
                 </div>
               ))}
             </div>
@@ -470,13 +476,13 @@ export default function Nextrip({ user, onGoLogin }: Props) {
 
         <section className="nx-features">
           {[
-            { icon: '🤖', title: 'AI 맞춤 일정', desc: '여행 스타일과 취향을 분석해 최적의 일정을 생성합니다' },
-            { icon: '🗺', title: '동선 최적화', desc: '이동 시간을 최소화하고 근처 명소를 묶어 효율적으로 짜드립니다' },
-            { icon: '⭐', title: '검증된 장소', desc: '평점 4.0+ 이상의 신뢰할 수 있는 맛집과 관광지만 추천합니다' },
-            { icon: '✏️', title: '자유로운 수정', desc: '생성된 일정을 언제든 직접 수정하고 저장할 수 있습니다' },
+            { icon: Route, title: 'AI 맞춤 일정', desc: '여행 스타일과 취향을 분석해 최적의 일정을 생성합니다' },
+            { icon: MapIcon, title: '동선 최적화', desc: '이동 시간을 최소화하고 근처 명소를 묶어 효율적으로 짜드립니다' },
+            { icon: BadgeCheck, title: '검증된 장소', desc: '평점 4.0+ 이상의 신뢰할 수 있는 맛집과 관광지만 추천합니다' },
+            { icon: Pencil, title: '자유로운 수정', desc: '생성된 일정을 언제든 직접 수정하고 저장할 수 있습니다' },
           ].map((f, i) => (
             <div key={i} className="nx-feature-card">
-              <span className="nx-feature-icon">{f.icon}</span>
+              <span className="nx-feature-icon"><f.icon size="1em" /></span>
               <h3>{f.title}</h3>
               <p>{f.desc}</p>
             </div>
@@ -509,7 +515,7 @@ export default function Nextrip({ user, onGoLogin }: Props) {
               <span className="nx-time-savings-num">최대 5시간</span>
             </div>
             <button className="nx-pricing-cta" onClick={() => user ? startSurvey() : onGoLogin()}>
-              지금 바로 시작하기 →
+             지금 바로 시작하기 <ArrowRight size="1em" />
             </button>
           </div>
         </section>
@@ -541,7 +547,7 @@ export default function Nextrip({ user, onGoLogin }: Props) {
 
           <div className="nx-survey-header">
             <button className="nx-survey-back" onClick={() => surveyStep === 1 ? setView('home') : setSurveyStep(s => s - 1)}>
-              ← {surveyStep === 1 ? '홈으로' : '이전'}
+             <ArrowLeft size="1em" /> {surveyStep === 1 ? '홈으로' : '이전'}
             </button>
             <div className="nx-survey-progress-wrap">
               <div className="nx-survey-progress" style={{ width: `${(surveyStep / totalSteps) * 100}%` }} />
@@ -562,7 +568,7 @@ export default function Nextrip({ user, onGoLogin }: Props) {
                       className={`nx-dest-btn ${form.destination === d.city ? 'selected' : ''}`}
                       onClick={() => { set('destination', d.city); set('destination_en', d.city_en) }}
                     >
-                      <span className="nx-dest-emoji">{d.emoji}</span>
+                      <span className="nx-dest-emoji"><d.icon size="1em" strokeWidth={1.5} /></span>
                       <span className="nx-dest-city">{d.city}</span>
                       <span className="nx-dest-en">{d.city_en}</span>
                     </button>
@@ -593,7 +599,7 @@ export default function Nextrip({ user, onGoLogin }: Props) {
 
                 {matchedBookings.length > 0 && (
                   <div className="nx-booking-pick">
-                    <p className="nx-booking-pick-label">✈ {form.destination} 예약 항공편에서 가져오기</p>
+                    <p className="nx-booking-pick-label"><Plane size="1em" /> {form.destination} 예약 항공편에서 가져오기</p>
                     <div className="nx-booking-pick-list">
                       {matchedBookings.map(b => {
                         const returnFlight = bookings.find(rb =>
@@ -628,11 +634,11 @@ export default function Nextrip({ user, onGoLogin }: Props) {
                             </div>
                             {returnFlight && (
                               <div className="nx-bpc-return">
-                                <span>↩ 귀국 {returnFlight.flight.date} {returnFlight.flight.depart_time}</span>
+                                <span><CornerDownLeft size="1em" /> 귀국 {returnFlight.flight.date} {returnFlight.flight.depart_time}</span>
                               </div>
                             )}
                             <span className="nx-bpc-ref">{b.booking_ref}</span>
-                            {isSelected && <span className="nx-bpc-check">✓</span>}
+                            {isSelected && <span className="nx-bpc-check"><Check size="1em" /></span>}
                           </button>
                         )
                       })}
@@ -694,12 +700,12 @@ export default function Nextrip({ user, onGoLogin }: Props) {
                 <h2>어떤 스타일로 여행하고 싶으세요?</h2>
                 <div className="nx-style-cards">
                   {[
-                    { id: 'relaxed', label: '여유로운 여행', icon: '🌿', desc: '하루 3~4개 일정, 충분한 휴식과 자유 시간' },
-                    { id: 'normal',  label: '일반 여행',     icon: '⚖️', desc: '하루 5~6개 일정, 균형 잡힌 관광과 여유' },
-                    { id: 'tight',   label: '타이트한 여행', icon: '⚡', desc: '하루 7~9개 일정, 최대한 많은 곳 방문' },
+                    { id: 'relaxed', label: '여유로운 여행', icon: Coffee, desc: '하루 3~4개 일정, 충분한 휴식과 자유 시간' },
+                    { id: 'normal',  label: '일반 여행',     icon: Scale, desc: '하루 5~6개 일정, 균형 잡힌 관광과 여유' },
+                    { id: 'tight',   label: '타이트한 여행', icon: Zap, desc: '하루 7~9개 일정, 최대한 많은 곳 방문' },
                   ].map(s => (
                     <button key={s.id} className={`nx-style-card ${form.travel_style === s.id ? 'selected' : ''}`} onClick={() => set('travel_style', s.id)}>
-                      <span className="nx-style-icon">{s.icon}</span>
+                      <span className="nx-style-icon"><s.icon size="1em" /></span>
                       <strong>{s.label}</strong>
                       <p>{s.desc}</p>
                     </button>
@@ -754,7 +760,7 @@ export default function Nextrip({ user, onGoLogin }: Props) {
                 <div className="nx-choice-section">
                   <h3>이동 수단</h3>
                   <div className="nx-choice-row">
-                    {[{ id: 'walk', label: '🚶 도보' }, { id: 'transit', label: '🚇 대중교통' }, { id: 'rental', label: '🚗 렌트카' }].map(t => (
+                    {[{ id: 'walk', label: '도보' }, { id: 'transit', label: '대중교통' }, { id: 'rental', label: '렌트카' }].map(t => (
                       <button key={t.id} className={`nx-choice-btn ${form.transport === t.id ? 'selected' : ''}`} onClick={() => set('transport', t.id)}>{t.label}</button>
                     ))}
                   </div>
@@ -762,7 +768,7 @@ export default function Nextrip({ user, onGoLogin }: Props) {
                 <div className="nx-choice-section">
                   <h3>예산 수준</h3>
                   <div className="nx-choice-row">
-                    {[{ id: 'budget', label: '💰 저예산', sub: '로컬 맛집·무료 명소 위주' }, { id: 'normal', label: '💳 일반', sub: '적당한 가격대 균형' }, { id: 'premium', label: '💎 프리미엄', sub: '미슐랭·고급 체험 우선' }].map(b => (
+                    {[{ id: 'budget', label: '저예산', sub: '로컬 맛집·무료 명소 위주' }, { id: 'normal', label: '일반', sub: '적당한 가격대 균형' }, { id: 'premium', label: '프리미엄', sub: '미슐랭·고급 체험 우선' }].map(b => (
                       <button key={b.id} className={`nx-choice-btn wide ${form.budget === b.id ? 'selected' : ''}`} onClick={() => set('budget', b.id)}>
                         <strong>{b.label}</strong><small>{b.sub}</small>
                       </button>
@@ -796,7 +802,7 @@ export default function Nextrip({ user, onGoLogin }: Props) {
                   </div>
                   {form.total_budget_krw && Number(form.total_budget_krw) > 0 && (
                     <p className="nx-budget-confirm">
-                      ✓ ₩{Number(form.total_budget_krw).toLocaleString()} 이내로 일정을 구성합니다
+                     <Check size="1em" /> ₩{Number(form.total_budget_krw).toLocaleString()} 이내로 일정을 구성합니다
                     </p>
                   )}
                 </div>
@@ -809,13 +815,13 @@ export default function Nextrip({ user, onGoLogin }: Props) {
                 <h2>누구와 함께 가시나요?</h2>
                 <div className="nx-companion-grid">
                   {[
-                    { id: 'solo',    label: '혼자', icon: '🧳' },
-                    { id: 'friends', label: '친구와',  icon: '👫' },
-                    { id: 'couple',  label: '연인과', icon: '💑' },
-                    { id: 'family',  label: '가족과', icon: '👨‍👩‍👧' },
+                    { id: 'solo',    label: '혼자', icon: Luggage },
+                    { id: 'friends', label: '친구와',  icon: Users },
+                    { id: 'couple',  label: '연인과', icon: Heart },
+                    { id: 'family',  label: '가족과', icon: House },
                   ].map(c => (
                     <button key={c.id} className={`nx-companion-btn ${form.companion === c.id ? 'selected' : ''}`} onClick={() => set('companion', c.id)}>
-                      <span className="nx-companion-icon">{c.icon}</span>
+                      <span className="nx-companion-icon"><c.icon size="1em" /></span>
                       <strong>{c.label}</strong>
                     </button>
                   ))}
@@ -825,10 +831,10 @@ export default function Nextrip({ user, onGoLogin }: Props) {
                   <div className="nx-survey-summary">
                     <h4>선택 요약</h4>
                     <div className="nx-summary-grid">
-                      <span>📍 {form.destination}</span>
-                      <span>📅 {form.arrival_date} ~ {form.departure_date}</span>
-                      <span>🏨 {form.hotel_location}</span>
-                      <span>🎯 {form.travel_types.map(t => TRAVEL_TYPES.find(x => x.id === t)?.label).join(', ')}</span>
+                      <span><MapPin size="1em" /> {form.destination}</span>
+                      <span><Calendar size="1em" /> {form.arrival_date} ~ {form.departure_date}</span>
+                      <span><Hotel size="1em" /> {form.hotel_location}</span>
+                      <span><Target size="1em" /> {form.travel_types.map(t => TRAVEL_TYPES.find(x => x.id === t)?.label).join(', ')}</span>
                     </div>
                   </div>
                 )}
@@ -839,11 +845,11 @@ export default function Nextrip({ user, onGoLogin }: Props) {
           <div className="nx-survey-nav">
             {surveyStep < totalSteps ? (
               <button className="nx-btn-primary full" disabled={!canNext()} onClick={() => setSurveyStep(s => s + 1)}>
-                다음 →
+               다음 <ArrowRight size="1em" />
               </button>
             ) : (
               <button className="nx-btn-primary full" disabled={!canNext() || submitting} onClick={submitSurvey}>
-                {submitting ? 'AI 일정 생성 중...' : '✦ AI 여행 계획 생성하기'}
+                {submitting ? 'AI 일정 생성 중...' : 'AI 여행 계획 생성하기'}
               </button>
             )}
           </div>
@@ -856,7 +862,7 @@ export default function Nextrip({ user, onGoLogin }: Props) {
     <main className="nx-page nx-generating">
       <div className="nx-gen-inner">
         <div className="nx-gen-orb" />
-        <div className="nx-gen-icon">✦</div>
+        <div className="nx-gen-icon"><Compass size="1em" /></div>
         <h2>AI가 여행 일정을 만들고 있습니다</h2>
         <p>{form.destination}의 최고 장소들을 엄선하고<br />최적의 동선으로 일정을 설계하는 중입니다.</p>
         <div className="nx-gen-log">
@@ -914,15 +920,15 @@ export default function Nextrip({ user, onGoLogin }: Props) {
       <main className="nx-page">
 
         <div className="nx-plan-topbar" id="no-print">
-          <button className="nx-plan-back" onClick={() => { setView('home'); loadPlans() }}>← 내 여행</button>
+          <button className="nx-plan-back" onClick={() => { setView('home'); loadPlans() }}><ArrowLeft size="1em" /> 내 여행</button>
           <div className="nx-plan-topbar-center">
             <span className="nx-plan-topbar-dest">{planDetail.destination}</span>
             <span className="nx-plan-topbar-dates">{planDetail.arrival_date} ~ {planDetail.departure_date}</span>
           </div>
           <div className="nx-plan-topbar-actions">
-            <button className="nx-plan-action-btn packing" onClick={() => { setPackingData(null); loadPackingList(planDetail, true) }}>🎒 짐 리스트</button>
-            <button className="nx-plan-action-btn" onClick={handleShare}>🔗 공유</button>
-            <button className="nx-plan-action-btn" onClick={() => window.print()}>🖨 인쇄</button>
+            <button className="nx-plan-action-btn packing" onClick={() => { setPackingData(null); loadPackingList(planDetail, true) }}><Backpack size="1em" /> 짐 리스트</button>
+            <button className="nx-plan-action-btn" onClick={handleShare}><Link2 size="1em" /> 공유</button>
+            <button className="nx-plan-action-btn" onClick={() => window.print()}><Printer size="1em" /> 인쇄</button>
           </div>
         </div>
 
@@ -946,18 +952,18 @@ export default function Nextrip({ user, onGoLogin }: Props) {
               {recommendationBasis.length > 0 && (
                 <div className="nx-rec-basis">
                   {recommendationBasis.map((b, i) => (
-                    <span key={i} className="nx-rec-basis-tag">✦ {b}</span>
+                    <span key={i} className="nx-rec-basis-tag">{b}</span>
                   ))}
                 </div>
               )}
             </div>
             {highlights.length > 0 && (
               <div className="nx-summary-highlights">
-                <h4>✦ 핵심 포인트</h4>
+                <h4>핵심 포인트</h4>
                 {highlights.map((h, i) => <p key={i}>• {h}</p>)}
                 {planDetail.plan_data?.total_estimated_cost != null && (
                   <div className="nx-total-cost">
-                    <span>💰 예상 총 경비</span>
+                    <span><Wallet size="1em" /> 예상 총 경비</span>
                     <strong>₩{planDetail.plan_data.total_estimated_cost.toLocaleString()}</strong>
                   </div>
                 )}
@@ -974,7 +980,7 @@ export default function Nextrip({ user, onGoLogin }: Props) {
                   <span className="nx-day-date">{day.date}</span>
                 </div>
                 {day.daily_estimated_cost != null && (
-                  <div className="nx-day-cost">💰 일 예산 ₩{day.daily_estimated_cost.toLocaleString()}</div>
+                  <div className="nx-day-cost"><Wallet size="1em" /> 일 예산 ₩{day.daily_estimated_cost.toLocaleString()}</div>
                 )}
               </div>
 
@@ -1011,7 +1017,7 @@ export default function Nextrip({ user, onGoLogin }: Props) {
                       <div className="nx-tl-card" style={{ borderLeftColor: meta.color }}>
                         <div className="nx-tl-card-top">
                           <span className="nx-tl-cat-badge" style={{ background: meta.bg, color: meta.color }}>
-                            {meta.icon} {catLabel}
+                            <meta.icon size="1em" /> {catLabel}
                           </span>
                           <Stars rating={item.rating} />
                           {!isEditing && (
@@ -1079,16 +1085,16 @@ export default function Nextrip({ user, onGoLogin }: Props) {
                             {item.place_name_en && <p className="nx-tl-place-en">{item.place_name_en}</p>}
 
                             <div className="nx-reason-wrap">
-                              <p className="nx-tl-reason">✦ {item.reason}</p>
+                              <p className="nx-tl-reason">{item.reason}</p>
                               <button
                                 className="nx-reason-toggle no-print"
                                 onClick={() => setExpandedReasonId(reasonExpanded ? null : item.id)}
-                              >추천 근거 {reasonExpanded ? '▲' : '▼'}</button>
+                              >추천 근거 {reasonExpanded ? <ChevronUp size="1em" /> : <ChevronDown size="1em" />}</button>
                               {reasonExpanded && (
                                 <div className="nx-reason-detail">
                                   {typeMatch.length > 0 && typeMatch.map(t => (
                                     <span key={t} className="nx-rtag match">
-                                      ✓ {TRAVEL_TYPES.find(x => x.id === t)?.label} 관심사 일치
+                                     <Check size="1em" /> {TRAVEL_TYPES.find(x => x.id === t)?.label} 관심사 일치
                                     </span>
                                   ))}
                                   <span className="nx-rtag">
@@ -1101,22 +1107,22 @@ export default function Nextrip({ user, onGoLogin }: Props) {
                                     {COMPANION_LABEL[planDetail.companion]} 여행에 적합
                                   </span>
                                   {item.estimated_cost === 0 && (
-                                    <span className="nx-rtag match">🆓 무료 입장</span>
+                                    <span className="nx-rtag match">무료 입장</span>
                                   )}
                                 </div>
                               )}
                             </div>
 
-                            {item.tip && <p className="nx-tl-tip">💡 {item.tip}</p>}
-                            {item.notes && <p className="nx-tl-notes">📝 {item.notes}</p>}
+                            {item.tip && <p className="nx-tl-tip"><Lightbulb size="1em" /> {item.tip}</p>}
+                            {item.notes && <p className="nx-tl-notes"><NotebookPen size="1em" /> {item.notes}</p>}
                             <div className="nx-tl-meta">
                               <span>⏱ {item.duration_min}분</span>
                               {item.distance_from_prev && item.distance_from_prev !== '0km' && (
-                                <span>📏 {item.distance_from_prev}</span>
+                                <span><Ruler size="1em" /> {item.distance_from_prev}</span>
                               )}
                               {item.estimated_cost != null && (
                                 <span className="nx-cost-badge">
-                                  {item.estimated_cost === 0 ? '🆓 무료' : `💰 ₩${item.estimated_cost.toLocaleString()}`}
+                                  {item.estimated_cost === 0 ? '무료' : `₩${item.estimated_cost.toLocaleString()}`}
                                 </span>
                               )}
                               <a
@@ -1124,7 +1130,7 @@ export default function Nextrip({ user, onGoLogin }: Props) {
                                 target="_blank"
                                 rel="noreferrer"
                                 className="nx-maps-btn no-print"
-                              >🗺 지도 보기</a>
+                              ><MapIcon size="1em" /> 지도 보기</a>
                             </div>
                           </>
                         )}
@@ -1141,9 +1147,9 @@ export default function Nextrip({ user, onGoLogin }: Props) {
           <div className="packing-overlay" onClick={() => setPackingOpen(false)}>
             <div className="packing-modal" onClick={e => e.stopPropagation()}>
               <div className="packing-modal-head">
-                <h2>🎒 AI 짐 리스트</h2>
+                <h2><Backpack size="1em" /> AI 짐 리스트</h2>
                 <p>{planDetail.destination} · {planDetail.companion === 'solo' ? '혼자' : planDetail.companion === 'couple' ? '연인과' : planDetail.companion === 'family' ? '가족과' : '친구와'}</p>
-                <button className="packing-close" onClick={() => setPackingOpen(false)}>✕</button>
+                <button className="packing-close" onClick={() => setPackingOpen(false)}><X size="1em" /></button>
               </div>
               {packingLoading ? (
                 <div className="packing-loading">
@@ -1154,10 +1160,10 @@ export default function Nextrip({ user, onGoLogin }: Props) {
                 <div className="packing-categories">
                   {packingData.categories.map((cat, i) => (
                     <div key={i} className="packing-cat">
-                      <h4>{cat.icon} {cat.name}</h4>
+                      <h4>{cat.name}</h4>
                       <ul>
                         {cat.items.map((item, j) => (
-                          <li key={j}><span className="packing-check">☐</span> {item}</li>
+                          <li key={j}><span className="packing-check"><Square size="1em" /></span> {item}</li>
                         ))}
                       </ul>
                     </div>

@@ -3,6 +3,7 @@ import './CustomerServicePage.css'
 import { api } from '../../services/api'
 import type { User } from '../../services/auth'
 import ChatWidget from './ChatWidget'
+import { Bot, ChevronDown, ChevronUp } from 'lucide-react'
 
 interface FAQ { id: number; category: string; question: string; answer: string; order_num: number }
 interface Inquiry {
@@ -78,7 +79,7 @@ export default function CustomerServicePage({ user, onGoLogin }: Props) {
       <div className="cs-body">
         <div className="cs-tabs">
           <button className={`cs-tab ${csTab === 'faq' ? 'active' : ''}`} onClick={() => setCsTab('faq')}>자주 묻는 질문</button>
-          <button className={`cs-tab ${csTab === 'aichat' ? 'active' : ''}`} onClick={() => setCsTab('aichat')}>🤖 AI 챗봇</button>
+          <button className={`cs-tab ${csTab === 'aichat' ? 'active' : ''}`} onClick={() => setCsTab('aichat')}><Bot size="1em" /> AI 챗봇</button>
           <button className={`cs-tab ${csTab === 'inquiry' ? 'active' : ''}`} onClick={() => setCsTab('inquiry')}>1:1 채팅 상담</button>
           {user && (
             <button className={`cs-tab ${csTab === 'myinquiry' ? 'active' : ''}`} onClick={() => setCsTab('myinquiry')}>내 문의 내역</button>
@@ -105,7 +106,7 @@ export default function CustomerServicePage({ user, onGoLogin }: Props) {
                   >
                     <span className="cs-faq-qmark">Q</span>
                     <span className="cs-faq-qtext">{f.question}</span>
-                    <span className="cs-faq-chevron">{openFaqId === f.id ? '▲' : '▼'}</span>
+                    <span className="cs-faq-chevron">{openFaqId === f.id ? <ChevronUp size="1em" /> : <ChevronDown size="1em" />}</span>
                   </button>
                   {openFaqId === f.id && (
                     <div className="cs-faq-a">
@@ -126,7 +127,7 @@ export default function CustomerServicePage({ user, onGoLogin }: Props) {
           <div className="cs-section">
             <div className="aichat-wrap">
               <div className="aichat-header">
-                <span className="aichat-avatar">🤖</span>
+                <span className="aichat-avatar"><Bot size="1em" /></span>
                 <div>
                   <h3>CLEARWAY AI 상담원</h3>
                   <p>예약·취소·수하물·마일리지 등 항공 관련 질문에 즉시 답변해 드립니다.</p>
@@ -135,7 +136,7 @@ export default function CustomerServicePage({ user, onGoLogin }: Props) {
               <div className="aichat-messages">
                 {aiMessages.length === 0 && (
                   <div className="aichat-welcome">
-                    <p>안녕하세요! CLEARWAY AI 상담원입니다 👋</p>
+                    <p>안녕하세요! CLEARWAY AI 상담원입니다 </p>
                     <p>궁금하신 점을 자유롭게 질문해 주세요.</p>
                     <div className="aichat-suggestions">
                       {['취소·환불 정책이 궁금해요', '수하물 규정을 알고 싶어요', '마일리지는 어떻게 사용하나요?', '온라인 체크인은 언제 가능한가요?'].map(s => (
@@ -146,13 +147,13 @@ export default function CustomerServicePage({ user, onGoLogin }: Props) {
                 )}
                 {aiMessages.map((m, i) => (
                   <div key={i} className={`aichat-bubble-wrap ${m.role}`}>
-                    {m.role === 'assistant' && <span className="aichat-bot-avatar">🤖</span>}
+                    {m.role === 'assistant' && <span className="aichat-bot-avatar"><Bot size="1em" /></span>}
                     <div className={`aichat-bubble ${m.role}`}>{m.content}</div>
                   </div>
                 ))}
                 {aiLoading && (
                   <div className="aichat-bubble-wrap assistant">
-                    <span className="aichat-bot-avatar">🤖</span>
+                    <span className="aichat-bot-avatar"><Bot size="1em" /></span>
                     <div className="aichat-bubble assistant aichat-typing">
                       <span/><span/><span/>
                     </div>

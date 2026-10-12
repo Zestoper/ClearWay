@@ -3,6 +3,7 @@ import './FlightStatusPage.css'
 import { api } from '../../services/api'
 import DatePicker from '../common/DatePicker'
 import { FROM_AIRPORTS, DOMESTIC, INTL_REGIONS } from '../common/SearchBar'
+import { Plane, PlaneLanding } from 'lucide-react'
 
 interface StatusFlight {
   flight_no: string | null
@@ -193,10 +194,10 @@ export default function FlightStatusPage() {
       <div className="fs-body">
         <div className="fs-tabs">
           <button className={`fs-tab${tab === 'dep' ? ' active' : ''}`} onClick={() => setTab('dep')}>
-            ✈ 출발편 <span className="fs-tab-count">{departures.length}</span>
+           <Plane size="1em" /> 출발편 <span className="fs-tab-count">{departures.length}</span>
           </button>
           <button className={`fs-tab${tab === 'arr' ? ' active' : ''}`} onClick={() => setTab('arr')}>
-            🛬 도착편 <span className="fs-tab-count">{arrivals.length}</span>
+           <PlaneLanding size="1em" /> 도착편 <span className="fs-tab-count">{arrivals.length}</span>
           </button>
         </div>
 

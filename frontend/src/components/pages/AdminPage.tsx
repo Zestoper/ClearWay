@@ -4,6 +4,7 @@ import { api } from '../../services/api'
 import type { User } from '../../services/auth'
 import ChatWidget from './ChatWidget'
 import { useToast } from '../common/ToastProvider'
+import { TriangleAlert, X } from 'lucide-react'
 
 const DEST_GROUPS: { region: string; airports: { code: string; city: string; country: string }[] }[] = [
   { region: '일본', airports: [
@@ -378,10 +379,10 @@ export default function AdminPage({ user, onGoLogin }: Props) {
                         <td>{editId === f.id ? <input className="admin-cell-input w-28" type="number" value={editForm.economy_price ?? f.economy_price} onChange={e => setEditForm(p => ({ ...p, economy_price: Number(e.target.value) }))} /> : `₩${Number(f.economy_price).toLocaleString()}`}</td>
                         <td>{editId === f.id ? <input className="admin-cell-input w-28" type="number" value={editForm.business_price ?? f.business_price} onChange={e => setEditForm(p => ({ ...p, business_price: Number(e.target.value) }))} /> : `₩${Number(f.business_price).toLocaleString()}`}</td>
                         <td className={f.economy_seats <= 10 ? 'low-seat' : ''}>
-                          {editId === f.id ? <input className="admin-cell-input w-16" type="number" value={editForm.economy_seats ?? f.economy_seats} onChange={e => setEditForm(p => ({ ...p, economy_seats: Number(e.target.value) }))} /> : (f.economy_seats <= 10 ? <strong style={{ color: '#dc2626' }}>{f.economy_seats}석 ⚠</strong> : f.economy_seats)}
+                          {editId === f.id ? <input className="admin-cell-input w-16" type="number" value={editForm.economy_seats ?? f.economy_seats} onChange={e => setEditForm(p => ({ ...p, economy_seats: Number(e.target.value) }))} /> : (f.economy_seats <= 10 ? <strong style={{ color: '#dc2626' }}>{f.economy_seats}석 <TriangleAlert size="1em" /></strong> : f.economy_seats)}
                         </td>
                         <td className={f.business_seats <= 3 ? 'low-seat' : ''}>
-                          {editId === f.id ? <input className="admin-cell-input w-16" type="number" value={editForm.business_seats ?? f.business_seats} onChange={e => setEditForm(p => ({ ...p, business_seats: Number(e.target.value) }))} /> : (f.business_seats <= 3 ? <strong style={{ color: '#dc2626' }}>{f.business_seats}석 ⚠</strong> : f.business_seats)}
+                          {editId === f.id ? <input className="admin-cell-input w-16" type="number" value={editForm.business_seats ?? f.business_seats} onChange={e => setEditForm(p => ({ ...p, business_seats: Number(e.target.value) }))} /> : (f.business_seats <= 3 ? <strong style={{ color: '#dc2626' }}>{f.business_seats}석 <TriangleAlert size="1em" /></strong> : f.business_seats)}
                         </td>
                         <td><span className={`status-badge ${f.is_cancelled ? 'cancelled' : 'active'}`}>{f.is_cancelled ? '운항중단' : '운항중'}</span></td>
                         <td className="action-cell">
@@ -566,7 +567,7 @@ export default function AdminPage({ user, onGoLogin }: Props) {
                     <div className="nl-picker-modal" onClick={e => e.stopPropagation()}>
                       <div className="nl-picker-header">
                         <h3>공지 / 이벤트 가져오기</h3>
-                        <button className="mp-modal-close" onClick={() => setNlPickerOpen(false)}>✕</button>
+                        <button className="mp-modal-close" onClick={() => setNlPickerOpen(false)}><X size="1em" /></button>
                       </div>
                       <div className="nl-picker-search">
                         <input
@@ -690,10 +691,10 @@ export default function AdminPage({ user, onGoLogin }: Props) {
                   <div className="notice-form-group">
                     <label>카테고리</label>
                     <select className="admin-input" value={noticeForm.category} onChange={e => setNoticeForm(f => ({ ...f, category: e.target.value }))}>
-                      <option value="notice">📢 공지</option>
-                      <option value="event">🎉 이벤트</option>
-                      <option value="promotion">🏷 프로모션</option>
-                      <option value="membership">⭐ 멤버십</option>
+                      <option value="notice">공지</option>
+                      <option value="event">이벤트</option>
+                      <option value="promotion">프로모션</option>
+                      <option value="membership">멤버십</option>
                     </select>
                   </div>
                   <div className="notice-form-group">

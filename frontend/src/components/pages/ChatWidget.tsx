@@ -3,6 +3,7 @@ import './ChatWidget.css'
 import type { User } from '../../services/auth'
 import { api } from '../../services/api'
 import { useToast } from '../common/ToastProvider'
+import { ArrowLeft, Clock, Headphones, UserIcon } from 'lucide-react'
 
 const CHAT_CATEGORIES = ['예약/발권', '취소/환불', '수하물', '마일리지', '기타']
 const WS_BASE = (import.meta.env.VITE_API_URL ?? 'http://localhost:8000/api/v1')
@@ -133,7 +134,7 @@ export default function ChatWidget({ user, onGoLogin, adminRoomId, adminSender }
   if (outside) {
     return (
       <div className="chat-closed">
-        <div className="chat-closed-icon">🕐</div>
+        <div className="chat-closed-icon"><Clock size="1em" /></div>
         <h3>현재 상담 가능 시간이 아닙니다</h3>
         <p>실시간 상담은 <strong>평일 09:30 ~ 17:30</strong>에 이용 가능합니다.</p>
         <p className="chat-closed-sub">자주 묻는 질문(FAQ)에서 빠른 답변을 찾아보세요.</p>
@@ -182,7 +183,7 @@ export default function ChatWidget({ user, onGoLogin, adminRoomId, adminSender }
   if (phase === 'history') {
     return (
       <div className="chat-history">
-        <button className="chat-back" onClick={() => setPhase('select')}>← 돌아가기</button>
+        <button className="chat-back" onClick={() => setPhase('select')}><ArrowLeft size="1em" /> 돌아가기</button>
         <h3>내 상담 내역</h3>
         {myRooms.length === 0
           ? <p className="chat-empty">상담 내역이 없습니다.</p>
@@ -204,7 +205,7 @@ export default function ChatWidget({ user, onGoLogin, adminRoomId, adminSender }
     <div className="chat-room">
       {!isAdmin && (
         <div className="chat-room-topbar">
-          <button className="chat-back" onClick={() => setPhase('select')}>← 목록</button>
+          <button className="chat-back" onClick={() => setPhase('select')}><ArrowLeft size="1em" /> 목록</button>
           <span>CLEARWAY 고객상담</span>
         </div>
       )}
@@ -212,14 +213,14 @@ export default function ChatWidget({ user, onGoLogin, adminRoomId, adminSender }
       <div className="chat-messages">
         {messages.length === 0 && (
           <div className="chat-welcome">
-            <p>안녕하세요! CLEARWAY 고객상담입니다 👋</p>
+            <p>안녕하세요! CLEARWAY 고객상담입니다 </p>
             <p>문의 내용을 입력해 주시면 빠르게 답변 드리겠습니다.</p>
           </div>
         )}
         {messages.map(m => (
           <div key={m.id} className={`chat-bubble-wrap ${m.sender === (isAdmin ? 'admin' : 'user') ? 'mine' : 'theirs'}`}>
             {m.sender !== (isAdmin ? 'admin' : 'user') && (
-              <div className="chat-avatar">{isAdmin ? '👤' : '🎧'}</div>
+              <div className="chat-avatar">{isAdmin ? <UserIcon size="1em" /> : <Headphones size="1em" />}</div>
             )}
             <div className={`chat-bubble ${m.sender === (isAdmin ? 'admin' : 'user') ? 'mine' : 'theirs'}`}>
               {m.msg_type === 'image'
