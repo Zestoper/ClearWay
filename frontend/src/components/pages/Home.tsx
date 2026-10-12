@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import './Home.css'
 import { api } from '../../services/api'
+import { Armchair, ArrowRight, Bot, Castle, Croissant, Flame, Gift, Landmark, Lock, Plane, Smartphone, Sparkle, Star, Tag, Ticket, TreePalm, Umbrella, User } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 
 interface ReviewItem {
   id: number
@@ -24,7 +26,7 @@ interface Props {
 
 const HERO_SLIDES = [
   {
-    badge: '🔥 하계 시즌 특가',
+    badge: '하계 시즌 특가',
     title: '지금 예약하면\n최대 40% 할인',
     sub: '6월~8월 출발 전 노선 한정 특가 · 수량 한정',
     cta: '특가 항공권 보기',
@@ -34,7 +36,7 @@ const HERO_SLIDES = [
     tagColor: '#60a5fa',
   },
   {
-    badge: '✦ NEXTRIP AI',
+    badge: 'NEXTRIP AI',
     title: 'AI가 완성하는\n나만의 완벽한 여행',
     sub: '목적지와 기간만 알려주면 동선 최적화 일정 자동 완성',
     cta: 'AI 여행 계획 시작하기',
@@ -44,7 +46,7 @@ const HERO_SLIDES = [
     tagColor: '#a78bfa',
   },
   {
-    badge: '🎁 신규 회원 혜택',
+    badge: '신규 회원 혜택',
     title: '가입 즉시\n마일리지 1,000점 증정',
     sub: '첫 예약에 바로 사용 가능 · 유효기간 3년',
     cta: '항공권 예약하기',
@@ -56,12 +58,12 @@ const HERO_SLIDES = [
 ]
 
 const DESTINATIONS = [
-  { code: 'NRT', city: '도쿄',     country: '일본',     emoji: '🗼', price: '189,000', tag: '인기 1위',    g1: '#1e3a8a', g2: '#2563eb' },
-  { code: 'KIX', city: '오사카',   country: '일본',     emoji: '🏯', price: '169,000', tag: '맛집 천국',   g1: '#4c1d95', g2: '#7c3aed' },
-  { code: 'BKK', city: '방콕',     country: '태국',     emoji: '🛕', price: '229,000', tag: '가성비 최고', g1: '#064e3b', g2: '#047857' },
-  { code: 'SIN', city: '싱가포르', country: '싱가포르', emoji: '🌴', price: '319,000', tag: '럭셔리 여행', g1: '#0c4a6e', g2: '#0369a1' },
-  { code: 'CDG', city: '파리',     country: '프랑스',   emoji: '🥐', price: '689,000', tag: '로맨틱 여행', g1: '#3b0764', g2: '#7e22ce' },
-  { code: 'DAD', city: '다낭',     country: '베트남',   emoji: '🏖️', price: '239,000', tag: '해변 휴양',   g1: '#042f2e', g2: '#0d9488' },
+  { code: 'NRT', city: '도쿄',     country: '일본',     icon: Landmark, price: '189,000', tag: '인기 1위',    g1: '#1e3a8a', g2: '#2563eb' },
+  { code: 'KIX', city: '오사카',   country: '일본',     icon: Castle, price: '169,000', tag: '맛집 천국',   g1: '#4c1d95', g2: '#7c3aed' },
+  { code: 'BKK', city: '방콕',     country: '태국',     icon: Landmark, price: '229,000', tag: '가성비 최고', g1: '#064e3b', g2: '#047857' },
+  { code: 'SIN', city: '싱가포르', country: '싱가포르', icon: TreePalm, price: '319,000', tag: '럭셔리 여행', g1: '#0c4a6e', g2: '#0369a1' },
+  { code: 'CDG', city: '파리',     country: '프랑스',   icon: Croissant, price: '689,000', tag: '로맨틱 여행', g1: '#3b0764', g2: '#7e22ce' },
+  { code: 'DAD', city: '다낭',     country: '베트남',   icon: Umbrella, price: '239,000', tag: '해변 휴양',   g1: '#042f2e', g2: '#0d9488' },
 ]
 
 const TRENDING = [
@@ -82,12 +84,12 @@ interface NoticeItem {
   created_at: string
 }
 
-function badgeStyle(badge: string | null): { icon: string; color: string } {
+function badgeStyle(badge: string | null): { icon: LucideIcon; color: string } {
   switch (badge?.toUpperCase()) {
-    case 'HOT':  return { icon: '🎫', color: '#ef4444' }
-    case 'NEW':  return { icon: '⭐', color: '#7c3aed' }
-    case 'SALE': return { icon: '💺', color: '#0891b2' }
-    default:     return { icon: '✈️', color: '#1d4ed8' }
+    case 'HOT':  return { icon: Ticket, color: '#ef4444' }
+    case 'NEW':  return { icon: Sparkle, color: '#7c3aed' }
+    case 'SALE': return { icon: Tag, color: '#0891b2' }
+    default:     return { icon: Plane, color: '#1d4ed8' }
   }
 }
 
@@ -98,10 +100,10 @@ const STATIC_REVIEWS = [
 ]
 
 const BENEFITS = [
-  { icon: '🔒', title: '안전한 결제',      desc: '카카오페이·네이버페이·토스 간편 결제 지원',         bg: '#dcfce7' },
-  { icon: '✈️', title: '실시간 좌석 확인', desc: '잔여 좌석 실시간 업데이트, 원하는 자리 바로 선택', bg: '#dbeafe' },
-  { icon: '🎁', title: '마일리지 적립',    desc: '예약마다 마일리지 적립, 다음 여행에 사용 가능',    bg: '#fef9c3' },
-  { icon: '📱', title: '온라인 체크인',    desc: '공항 방문 전 모바일로 체크인 완료',                bg: '#fce7f3' },
+  { icon: Lock, title: '안전한 결제',      desc: '카카오페이·네이버페이·토스 간편 결제 지원',         bg: '#dcfce7' },
+  { icon: Armchair, title: '실시간 좌석 확인', desc: '잔여 좌석 실시간 업데이트, 원하는 자리 바로 선택', bg: '#dbeafe' },
+  { icon: Gift, title: '마일리지 적립',    desc: '예약마다 마일리지 적립, 다음 여행에 사용 가능',    bg: '#fef9c3' },
+  { icon: Smartphone, title: '온라인 체크인',    desc: '공항 방문 전 모바일로 체크인 완료',                bg: '#fce7f3' },
 ]
 
 const FAQS = [
@@ -115,8 +117,8 @@ const FAQS = [
 function Stars({ n }: { n: number }) {
   return (
     <span className="stars">
-      {'★★★★★'.split('').map((s, i) => (
-        <span key={i} style={{ color: i < n ? '#fbbf24' : '#e2e8f0' }}>{s}</span>
+      {[0, 1, 2, 3, 4].map((i) => (
+        <Star key={i} size="1em" fill="currentColor" style={{ color: i < n ? '#fbbf24' : '#e2e8f0' }} />
       ))}
     </span>
   )
@@ -177,10 +179,10 @@ export default function Home({ onGoNextrip, onGoBooking, onGoNotice, onGoReview,
           <div className="hero-right">
             <div className="hero-card">
               <div className="hero-card-label">
-                <span>✈️</span>
-                <span>ICN → {heroDest.code}</span>
+                <span><Plane size="1em" /></span>
+                <span>ICN <ArrowRight size="1em" /> {heroDest.code}</span>
               </div>
-              <div className="hero-card-emoji">{heroDest.emoji}</div>
+              <div className="hero-card-emoji"><heroDest.icon size="1em" strokeWidth={1.5} /></div>
               <div className="hero-card-city">{heroDest.city}</div>
               <div className="hero-card-price">₩{heroDest.price}<em>원~</em></div>
             </div>
@@ -198,7 +200,7 @@ export default function Home({ onGoNextrip, onGoBooking, onGoNotice, onGoReview,
           <div className="benefit-grid">
             {BENEFITS.map((b, i) => (
               <div key={i} className="benefit-card">
-                <div className="benefit-icon" style={{ background: b.bg }}>{b.icon}</div>
+                <div className="benefit-icon" style={{ background: b.bg }}><b.icon size="1em" /></div>
                 <div className="benefit-text">
                   <h4 className="benefit-title">{b.title}</h4>
                   <p className="benefit-desc">{b.desc}</p>
@@ -224,7 +226,7 @@ export default function Home({ onGoNextrip, onGoBooking, onGoNotice, onGoReview,
                 className="dest-card"
                 style={{ background: `linear-gradient(145deg, ${d.g1} 0%, ${d.g2} 100%)` }}
               >
-                <div className="dest-bg-emoji">{d.emoji}</div>
+                <div className="dest-bg-emoji"><d.icon size="1em" strokeWidth={1.25} /></div>
                 <div className="dest-info">
                   <span className="dest-tag">{d.tag}</span>
                   <h3 className="dest-city">{d.city}</h3>
@@ -251,21 +253,21 @@ export default function Home({ onGoNextrip, onGoBooking, onGoNotice, onGoReview,
                   <h2 className="hp-title">이벤트 & 혜택</h2>
                   <p className="hp-sub">놓치면 아쉬운 특가와 프로모션</p>
                 </div>
-                <button className="more-btn" onClick={onGoNotice}>전체보기 →</button>
+                <button className="more-btn" onClick={onGoNotice}>전체보기 <ArrowRight size="1em" /></button>
               </div>
               {eventItems.length > 0 ? (
                 <div className="event-grid" style={{ gridTemplateColumns: '1fr' }}>
                   {eventItems.slice(0, 2).map((e) => {
-                    const { icon, color } = badgeStyle(e.badge)
+                    const { icon: BadgeIcon, color } = badgeStyle(e.badge)
                     return (
                       <div key={e.id} className="event-card" style={{ '--accent': color } as React.CSSProperties}>
                         <div className="event-top">
-                          <span className="event-icon">{icon}</span>
+                          <span className="event-icon"><BadgeIcon size="1em" /></span>
                           {e.badge && <span className="event-badge">{e.badge}</span>}
                         </div>
                         <h3 className="event-title">{e.title}</h3>
                         <p className="event-desc">{e.content}</p>
-                        <button className="event-link" onClick={onGoNotice}>자세히 보기 →</button>
+                        <button className="event-link" onClick={onGoNotice}>자세히 보기 <ArrowRight size="1em" /></button>
                       </div>
                     )
                   })}
@@ -279,7 +281,7 @@ export default function Home({ onGoNextrip, onGoBooking, onGoNotice, onGoReview,
 
             <div className="split-card">
               <div className="split-head">
-                <h2 className="hp-title">🔥 실시간 인기 검색</h2>
+                <h2 className="hp-title"><Flame size="1em" /> 실시간 인기 검색</h2>
                 <span className="live-badge">LIVE</span>
               </div>
               <ul className="trending-list">
@@ -306,16 +308,16 @@ export default function Home({ onGoNextrip, onGoBooking, onGoNotice, onGoReview,
               <p className="hp-sub">실제 이용 고객들의 생생한 후기</p>
             </div>
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-              <button className="more-btn" onClick={onGoReview}>후기 작성 →</button>
-              <button className="more-btn" style={{ background: '#f5f3ff', color: '#7c3aed', borderColor: '#ddd6fe' }} onClick={onGoAIReview}>AI 후기 →</button>
-              <button className="more-btn" style={{ background: '#f0fdf4', color: '#16a34a', borderColor: '#bbf7d0' }} onClick={onGoReviews}>전체보기 →</button>
+              <button className="more-btn" onClick={onGoReview}>후기 작성 <ArrowRight size="1em" /></button>
+              <button className="more-btn" style={{ background: '#f5f3ff', color: '#7c3aed', borderColor: '#ddd6fe' }} onClick={onGoAIReview}>AI 후기 <ArrowRight size="1em" /></button>
+              <button className="more-btn" style={{ background: '#f0fdf4', color: '#16a34a', borderColor: '#bbf7d0' }} onClick={onGoReviews}>전체보기 <ArrowRight size="1em" /></button>
             </div>
           </div>
           <div className="review-grid">
             {reviews.slice(0, 3).map((r, i) => (
               <div key={r.id ?? i} className="review-card">
                 <div className="review-header">
-                  <span className="review-avatar">{r.review_type === 'ai' ? '🤖' : '👤'}</span>
+                  <span className="review-avatar">{r.review_type === 'ai' ? <Bot size="1em" /> : <User size="1em" />}</span>
                   <div>
                     <p className="review-name">{r.user_name}</p>
                     <p className="review-meta">

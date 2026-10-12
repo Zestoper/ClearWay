@@ -1,5 +1,7 @@
 import { createContext, useContext, useState, useCallback, type ReactNode } from 'react'
 import './Toast.css'
+import { Check, Info, TriangleAlert, X } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 
 export type ToastType = 'success' | 'error' | 'warning' | 'info'
 
@@ -11,7 +13,7 @@ export const useToast = () => useContext(Ctx)
 
 let _id = 0
 
-const ICONS: Record<ToastType, string> = { success: '✓', error: '✕', warning: '⚠', info: 'ℹ' }
+const ICONS: Record<ToastType, LucideIcon> = { success: Check, error: X, warning: TriangleAlert, info: Info }
 
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<ToastItem[]>([])
@@ -31,9 +33,9 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         <div className="toast-stack">
           {items.map(item => (
             <div key={item.id} className={`toast-item toast--${item.type}`}>
-              <span className="toast-icon">{ICONS[item.type]}</span>
+              <span className="toast-icon">{(() => { const Icon = ICONS[item.type]; return <Icon size="1em" /> })()}</span>
               <span className="toast-msg">{item.message}</span>
-              <button className="toast-close" onClick={() => remove(item.id)}>✕</button>
+              <button className="toast-close" onClick={() => remove(item.id)}><X size="1em" /></button>
             </div>
           ))}
         </div>

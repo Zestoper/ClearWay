@@ -5,6 +5,7 @@ import { createBooking } from '../../services/bookings'
 import type { User } from '../../services/auth'
 import { api } from '../../services/api'
 import { useToast } from '../common/ToastProvider'
+import { ArrowLeft, ArrowRight, Check, Drama, Hotel, MapIcon, Plane, Soup, Sunset, TriangleAlert, X } from 'lucide-react'
 
 interface Props {
   flight: BookingFlight
@@ -231,7 +232,7 @@ export default function BookingFlow({ flight, user, onGoReservations, onGoHome, 
               <button className="guest-btn-login" onClick={onGoLogin}>회원 로그인</button>
               <button className="guest-btn-continue" onClick={() => { setContinueAsGuest(true); setShowGuestModal(false) }}>비회원으로 예약</button>
             </div>
-            <button className="guest-modal-back" onClick={onGoHome}>← 돌아가기</button>
+            <button className="guest-modal-back" onClick={onGoHome}><ArrowLeft size="1em" /> 돌아가기</button>
           </div>
         </div>
       </main>
@@ -329,7 +330,7 @@ export default function BookingFlow({ flight, user, onGoReservations, onGoHome, 
                 </div>
               </div>
               {!user && (
-                <div className="bi-guest-notice">⚠ 비회원 예약입니다. 마일리지가 적립되지 않습니다.</div>
+                <div className="bi-guest-notice"><TriangleAlert size="1em" /> 비회원 예약입니다. 마일리지가 적립되지 않습니다.</div>
               )}
             </div>
 
@@ -343,7 +344,7 @@ export default function BookingFlow({ flight, user, onGoReservations, onGoHome, 
                   >
                     승객 {i + 1}
                     {Object.keys(allPaxErrors[i]).length === 0 && passengers[i].lastNameEn && (
-                      <span className="pax-tab-check">✓</span>
+                      <span className="pax-tab-check"><Check size="1em" /></span>
                     )}
                   </button>
                 ))}
@@ -362,7 +363,7 @@ export default function BookingFlow({ flight, user, onGoReservations, onGoHome, 
                     <button type="button" style={{ background:'#1d4ed8', color:'#fff', border:'none', borderRadius:'7px', padding:'5px 12px', fontSize:'12px', fontWeight:700, cursor:'pointer' }}
                       onClick={() => { setPassengers(prev => prev.map((p, i) => i === 0 ? savedPax : p)); setShowLoadBanner(false) }}>불러오기</button>
                     <button type="button" style={{ background:'none', color:'#64748b', border:'none', fontSize:'12px', cursor:'pointer' }}
-                      onClick={() => setShowLoadBanner(false)}>✕</button>
+                      onClick={() => setShowLoadBanner(false)}><X size="1em" /></button>
                   </div>
                 </div>
               )}
@@ -438,7 +439,7 @@ export default function BookingFlow({ flight, user, onGoReservations, onGoHome, 
                     onClick={() => setActivePaxIdx(i => i + 1)}
                     style={{ width: 'auto', padding: '10px 24px' }}
                   >
-                    다음 승객 →
+                   다음 승객 <ArrowRight size="1em" />
                   </button>
                 </div>
               )}
@@ -461,7 +462,7 @@ export default function BookingFlow({ flight, user, onGoReservations, onGoHome, 
                       onClick={() => setActiveSeatPaxIdx(i)}
                     >
                       승객 {i + 1}
-                      {hasSeat && <span className="pax-tab-check">✓</span>}
+                      {hasSeat && <span className="pax-tab-check"><Check size="1em" /></span>}
                     </button>
                   )
                 })}
@@ -472,7 +473,7 @@ export default function BookingFlow({ flight, user, onGoReservations, onGoHome, 
               <>
                 <div className="seat-substep-bar">
                   <div className={`seat-substep ${seats.every(s => s) ? 'done' : seatTab === 'outbound' ? 'active' : ''}`}>
-                    <span className="seat-substep-num">{seats.every(s => s) ? '✓' : '1'}</span>
+                    <span className="seat-substep-num">{seats.every(s => s) ? <Check size="1em" /> : '1'}</span>
                     <div className="seat-substep-text">
                       <span className="seat-substep-label">가는편 좌석</span>
                       {seats.every(s => s) && <span className="seat-substep-val">{seats.join(', ')}</span>}
@@ -480,7 +481,7 @@ export default function BookingFlow({ flight, user, onGoReservations, onGoHome, 
                   </div>
                   <div className={`seat-substep-line ${seats.every(s => s) ? 'done' : ''}`} />
                   <div className={`seat-substep ${returnSeats.every(s => s) ? 'done' : seats.every(s => s) && seatTab === 'return' ? 'active' : ''}`}>
-                    <span className="seat-substep-num">{returnSeats.every(s => s) ? '✓' : '2'}</span>
+                    <span className="seat-substep-num">{returnSeats.every(s => s) ? <Check size="1em" /> : '2'}</span>
                     <div className="seat-substep-text">
                       <span className="seat-substep-label">오는편 좌석</span>
                       {returnSeats.every(s => s) && <span className="seat-substep-val">{returnSeats.join(', ')}</span>}
@@ -754,26 +755,26 @@ export default function BookingFlow({ flight, user, onGoReservations, onGoHome, 
             <button className="nextrip-ad-banner" onClick={onGoNextrip}>
               <div className="nextrip-ad-glow" />
               <div className="nextrip-ad-left">
-                <span className="nextrip-ad-label">✦ NEXTRIP</span>
+                <span className="nextrip-ad-label">NEXTRIP</span>
                 <p className="nextrip-ad-title">여행 일정, 이제 AI가 대신 짜드립니다</p>
                 <p className="nextrip-ad-desc">
                   목적지·기간·취향만 알려주면 숙소·식당·코스까지<br />
                   나만을 위한 여행 플랜을 세세하게 완성해 드려요.
                 </p>
-                <span className="nextrip-ad-cta">내 맞춤 여행 시작하기 →</span>
+                <span className="nextrip-ad-cta">내 맞춤 여행 시작하기 <ArrowRight size="1em" /></span>
               </div>
               <div className="nextrip-ad-right">
                 <div className="nextrip-ad-card">
                   <span className="nextrip-ad-card-day">DAY 1</span>
-                  <span className="nextrip-ad-card-item">✈ 도착 · 공항 픽업</span>
-                  <span className="nextrip-ad-card-item">🏨 호텔 체크인</span>
-                  <span className="nextrip-ad-card-item">🍜 현지 맛집 디너</span>
+                  <span className="nextrip-ad-card-item"><Plane size="1em" /> 도착 · 공항 픽업</span>
+                  <span className="nextrip-ad-card-item"><Hotel size="1em" /> 호텔 체크인</span>
+                  <span className="nextrip-ad-card-item"><Soup size="1em" /> 현지 맛집 디너</span>
                 </div>
                 <div className="nextrip-ad-card nextrip-ad-card-2">
                   <span className="nextrip-ad-card-day">DAY 2</span>
-                  <span className="nextrip-ad-card-item">🗺 시내 관광 코스</span>
-                  <span className="nextrip-ad-card-item">🎭 문화 체험</span>
-                  <span className="nextrip-ad-card-item">🌅 야경 스팟</span>
+                  <span className="nextrip-ad-card-item"><MapIcon size="1em" /> 시내 관광 코스</span>
+                  <span className="nextrip-ad-card-item"><Drama size="1em" /> 문화 체험</span>
+                  <span className="nextrip-ad-card-item"><Sunset size="1em" /> 야경 스팟</span>
                 </div>
               </div>
             </button>
@@ -783,7 +784,7 @@ export default function BookingFlow({ flight, user, onGoReservations, onGoHome, 
         {step < 4 && (
           <div className="bf-nav">
             {step > 1
-              ? <button className="bf-nav-btn prev" onClick={() => setStep(s => s - 1)}>← 이전</button>
+              ? <button className="bf-nav-btn prev" onClick={() => setStep(s => s - 1)}><ArrowLeft size="1em" /> 이전</button>
               : <div />
             }
             <button

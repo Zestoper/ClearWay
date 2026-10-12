@@ -5,6 +5,7 @@ import { fetchMyBookings } from '../../services/bookings'
 import type { BookingRecord } from '../../services/bookings'
 import { api } from '../../services/api'
 import { useToast } from '../common/ToastProvider'
+import { Check, Plane, Star, X } from 'lucide-react'
 
 interface Props {
   user: User | null
@@ -223,7 +224,7 @@ export default function MyPage({ user, onGoLogin, onUpdateUser }: Props) {
           <div className="mp-modal" onClick={e => e.stopPropagation()}>
             <div className="mp-modal-header">
               <h2>내 예약 내역</h2>
-              <button className="mp-modal-close" onClick={closeModal}>✕</button>
+              <button className="mp-modal-close" onClick={closeModal}><X size="1em" /></button>
             </div>
             <div className="mp-modal-body">
               {bookings.length === 0 ? (
@@ -260,7 +261,7 @@ export default function MyPage({ user, onGoLogin, onUpdateUser }: Props) {
           <div className="mp-modal" onClick={e => e.stopPropagation()}>
             <div className="mp-modal-header">
               <h2>멤버십 혜택</h2>
-              <button className="mp-modal-close" onClick={closeModal}>✕</button>
+              <button className="mp-modal-close" onClick={closeModal}><X size="1em" /></button>
             </div>
             <div className="mp-modal-body">
               <p className="mp-modal-desc">현재 등급: <strong className={`mp-tier-text mp-tier-text--${tier.toLowerCase()}`}>{tier} 회원</strong></p>
@@ -272,7 +273,7 @@ export default function MyPage({ user, onGoLogin, onUpdateUser }: Props) {
                     <span className="mp-tier-req">{t.tier === 'BLUE' ? '기본' : t.tier === 'RED' ? '5만 마일 달성' : '20만 마일 달성'}</span>
                   </div>
                   <ul className="mp-tier-benefits">
-                    {t.benefits.map((b, i) => <li key={i}>✓ {b}</li>)}
+                    {t.benefits.map((b, i) => <li key={i}><Check size="1em" /> {b}</li>)}
                   </ul>
                 </div>
               ))}
@@ -294,7 +295,7 @@ export default function MyPage({ user, onGoLogin, onUpdateUser }: Props) {
           <div className="mp-modal" onClick={e => e.stopPropagation()}>
             <div className="mp-modal-header">
               <h2>이용 내역</h2>
-              <button className="mp-modal-close" onClick={closeModal}>✕</button>
+              <button className="mp-modal-close" onClick={closeModal}><X size="1em" /></button>
             </div>
             <div className="mp-modal-body">
               {bookings.length === 0 ? (
@@ -361,7 +362,7 @@ function ProfileModal({ user, onClose, onUpdateUser }: { user: User; onClose: ()
       <div className="mp-modal" onClick={e => e.stopPropagation()}>
         <div className="mp-modal-header">
           <h2>개인정보 수정</h2>
-          <button className="mp-modal-close" onClick={onClose}>✕</button>
+          <button className="mp-modal-close" onClick={onClose}><X size="1em" /></button>
         </div>
         <div className="mp-modal-body">
           <div className="mp-form-group">
@@ -418,7 +419,7 @@ function PasswordModal({ onClose }: { onClose: () => void }) {
       <div className="mp-modal" onClick={e => e.stopPropagation()}>
         <div className="mp-modal-header">
           <h2>비밀번호 변경</h2>
-          <button className="mp-modal-close" onClick={onClose}>✕</button>
+          <button className="mp-modal-close" onClick={onClose}><X size="1em" /></button>
         </div>
         <div className="mp-modal-body">
           {[
@@ -571,7 +572,7 @@ function PriceAlertsModal({ onClose }: { onClose: () => void }) {
       <div className="mp-modal" onClick={e => e.stopPropagation()}>
         <div className="mp-modal-header">
           <h2>가격 알림</h2>
-          <button className="mp-modal-close" onClick={onClose}>✕</button>
+          <button className="mp-modal-close" onClick={onClose}><X size="1em" /></button>
         </div>
         <div className="mp-modal-body">
           <p style={{ fontSize: 13, color: '#64748b', marginBottom: 16 }}>
@@ -636,7 +637,7 @@ function PriceAlertsModal({ onClose }: { onClose: () => void }) {
                 style={{ padding: '4px 10px', background: a.active ? '#dcfce7' : '#f1f5f9', color: a.active ? '#16a34a' : '#64748b', border: 'none', borderRadius: 6, fontSize: 11, fontWeight: 700, cursor: 'pointer' }}>
                 {a.active ? '활성' : '비활성'}
               </button>
-              <button onClick={() => remove(a.id)} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: 16 }}>✕</button>
+              <button onClick={() => remove(a.id)} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: 16 }}><X size="1em" /></button>
             </div>
           ))}
         </div>
@@ -676,7 +677,7 @@ function NotificationsModal({ onClose }: { onClose: () => void }) {
       <div className="mp-modal" onClick={e => e.stopPropagation()}>
         <div className="mp-modal-header">
           <h2>알림 설정</h2>
-          <button className="mp-modal-close" onClick={onClose}>✕</button>
+          <button className="mp-modal-close" onClick={onClose}><X size="1em" /></button>
         </div>
         <div className="mp-modal-body">
           {ITEMS.map(({ key, label, sub }) => (
@@ -721,7 +722,7 @@ function MyReviewStars({ value }: { value: number }) {
   return (
     <span style={{ display: 'inline-flex', gap: 1 }}>
       {[1,2,3,4,5].map(n => (
-        <span key={n} style={{ color: n <= value ? '#fbbf24' : '#d1d5db', fontSize: 14 }}>★</span>
+        <span key={n} style={{ color: n <= value ? '#fbbf24' : '#d1d5db', fontSize: 14 }}><Star size="1em" fill="currentColor" /></span>
       ))}
     </span>
   )
@@ -787,7 +788,7 @@ function MyReviewsModal({ user, onClose }: { user: User; onClose: () => void }) 
       <div className="mp-modal mp-modal--wide" onClick={e => e.stopPropagation()}>
         <div className="mp-modal-header">
           <h2>내 후기 관리</h2>
-          <button className="mp-modal-close" onClick={onClose}>✕</button>
+          <button className="mp-modal-close" onClick={onClose}><X size="1em" /></button>
         </div>
         <div className="mp-modal-body">
           {loading ? (
@@ -802,7 +803,7 @@ function MyReviewsModal({ user, onClose }: { user: User; onClose: () => void }) 
                     <div className="myr-edit-form">
                       <div className="myr-edit-stars">
                         {[1,2,3,4,5].map(n => (
-                          <button key={n} type="button" className={`myr-star-btn ${n <= editRating ? 'on' : ''}`} onClick={() => setEditRating(n)}>★</button>
+                          <button key={n} type="button" className={`myr-star-btn ${n <= editRating ? 'on' : ''}`} onClick={() => setEditRating(n)}><Star size="1em" fill="currentColor" /></button>
                         ))}
                         <span style={{ fontSize: 12, color: '#6b7280', marginLeft: 6 }}>{STAR_LABELS[editRating]}</span>
                       </div>
@@ -829,7 +830,7 @@ function MyReviewsModal({ user, onClose }: { user: User; onClose: () => void }) 
                         <span style={{ fontSize: 11, color: '#9ca3af', marginLeft: 'auto' }}>{r.created_at.slice(0, 10)}</span>
                       </div>
                       {(r.route || r.plan_destination) && (
-                        <p className="myr-route">✈ {r.review_type === 'ai' ? r.plan_destination : r.route}</p>
+                        <p className="myr-route"><Plane size="1em" /> {r.review_type === 'ai' ? r.plan_destination : r.route}</p>
                       )}
                       <p className="myr-text">{r.text}</p>
                       <div className="myr-actions">

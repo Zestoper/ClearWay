@@ -45,7 +45,7 @@ export default function Header({ currentPage, onNavigate, user, onGoLogin, onLog
     { page: 'notice',        label: '공지/이벤트' },
     { page: 'csevice',       label: '고객센터' },
     { page: 'flight-status', label: '항공편 현황' },
-    { page: 'nextrip',       label: 'NEXTRIP ✦', className: 'nav-nextrip' },
+    { page: 'nextrip',       label: 'NEXTRIP', className: 'nav-nextrip' },
   ]
 
   return (

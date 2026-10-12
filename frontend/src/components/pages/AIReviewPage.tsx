@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import './ReviewPage.css'
 import { api } from '../../services/api'
 import type { User } from '../../services/auth'
+import { ArrowLeft, Compass, Star } from 'lucide-react'
 
 interface Props {
   user: User | null
@@ -31,7 +32,7 @@ function Stars({ value, onChange }: { value: number; onChange?: (n: number) => v
           onMouseEnter={() => onChange && setHover(n)}
           onMouseLeave={() => onChange && setHover(0)}
           onClick={() => onChange?.(n)}
-        >★</button>
+        ><Star size="1em" fill="currentColor" /></button>
       ))}
       <span className="rv-stars-label">
         {value === 1 ? '매우 불만족' : value === 2 ? '불만족' : value === 3 ? '보통' : value === 4 ? '만족' : value === 5 ? '매우 만족' : ''}
@@ -101,7 +102,7 @@ export default function AIReviewPage({ user, onGoLogin, onGoHome, onGoNextrip }:
       <div className="rv-topbar"><div className="rv-topbar-inner"><h1>AI 여행 후기</h1></div></div>
       <div className="rv-body">
         <div className="rv-card rv-done-card">
-          <div className="rv-done-icon" style={{ background: 'linear-gradient(135deg, #7c3aed, #4f46e5)' }}>✦</div>
+          <div className="rv-done-icon" style={{ background: 'linear-gradient(135deg, #7c3aed, #4f46e5)' }}><Compass size="1em" /></div>
           <h2>AI 후기가 등록되었습니다!</h2>
           <p>NEXTRIP AI 서비스 개선에 큰 도움이 됩니다. 감사합니다!</p>
           <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
@@ -117,14 +118,14 @@ export default function AIReviewPage({ user, onGoLogin, onGoHome, onGoNextrip }:
     <main className="rv-page">
       <div className="rv-topbar rv-topbar--ai">
         <div className="rv-topbar-inner">
-          <button className="rv-back-btn" onClick={onGoHome}>← 홈으로</button>
-          <h1>✦ NEXTRIP AI 후기 작성</h1>
+          <button className="rv-back-btn" onClick={onGoHome}><ArrowLeft size="1em" /> 홈으로</button>
+          <h1>NEXTRIP AI 후기 작성</h1>
         </div>
       </div>
       <div className="rv-body">
         {plans.length === 0 ? (
           <div className="rv-card" style={{ textAlign: 'center' }}>
-            <div className="rv-empty-icon">✦</div>
+            <div className="rv-empty-icon"><Compass size="1em" /></div>
             <h3 style={{ color: '#1e1b4b', marginBottom: 8 }}>아직 완성된 AI 여행 계획이 없습니다</h3>
             <p style={{ color: '#6b7280', marginBottom: 20 }}>NEXTRIP AI로 나만의 여행 계획을 만들어보세요!</p>
             <button className="rv-submit-btn" style={{ background: '#7c3aed' }} onClick={onGoNextrip}>AI 여행 계획 시작하기</button>
@@ -132,7 +133,7 @@ export default function AIReviewPage({ user, onGoLogin, onGoHome, onGoNextrip }:
         ) : (
           <div className="rv-card">
             <div className="rv-card-header rv-card-header--ai">
-              <span className="rv-card-icon rv-ai-icon">✦</span>
+              <span className="rv-card-icon rv-ai-icon"><Compass size="1em" /></span>
               <div>
                 <h2>NEXTRIP AI 이용 후기</h2>
                 <p>AI가 만들어준 여행 계획이 얼마나 도움이 되었나요?</p>
@@ -178,7 +179,7 @@ export default function AIReviewPage({ user, onGoLogin, onGoHome, onGoNextrip }:
               {error && <p className="rv-error">{error}</p>}
 
               <button type="submit" className="rv-submit-btn rv-submit-ai" disabled={submitting}>
-                {submitting ? '등록 중...' : '✦ AI 후기 등록하기'}
+                {submitting ? '등록 중...' : 'AI 후기 등록하기'}
               </button>
             </form>
           </div>
