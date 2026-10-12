@@ -9,6 +9,7 @@ from app.models.trip_plan import TripPlan
 from app.models.user import User
 from app.api.v1.deps import get_current_user, get_optional_user
 from app.core.config import settings
+from app.core.groq_chain import GROQ_MODELS_LIGHT, groq_chat
 
 router = APIRouter()
 
@@ -113,18 +114,16 @@ def _raise_for_status_friendly(resp: httpx.Response) -> None:
 def _call_groq(prompt: str, system: str = SYSTEM_PROMPT) -> str:
     if not settings.GROQ_API_KEY:
         raise ValueError("GROQ_API_KEY가 설정되지 않았습니다.\nhttps://console.groq.com 에서 무료 API 키를 발급받아 .env에 추가하세요.")
-    resp = httpx.post(
-        "https://api.groq.com/openai/v1/chat/completions",
-        headers={"Authorization": f"Bearer {settings.GROQ_API_KEY}"},
-        json={
-            "model": "openai/gpt-oss-120b",  # llama-3.3-70b-versatile 2026-08-16 종료
+    # gpt-oss-120b → gpt-oss-20b → qwen3.8 순서로 시도 (한 모델 한도가 차도 다음 모델로)
+    resp = groq_chat(
+        settings.GROQ_API_KEY,
+        {
             "messages": [
                 {"role": "system", "content": system},
                 {"role": "user",   "content": prompt},
             ],
             "temperature": 0.7,
             "max_tokens": 8000,
-            "reasoning_effort": "low",
             "response_format": {"type": "json_object"},
         },
         timeout=120.0,
@@ -382,28 +381,24 @@ def _call_flight_rec_ai(prompt: str) -> str:
     """항공편 추천용: 가벼운 모델 우선 시도, 실패시 기본 모델."""
     provider = settings.AI_PROVIDER.lower()
     if provider == "groq":
-        for model in ["openai/gpt-oss-20b", "openai/gpt-oss-120b"]:
-            try:
-                resp = httpx.post(
-                    "https://api.groq.com/openai/v1/chat/completions",
-                    headers={"Authorization": f"Bearer {settings.GROQ_API_KEY}"},
-                    json={
-                        "model": model,
-                        "messages": [
-                            {"role": "system", "content": _SIMPLE_SYSTEM},
-                            {"role": "user", "content": prompt},
-                        ],
-                        "temperature": 0.3,
-                        "max_tokens": 2000,
-                        "reasoning_effort": "low",
-                        "response_format": {"type": "json_object"},
-                    },
-                    timeout=60.0,
-                )
-                resp.raise_for_status()
-                return resp.json()["choices"][0]["message"]["content"]
-            except Exception:
-                continue
+        resp = groq_chat(
+            settings.GROQ_API_KEY,
+            {
+                "messages": [
+                    {"role": "system", "content": _SIMPLE_SYSTEM},
+                    {"role": "user", "content": prompt},
+                ],
+                "temperature": 0.3,
+                "max_tokens": 2000,
+                "response_format": {"type": "json_object"},
+            },
+            timeout=60.0,
+            models=GROQ_MODELS_LIGHT,  # 가벼운 모델 먼저
+        )
+        if resp.is_success:
+            return resp.json()["choices"][0]["message"]["content"]
+        if settings.CEREBRAS_API_KEY:
+            return _call_cerebras(prompt, _SIMPLE_SYSTEM)
         raise ValueError("Groq API 호출 실패 (rate limit 또는 오류)")
     return _call_ai(prompt, _SIMPLE_SYSTEM)
 

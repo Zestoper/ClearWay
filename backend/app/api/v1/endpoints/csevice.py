@@ -9,6 +9,7 @@ from app.models.inquiry import FAQ, Inquiry
 from app.api.v1.deps import get_admin_user, get_optional_user
 from app.models.user import User
 from app.core.config import settings
+from app.core.groq_chain import groq_chat
 
 router = APIRouter()
 
@@ -113,14 +114,21 @@ def ai_chat(body: AIChatRequest):
     elif provider == "groq":
         if not settings.GROQ_API_KEY:
             raise HTTPException(status_code=500, detail="GROQ_API_KEY 미설정")
-        resp = httpx.post(
-            "https://api.groq.com/openai/v1/chat/completions",
-            headers={"Authorization": f"Bearer {settings.GROQ_API_KEY}"},
-            json={"model": "openai/gpt-oss-120b", "messages": [{"role": "system", "content": _CS_SYSTEM}] + msgs, "max_tokens": 1200, "reasoning_effort": "low"},
-            timeout=30.0,
-        )
+        cs_messages = [{"role": "system", "content": _CS_SYSTEM}] + msgs
+        resp = groq_chat(settings.GROQ_API_KEY, {"messages": cs_messages, "max_tokens": 1200}, timeout=30.0)
+        if resp.is_success:
+            return {"reply": resp.json()["choices"][0]["message"]["content"]}
+        # Groq 모델이 전부 막히면 Cerebras로 폴백
+        if settings.CEREBRAS_API_KEY:
+            c = httpx.post(
+                "https://api.cerebras.ai/v1/chat/completions",
+                headers={"Authorization": f"Bearer {settings.CEREBRAS_API_KEY}"},
+                json={"model": "gpt-oss-120b", "messages": cs_messages, "max_tokens": 1200, "reasoning_effort": "low"},
+                timeout=30.0,
+            )
+            c.raise_for_status()
+            return {"reply": c.json()["choices"][0]["message"]["content"]}
         resp.raise_for_status()
-        return {"reply": resp.json()["choices"][0]["message"]["content"]}
 
     elif provider == "gemini":
         if not settings.GOOGLE_API_KEY:
