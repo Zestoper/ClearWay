@@ -3,7 +3,7 @@ import './Nextrip.css'
 import { api } from '../../services/api'
 import type { User } from '../../services/auth'
 import { useToast } from '../common/ToastProvider'
-import { ArrowLeft, ArrowRight, Backpack, BadgeCheck, Calendar, Castle, Check, ChevronDown, ChevronUp, Coffee, Compass, CornerDownLeft, Fish, Heart, Hotel, House, Landmark, Lightbulb, Link2, Luggage, MapIcon, MapPin, Moon, NotebookPen, Pencil, Plane, Printer, Route, Ruler, Scale, ShoppingBag, Soup, Square, Star, StarHalf, Target, TrainFront, TreePalm, Users, UtensilsCrossed, Wallet, X, Zap } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Backpack, BadgeCheck, Calendar, Castle, Check, ChevronDown, ChevronUp, Coffee, Compass, CornerDownLeft, Fish, Heart, Hotel, House, Landmark, Lightbulb, Link2, Luggage, MapIcon, MapPin, Moon, NotebookPen, Pencil, Plane, Printer, Route, Ruler, Scale, ShoppingBag, Soup, Square, Star, StarHalf, Target, Timer, TrainFront, TreePalm, Users, UtensilsCrossed, Wallet, X, Zap } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
 interface Props { user: User | null; onGoLogin: () => void }
@@ -361,7 +361,7 @@ export default function Nextrip({ user, onGoLogin }: Props) {
               <span className="nx-price-amount">₩3,900</span>
             </div>
             <ul className="nx-price-perks">
-              <li>⏱ 직접 짜면 3~5시간 → AI는 <strong>30초</strong></li>
+              <li><Timer size="1em" /> 직접 짜면 3~5시간 → AI는 <strong>30초</strong></li>
               <li><Check size="1em" /> 커피 한 잔 값으로 완성하는 완벽한 여행</li>
               <li><Check size="1em" /> 맛집·관광지·동선 모두 AI가 최적화</li>
             </ul>
@@ -625,7 +625,7 @@ export default function Nextrip({ user, onGoLogin }: Props) {
                           >
                             <div className="nx-bpc-route">
                               <span className="nx-bpc-code">{b.flight.from_code}</span>
-                              <span className="nx-bpc-arrow">→</span>
+                              <span className="nx-bpc-arrow"><ArrowRight size="1em" /></span>
                               <span className="nx-bpc-code">{b.flight.to_code}</span>
                             </div>
                             <div className="nx-bpc-info">
@@ -1116,7 +1116,7 @@ export default function Nextrip({ user, onGoLogin }: Props) {
                             {item.tip && <p className="nx-tl-tip"><Lightbulb size="1em" /> {item.tip}</p>}
                             {item.notes && <p className="nx-tl-notes"><NotebookPen size="1em" /> {item.notes}</p>}
                             <div className="nx-tl-meta">
-                              <span>⏱ {item.duration_min}분</span>
+                              <span><Timer size="1em" /> {item.duration_min}분</span>
                               {item.distance_from_prev && item.distance_from_prev !== '0km' && (
                                 <span><Ruler size="1em" /> {item.distance_from_prev}</span>
                               )}
