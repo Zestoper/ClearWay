@@ -117,13 +117,14 @@ def _call_groq(prompt: str, system: str = SYSTEM_PROMPT) -> str:
         "https://api.groq.com/openai/v1/chat/completions",
         headers={"Authorization": f"Bearer {settings.GROQ_API_KEY}"},
         json={
-            "model": "llama-3.3-70b-versatile",
+            "model": "openai/gpt-oss-120b",  # llama-3.3-70b-versatile 2026-08-16 종료
             "messages": [
                 {"role": "system", "content": system},
                 {"role": "user",   "content": prompt},
             ],
             "temperature": 0.7,
             "max_tokens": 8000,
+            "reasoning_effort": "low",
             "response_format": {"type": "json_object"},
         },
         timeout=120.0,
@@ -381,7 +382,7 @@ def _call_flight_rec_ai(prompt: str) -> str:
     """항공편 추천용: 가벼운 모델 우선 시도, 실패시 기본 모델."""
     provider = settings.AI_PROVIDER.lower()
     if provider == "groq":
-        for model in ["llama-3.1-8b-instant", "llama-3.3-70b-versatile"]:
+        for model in ["openai/gpt-oss-20b", "openai/gpt-oss-120b"]:
             try:
                 resp = httpx.post(
                     "https://api.groq.com/openai/v1/chat/completions",
@@ -393,7 +394,8 @@ def _call_flight_rec_ai(prompt: str) -> str:
                             {"role": "user", "content": prompt},
                         ],
                         "temperature": 0.3,
-                        "max_tokens": 1000,
+                        "max_tokens": 2000,
+                        "reasoning_effort": "low",
                         "response_format": {"type": "json_object"},
                     },
                     timeout=60.0,

@@ -116,7 +116,7 @@ def ai_chat(body: AIChatRequest):
         resp = httpx.post(
             "https://api.groq.com/openai/v1/chat/completions",
             headers={"Authorization": f"Bearer {settings.GROQ_API_KEY}"},
-            json={"model": "llama-3.3-70b-versatile", "messages": [{"role": "system", "content": _CS_SYSTEM}] + msgs, "max_tokens": 400},
+            json={"model": "openai/gpt-oss-120b", "messages": [{"role": "system", "content": _CS_SYSTEM}] + msgs, "max_tokens": 1200, "reasoning_effort": "low"},
             timeout=30.0,
         )
         resp.raise_for_status()
