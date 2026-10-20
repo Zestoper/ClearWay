@@ -32,16 +32,19 @@ export default function NoticeEventPage() {
   const [notices, setNotices] = useState<Notice[]>([])
   const [category, setCategory] = useState('')
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+  const [reloadKey, setReloadKey] = useState(0)
   const [selected, setSelected] = useState<Notice | null>(null)
 
   useEffect(() => {
     setLoading(true)
+    setError('')
     const url = category ? `/notices?category=${encodeURIComponent(category)}` : '/notices'
     api.get<Notice[]>(url)
       .then(setNotices)
-      .catch(() => setNotices([]))
+      .catch((e: Error) => { setNotices([]); setError(e.message) })
       .finally(() => setLoading(false))
-  }, [category])
+  }, [category, reloadKey])
 
   function formatDate(dt: string) {
     return dt?.slice(0, 10).replace(/-/g, '.')
@@ -75,6 +78,13 @@ export default function NoticeEventPage() {
 
         {loading ? (
           <p className="notice-loading">불러오는 중...</p>
+        ) : error ? (
+          <div className="notice-loading">
+            <p>{error}</p>
+            <button type="button" className="notice-retry" onClick={() => setReloadKey(k => k + 1)}>
+              다시 시도
+            </button>
+          </div>
         ) : notices.length === 0 ? (
           <p className="notice-empty">등록된 공지가 없습니다.</p>
         ) : (
