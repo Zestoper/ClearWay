@@ -4,7 +4,16 @@ import DatePicker from './DatePicker';
 import type { SearchParams } from '../../types';
 import { useToast } from './ToastProvider';
 
-export const FROM_AIRPORTS = [{ code: 'ICN', city: '서울', name: '인천국제공항' }];
+// 실데이터(공공 API) 기준 출발편이 많은 공항
+export const FROM_AIRPORTS = [
+    { code: 'ICN', city: '서울', name: '인천국제공항' },
+    { code: 'GMP', city: '서울', name: '김포국제공항' },
+    { code: 'PUS', city: '부산', name: '김해국제공항' },
+    { code: 'CJU', city: '제주', name: '제주국제공항' },
+];
+
+// 공공 API 운항 데이터는 오늘 ~ 6일 후까지만 제공된다
+export const BOOKABLE_DAYS = 6;
 
 export const DOMESTIC = [
     { code: 'GMP', city: '서울', name: '김포국제공항' },
@@ -122,7 +131,7 @@ export default function SearchBar({ onSearch, onGoMyTrips, onGoCheckin, isLogged
     const [fromCode, setFromCode] = useState('ICN');
     const [toCode, setToCode] = useState('');
     const [date, setDate] = useState(todayStr);
-    const [returnDate, setReturnDate] = useState(() => plusDays(todayStr(), 7));
+    const [returnDate, setReturnDate] = useState(() => plusDays(todayStr(), 3));
     const [adults, setAdults] = useState(1);
     const [children, setChildren] = useState(0);
     const [infants, setInfants] = useState(0);
@@ -349,7 +358,7 @@ export default function SearchBar({ onSearch, onGoMyTrips, onGoCheckin, isLogged
                                 <div className="search-field date-field">
                                     <label>출발일</label>
                                     <div className="field-value">
-                                        <DatePicker value={date} onChange={(d) => { setDate(d); if (returnDate < d) setReturnDate(d) }} showPrices />
+                                        <DatePicker value={date} onChange={(d) => { setDate(d); if (returnDate < d) setReturnDate(d) }} maxDate={plusDays(todayStr(), BOOKABLE_DAYS)} />
                                     </div>
                                 </div>
 
@@ -359,7 +368,7 @@ export default function SearchBar({ onSearch, onGoMyTrips, onGoCheckin, isLogged
                                         <div className="search-field date-field">
                                             <label>귀국일</label>
                                             <div className="field-value">
-                                                <DatePicker value={returnDate} onChange={setReturnDate} minDate={date} showPrices />
+                                                <DatePicker value={returnDate} onChange={setReturnDate} minDate={date} maxDate={plusDays(todayStr(), BOOKABLE_DAYS)} />
                                             </div>
                                         </div>
                                     </>

@@ -32,6 +32,10 @@ services:
         sync: false
       - key: SMTP_FROM_EMAIL
         sync: false
+      - key: DATA_GO_KR_SERVICE_KEY
+        sync: false
+      - key: FLIGHT_SYNC_TOKEN
+        sync: false
 
   - type: web
     name: clearway-frontend

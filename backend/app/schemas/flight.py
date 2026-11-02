@@ -22,5 +22,10 @@ class FlightOut(BaseModel):
     is_cancelled: bool
     is_direct: bool = True
     via_city: str | None = None
+    # 실데이터 동기화 필드
+    source: str = "mock"
+    airline: str | None = None
+    status: str | None = None
+    depart_estimated: str | None = None
 
     model_config = {"from_attributes": True}

@@ -21,6 +21,10 @@ class Settings(BaseSettings):
     SMTP_PASSWORD: str = ""
     SMTP_FROM_EMAIL: str = ""
     AERODATABOX_API_KEY: str = ""
+    # 공공데이터포털 인증키 (한국공항공사·인천국제공항공사 운항 API 공용)
+    DATA_GO_KR_SERVICE_KEY: str = ""
+    # GitHub Actions가 수집 API를 호출할 때 쓰는 비밀 토큰
+    FLIGHT_SYNC_TOKEN: str = ""
 
     class Config:
         env_file = ".env"

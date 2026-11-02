@@ -1,0 +1,47 @@
+# 공공데이터포털 실데이터 항공편 수집 (하루 4회)
+# Render 무료 서버는 요청이 없으면 잠들어서 서버 내부 스케줄러가 돌지 않는다.
+# → 외부(GitHub Actions)에서 서버를 깨운 뒤 수집 API를 호출한다.
+#
+# 필요한 Repository secrets
+#   CLEARWAY_API_URL     예) https://clearway-backend.onrender.com
+#   FLIGHT_SYNC_TOKEN    백엔드 환경변수 FLIGHT_SYNC_TOKEN 과 같은 값
+name: Sync real flight data
+
+on:
+  schedule:
+    # UTC 기준 → 한국 시간 00:17 / 06:17 / 12:17 / 18:17
+    - cron: "17 15,21,3,9 * * *"
+  workflow_dispatch: {}
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Wake up Render server
+        run: |
+          for i in $(seq 1 20); do
+            code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 "${{ secrets.CLEARWAY_API_URL }}/health" || true)
+            echo "health check $i: $code"
+            if [ "$code" = "200" ]; then exit 0; fi
+            sleep 15
+          done
+          echo "서버가 깨어나지 않았습니다" && exit 1
+
+      - name: Trigger flight sync
+        run: |
+          curl -sf -X POST "${{ secrets.CLEARWAY_API_URL }}/api/v1/admin/flight-sync" \
+            -H "X-Sync-Token: ${{ secrets.FLIGHT_SYNC_TOKEN }}"
+
+      - name: Wait for result
+        run: |
+          for i in $(seq 1 60); do
+            sleep 15
+            body=$(curl -s "${{ secrets.CLEARWAY_API_URL }}/api/v1/admin/flight-sync/status" \
+              -H "X-Sync-Token: ${{ secrets.FLIGHT_SYNC_TOKEN }}")
+            status=$(echo "$body" | python3 -c "import sys,json; print(json.load(sys.stdin).get('status',''))")
+            echo "[$i] $status"
+            if [ "$status" = "ok" ] || [ "$status" = "partial" ]; then echo "$body"; exit 0; fi
+            if [ "$status" = "failed" ]; then echo "$body"; exit 1; fi
+          done
+          echo "15분 안에 끝나지 않았습니다" && exit 1

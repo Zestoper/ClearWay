@@ -5,6 +5,7 @@ interface Props {
   value: string
   onChange: (v: string) => void
   minDate?: string
+  maxDate?: string
   showPrices?: boolean
 }
 
@@ -32,10 +33,11 @@ function fmtPrice(n: number) {
   return `${Math.round(n / 1000)}k`
 }
 
-export default function DatePicker({ value, onChange, minDate, showPrices }: Props) {
+export default function DatePicker({ value, onChange, minDate, maxDate, showPrices }: Props) {
   const [open, setOpen] = useState(false)
   const today = toYMD(new Date())
   const min = minDate ?? today
+  const max = maxDate ?? '9999-12-31'
 
   const [viewYear, setViewYear] = useState(() => {
     const d = value ? parseYMD(value) : new Date()
@@ -77,7 +79,7 @@ export default function DatePicker({ value, onChange, minDate, showPrices }: Pro
 
   function selectDay(day: number) {
     const s = `${viewYear}-${String(viewMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`
-    if (s < min) return
+    if (s < min || s > max) return
     onChange(s)
     setOpen(false)
   }
@@ -85,7 +87,7 @@ export default function DatePicker({ value, onChange, minDate, showPrices }: Pro
   function cellClass(day: number | null) {
     if (!day) return 'dp-cell empty'
     const s = `${viewYear}-${String(viewMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`
-    const isDisabled = s < min
+    const isDisabled = s < min || s > max
     const isToday = s === today
     const isSelected = s === value
     const col = new Date(viewYear, viewMonth, day).getDay()
@@ -143,7 +145,7 @@ export default function DatePicker({ value, onChange, minDate, showPrices }: Pro
             ))}
             {getDays().map((day, i) => {
               const dateStr = day ? `${viewYear}-${String(viewMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}` : ''
-              const disabled = !day || dateStr < min
+              const disabled = !day || dateStr < min || dateStr > max
               const price = showPrices && day && !disabled ? mockPrice(dateStr) : null
               return (
                 <button
