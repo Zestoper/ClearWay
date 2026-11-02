@@ -29,6 +29,10 @@ STATEMENTS = [
     "CREATE INDEX IF NOT EXISTS ix_flights_flight_no ON flights (flight_no)",
     "CREATE UNIQUE INDEX IF NOT EXISTS flights_sync_key_key ON flights (sync_key)",
     "CREATE INDEX IF NOT EXISTS ix_flights_route_date ON flights (from_code, to_code, date)",
+    # 실시세 운임
+    "ALTER TABLE flights ADD COLUMN IF NOT EXISTS price_source VARCHAR(10) NOT NULL DEFAULT 'estimated'",
+    "ALTER TABLE flights ADD COLUMN IF NOT EXISTS price_updated_at TIMESTAMPTZ",
+    # fare_lookups 테이블은 서버 시작 시 create_all 로 자동 생성된다
 ]
 
 

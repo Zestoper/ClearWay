@@ -116,8 +116,9 @@ INTL_PLACES: dict[str, Place] = {r[0]: Place(r[1], r[2], r[3]) for r in _INTL_RO
 INTL_ROUTES: dict[str, Route] = {r[0]: Route(r[4], r[5], r[6], r[7]) for r in _INTL_ROWS}
 
 # 국내선: 제주 노선은 조금 길고 나머지는 대부분 1시간 안팎
-_DOMESTIC_JEJU = Route(65, 45_000, 85_000, 2.0)
-_DOMESTIC_OTHER = Route(55, 38_000, 75_000, 1.8)
+# 운임 범위는 실시세 확인 결과(김포→제주 저비용 약 10만 / 대형 약 17만)에 맞춰 보정
+_DOMESTIC_JEJU = Route(65, 70_000, 150_000, 1.8)
+_DOMESTIC_OTHER = Route(55, 60_000, 130_000, 1.8)
 
 
 def place_of(code: str) -> Place | None:

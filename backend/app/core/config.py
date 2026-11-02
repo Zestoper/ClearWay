@@ -25,6 +25,10 @@ class Settings(BaseSettings):
     DATA_GO_KR_SERVICE_KEY: str = ""
     # GitHub Actions가 수집 API를 호출할 때 쓰는 비밀 토큰
     FLIGHT_SYNC_TOKEN: str = ""
+    # 실시세 운임 (SerpApi Google Flights) — 비어 있으면 산정가만 사용
+    SERPAPI_KEY: str = ""
+    SERPAPI_MONTHLY_BUDGET: int = 230   # 무료 250회 중 여유분을 남긴 월 예산
+    FARE_CACHE_HOURS: int = 12          # 같은 노선·날짜 재조회 간격
 
     class Config:
         env_file = ".env"

@@ -8,6 +8,7 @@ from app.models.flight import Flight
 from app.models.booking import Booking, BookingStatus
 from app.schemas.flight import FlightOut
 from app.services.flight_sync.builder import KST, WINDOW_DAYS, today_kst
+from app.services.fares import apply_live_fares
 
 router = APIRouter()
 
@@ -25,6 +26,10 @@ def list_flights(
     last_day = today + timedelta(days=WINDOW_DAYS)
     if date and not (today <= date <= last_day):
         return []
+
+    # 노선·날짜가 정해진 검색이면 실시세를 먼저 반영 (캐시·월 예산 안에서만 호출 / 실패 시 산정가 유지)
+    if from_code and to_code and date:
+        apply_live_fares(db, from_code.upper(), to_code.upper(), date)
 
     q = db.query(Flight).filter(
         Flight.source != "mock",

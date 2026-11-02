@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from datetime import date
+from datetime import date, datetime
 from decimal import Decimal
 
 class FlightOut(BaseModel):
@@ -27,5 +27,7 @@ class FlightOut(BaseModel):
     airline: str | None = None
     status: str | None = None
     depart_estimated: str | None = None
+    price_source: str = "estimated"
+    price_updated_at: datetime | None = None
 
     model_config = {"from_attributes": True}
