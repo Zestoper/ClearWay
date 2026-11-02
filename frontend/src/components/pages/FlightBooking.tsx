@@ -500,7 +500,7 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
             <span className="result-count">
               총 <strong>{filtered.length}편</strong> 운항
               <small className="data-source-note">
-                {' '}· 한국공항공사·인천국제공항공사 실시간 운항 데이터 기준 (오늘부터 7일) · 운임은 노선 기준 산정가
+                {' '}· 운항 스케줄은 한국공항공사·인천국제공항공사 실시간 데이터 (오늘부터 7일) · 일반석 운임은 구글 항공권 시세 참고 (없으면 노선 기준 산정가)
               </small>
             </span>
             <div className="sort-options">
@@ -569,9 +569,17 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
                 </div>
 
                 <div className="flight-price-wrap">
-                  {lowSeat && <span className="seats-left">잔여 {fareSeats}석</span>}
+                  {lowSeat && <span className="seats-left">CLEARWAY 판매 가능 {fareSeats}석</span>}
                   <p className="fare-class-label">{fareClass === 'economy' ? '일반석' : '비즈니스석'}</p>
                   <p className="flight-price">₩{farePrice.toLocaleString()}</p>
+                  <span
+                    className={`price-source ${flight.price_source === 'live' && fareClass === 'economy' ? 'live' : 'estimated'}`}
+                    title={flight.price_source === 'live' && fareClass === 'economy'
+                      ? '구글 항공권 검색 시세 기준 (최대 12시간 전 조회)'
+                      : '노선 기준 산정가 (실시세 미조회 또는 비즈니스석)'}
+                  >
+                    {flight.price_source === 'live' && fareClass === 'economy' ? '실시세' : '산정가'}
+                  </span>
                   <p className="price-note">성인 1인 · 세금 포함</p>
                   <button
                     className={`select-btn ${isSelected ? 'selected' : ''}`}

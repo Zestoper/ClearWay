@@ -24,6 +24,8 @@ export interface Flight {
   airline?: string | null
   status?: string | null
   depart_estimated?: string | null
+  price_source?: 'live' | 'estimated'
+  price_updated_at?: string | null
 }
 
 export async function fetchFlights(params?: { from_code?: string; to_code?: string; date?: string }): Promise<Flight[]> {
