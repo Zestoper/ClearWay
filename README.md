@@ -2,6 +2,9 @@
 
 > 공공데이터 실제 운항 스케줄과 구글 항공권 시세로 동작하는 풀스택 항공권 예약 서비스
 
+**서비스**: https://clear-way-drab.vercel.app · **API**: https://clearway-3z2c.onrender.com/docs
+> 백엔드는 Render 무료 플랜이라 처음 접속 시 서버가 깨어나는 데 최대 1분 정도 걸립니다.
+
 ---
 
 ## 목차
