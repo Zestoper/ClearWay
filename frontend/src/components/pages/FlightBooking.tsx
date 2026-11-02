@@ -243,6 +243,9 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
 
   const activeList = bookingStep === 'return' ? returnFlights : flights
   const filtered = applyFilters(activeList)
+  // 실데이터 예약 가능 범위: 오늘 ~ 6일 후
+  const bookableMin = new Date().toLocaleDateString('sv-SE')
+  const bookableMax = new Date(Date.now() + 6 * 86400000).toLocaleDateString('sv-SE')
 
   const TIME_FILTERS = [
     { key: 'dawn',      label: '새벽', sub: '00 – 06시' },
@@ -348,6 +351,8 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
               type="date"
               className="filter-date-input"
               value={localDate}
+              min={bookableMin}
+              max={bookableMax}
               onChange={e => setLocalDate(e.target.value)}
             />
           </div>
@@ -360,6 +365,7 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
                 className="filter-date-input"
                 value={localReturnDate}
                 min={localDate}
+                max={bookableMax}
                 onChange={e => setLocalReturnDate(e.target.value)}
               />
             </div>
@@ -493,6 +499,9 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
           <div className="sort-bar">
             <span className="result-count">
               총 <strong>{filtered.length}편</strong> 운항
+              <small className="data-source-note">
+                {' '}· 한국공항공사·인천국제공항공사 실시간 운항 데이터 기준 (오늘부터 7일) · 운임은 노선 기준 산정가
+              </small>
             </span>
             <div className="sort-options">
               {(['departure', 'price', 'duration'] as SortKey[]).map(key => (
@@ -522,9 +531,9 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
               <div key={flight.id} className={`flight-card ${isSelected ? 'selected' : ''}`}>
 
                 <div className="flight-brand">
-                  <div className="cw-badge">CW</div>
+                  <div className="cw-badge">{flight.flight_no.slice(0, 2)}</div>
                   <div>
-                    <p className="brand-name">CLEARWAY</p>
+                    <p className="brand-name">{flight.airline ?? 'CLEARWAY'}</p>
                     <p className="flight-no">{flight.flight_no}</p>
                   </div>
                 </div>

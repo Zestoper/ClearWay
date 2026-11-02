@@ -19,6 +19,11 @@ export interface Flight {
   business_seats: number
   is_direct: boolean
   via_city: string | null
+  // 실데이터 동기화 필드
+  source?: string
+  airline?: string | null
+  status?: string | null
+  depart_estimated?: string | null
 }
 
 export async function fetchFlights(params?: { from_code?: string; to_code?: string; date?: string }): Promise<Flight[]> {

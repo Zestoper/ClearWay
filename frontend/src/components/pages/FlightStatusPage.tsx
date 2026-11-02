@@ -29,7 +29,8 @@ interface StatusResponse {
 
 const AIRPORT_OPTIONS: Array<{ code: string; label: string; group: string }> = [
   ...FROM_AIRPORTS.map(a => ({ code: a.code, label: `${a.city} · ${a.name}`, group: '출발' })),
-  ...DOMESTIC.map(a => ({ code: a.code, label: `${a.city} · ${a.name}`, group: '국내' })),
+  ...DOMESTIC.filter(a => !FROM_AIRPORTS.some(f => f.code === a.code))
+    .map(a => ({ code: a.code, label: `${a.city} · ${a.name}`, group: '국내' })),
   ...INTL_REGIONS.flatMap(({ region, airports }) =>
     airports.map(a => ({ code: a.code, label: `${a.city} · ${a.name}`, group: region }))
   ),
