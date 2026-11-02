@@ -1261,9 +1261,11 @@
   .rec-results { padding: 14px 16px 20px; }
 }
 
-/* 실데이터 출처 안내 */
+/* 실데이터 출처 안내 (정렬 바 아래 별도 줄) */
 .data-source-note {
+  margin: -4px 0 12px;
   font-size: 12px;
+  line-height: 1.5;
   color: #8a94a6;
   font-weight: 400;
 }
@@ -1285,4 +1287,9 @@
 .price-source.estimated {
   color: #6b7280;
   background: #f1f3f6;
+}
+
+/* 정렬 버튼 글자가 세로로 쪼개지지 않게 */
+.sort-options button {
+  white-space: nowrap;
 }
