@@ -150,7 +150,8 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
     : []
 
   useEffect(() => {
-    setLocalDate(searchParams?.date ?? '')
+    // 날짜 없이 들어오면 오늘로 (실데이터는 날짜·출발지 없이 부르면 14개 공항 1만여 편이 섞여 나온다)
+    setLocalDate(searchParams?.date || new Date().toLocaleDateString('sv-SE'))
     setLocalReturnDate(searchParams?.returnDate ?? '')
     setIsRoundtrip(searchParams?.tripType === 'roundtrip')
   }, [searchParams])
@@ -161,7 +162,11 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
     setOutboundFlight(null)
     setSelectedId(null)
     setSelectedReturnId(null)
-    fetchFlights(searchParams ? { ...searchParams, date: localDate || searchParams.date } : { date: localDate } as never)
+    if (!localDate) return
+    // 출발지가 없으면 헤더 기본값과 같은 인천(ICN) 출발편만 보여준다
+    fetchFlights(searchParams
+      ? { ...searchParams, from_code: searchParams.from_code || 'ICN', date: localDate }
+      : { from_code: 'ICN', date: localDate })
       .then(setFlights)
       .finally(() => setLoading(false))
 
