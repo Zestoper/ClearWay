@@ -15,6 +15,7 @@ from app.db.database import SessionLocal, engine, create_tables
 from app.services.flight_sync import run_sync
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
+logging.getLogger("httpx").setLevel(logging.WARNING)  # URL에 인증키가 포함되므로 출력하지 않음
 
 if __name__ == "__main__":
     print(f"대상 DB: {engine.url.drivername}://{engine.url.host or engine.url.database}")

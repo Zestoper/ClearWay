@@ -8,6 +8,8 @@
 - numOfRows=500 은 정상 응답이 오지 않음 → 100건씩 페이징
 """
 import logging
+import math
+from concurrent.futures import ThreadPoolExecutor
 
 import httpx
 
@@ -19,6 +21,7 @@ log = logging.getLogger(__name__)
 BASE = "https://apis.data.go.kr/B551178/flight-status"
 PAGE_SIZE = 100
 MAX_PAGES = 150   # 안전장치: 혹시 totalCount가 이상하게 와도 트래픽을 다 쓰지 않도록
+WORKERS = 6       # 순차 호출 시 수집 1회 약 8분 → 동시 호출로 단축
 
 
 class KacClient:
@@ -27,20 +30,22 @@ class KacClient:
         self.http = client
         self.calls = 0
 
+    def _page(self, operation: str, page: int) -> dict:
+        payload = get_json(self.http, f"{BASE}/{operation}", {
+            "serviceKey": self.key, "type": "json",
+            "pageNo": page, "numOfRows": PAGE_SIZE,
+        })
+        self.calls += 1
+        return payload
+
     def _fetch_all(self, operation: str) -> list[dict]:
-        items: list[dict] = []
-        page = 1
-        while page <= MAX_PAGES:
-            payload = get_json(self.http, f"{BASE}/{operation}", {
-                "serviceKey": self.key, "type": "json",
-                "pageNo": page, "numOfRows": PAGE_SIZE,
-            })
-            self.calls += 1
-            chunk = extract_items(payload)
-            items.extend(chunk)
-            if not chunk or page * PAGE_SIZE >= total_count(payload):
-                break
-            page += 1
+        first = self._page(operation, 1)
+        items = extract_items(first)
+        pages = min(math.ceil(total_count(first) / PAGE_SIZE), MAX_PAGES)
+        if pages > 1:
+            with ThreadPoolExecutor(max_workers=WORKERS) as pool:
+                for payload in pool.map(lambda p: self._page(operation, p), range(2, pages + 1)):
+                    items.extend(extract_items(payload))
         return items
 
     def _to_movement(self, it: dict, io: str) -> Movement | None:

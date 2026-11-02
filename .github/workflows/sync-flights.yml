@@ -16,7 +16,7 @@ on:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - name: Wake up Render server
         run: |
@@ -35,7 +35,7 @@ jobs:
 
       - name: Wait for result
         run: |
-          for i in $(seq 1 24); do
+          for i in $(seq 1 60); do
             sleep 15
             body=$(curl -s "${{ secrets.CLEARWAY_API_URL }}/api/v1/admin/flight-sync/status" \
               -H "X-Sync-Token: ${{ secrets.FLIGHT_SYNC_TOKEN }}")
@@ -44,4 +44,4 @@ jobs:
             if [ "$status" = "ok" ] || [ "$status" = "partial" ]; then echo "$body"; exit 0; fi
             if [ "$status" = "failed" ]; then echo "$body"; exit 1; fi
           done
-          echo "6분 안에 끝나지 않았습니다" && exit 1
+          echo "15분 안에 끝나지 않았습니다" && exit 1

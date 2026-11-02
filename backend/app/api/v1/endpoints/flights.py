@@ -1,12 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from typing import Optional
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
+from sqlalchemy import or_
 from app.db.database import get_db
 from app.models.flight import Flight
 from app.models.booking import Booking, BookingStatus
 from app.schemas.flight import FlightOut
-from app.services.flight_sync.builder import WINDOW_DAYS, today_kst
+from app.services.flight_sync.builder import KST, WINDOW_DAYS, today_kst
 
 router = APIRouter()
 
@@ -30,6 +31,8 @@ def list_flights(
         Flight.is_cancelled.is_(False),
         Flight.date >= today,
         Flight.date <= last_day,
+        # 오늘 편은 아직 출발 전인 것만 (시각은 'HH:MM' 문자열이라 문자열 비교로 충분)
+        or_(Flight.date > today, Flight.depart_time > datetime.now(KST).strftime("%H:%M")),
     )
     if from_code:
         q = q.filter(Flight.from_code == from_code.upper())

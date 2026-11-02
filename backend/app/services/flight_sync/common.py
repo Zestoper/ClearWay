@@ -13,7 +13,7 @@ log = logging.getLogger(__name__)
 
 def get_json(client: httpx.Client, url: str, params: dict, retries: int = 3) -> dict:
     """공공데이터포털은 가끔 일시적으로 실패하거나 JSON 대신 XML 에러를 준다 → 재시도 + 형식 검사."""
-    last_err: Exception | None = None
+    last_err: str | None = None
     for attempt in range(1, retries + 1):
         try:
             res = client.get(url, params=params)
@@ -22,10 +22,15 @@ def get_json(client: httpx.Client, url: str, params: dict, retries: int = 3) -> 
             check_result(payload)
             return payload
         except (httpx.HTTPError, ValueError, RuntimeError) as e:
-            last_err = e
-            log.warning("공공데이터 API 호출 실패 (%d/%d) %s: %s", attempt, retries, url.rsplit("/", 1)[-1], e)
+            # httpx 에러 메시지에는 요청 URL 전체(= 인증키 포함)가 들어 있어 가린다
+            last_err = _scrub(str(e), params.get("serviceKey"))
+            log.warning("공공데이터 API 호출 실패 (%d/%d) %s: %s", attempt, retries, url.rsplit("/", 1)[-1], last_err)
             time.sleep(1.5 * attempt)
     raise RuntimeError(f"공공데이터 API 호출 실패: {last_err}")
+
+
+def _scrub(text: str, secret: str | None) -> str:
+    return text.replace(secret, "***") if secret else text
 
 
 def check_result(payload: Any) -> None:

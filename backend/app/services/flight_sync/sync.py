@@ -22,6 +22,8 @@ from .incheon import IncheonClient
 from .kac import KacClient
 
 log = logging.getLogger(__name__)
+# httpx는 INFO 레벨에서 요청 URL 전체를 찍는데 URL에 serviceKey가 들어 있다 → 서버 로그에 키가 남지 않도록 차단
+logging.getLogger("httpx").setLevel(logging.WARNING)
 
 _lock = threading.Lock()
 last_result: dict = {"status": "never"}
