@@ -1,5 +1,6 @@
 from app.models.user import User
 from app.models.flight import Flight
+from app.models.fare_lookup import FareLookup
 from app.models.booking import Booking
 from app.models.notice import Notice
 from app.models.inquiry import FAQ, Inquiry

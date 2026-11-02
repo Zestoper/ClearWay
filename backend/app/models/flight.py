@@ -43,5 +43,8 @@ class Flight(Base):
     status = Column(String(16), nullable=True)            # SCHEDULED / DELAYED / CANCELLED ...
     depart_estimated = Column(String(5), nullable=True)   # 변경된 출발 시각 (지연 등)
     synced_at = Column(DateTime(timezone=True), nullable=True)
+    # 운임 출처: estimated(노선 기준 산정) / live(SerpApi 구글 항공권 실시세)
+    price_source = Column(String(10), nullable=False, default="estimated", server_default="estimated")
+    price_updated_at = Column(DateTime(timezone=True), nullable=True)
 
     bookings = relationship("Booking", back_populates="flight")
