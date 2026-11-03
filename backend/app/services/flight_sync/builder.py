@@ -8,7 +8,7 @@
 2) 해외 → 한국 입국편은 출발 기록이 없으니 한국 도착 기록으로 만든다
    - 출발 시각은 '도착 시각 - 평균 비행시간 + 현지 시차'로 추정한다
 3) 기준표(reference.py)에 없는 노선은 만들지 않는다
-4) 오늘 ~ D+6 (한국 시간) 출발편만 남긴다
+4) 오늘 ~ D+6 (한국 시간) 출발편만 남긴다 (그 뒤 날짜는 projection.py가 요일 패턴으로 만든다)
 """
 import hashlib
 from collections import defaultdict
@@ -20,7 +20,8 @@ from .dto import Movement
 from .reference import Route, is_korean, place_of, route_of
 
 KST = ZoneInfo("Asia/Seoul")
-WINDOW_DAYS = 6
+REAL_WINDOW_DAYS = 6                   # 공공 API가 주는 범위: 오늘 ~ D+6
+BOOKABLE_DAYS = 365                    # 예약 가능 범위: 오늘 ~ 1년 뒤
 MAX_PAIR_GAP = timedelta(hours=6)      # 국내선 출발-도착 기록을 짝지을 때 허용 간격
 
 
@@ -97,7 +98,7 @@ def _row(
 
 def build_rows(deps: list[Movement], arrs: list[Movement], today: date | None = None) -> tuple[list[dict], BuildStats]:
     today = today or today_kst()
-    last_day = today + timedelta(days=WINDOW_DAYS)
+    last_day = today + timedelta(days=REAL_WINDOW_DAYS)
     now = datetime.now(KST)
     stats = BuildStats()
     rows: dict[str, dict] = {}

@@ -20,6 +20,7 @@ from app.models.flight import Flight
 from .builder import KST, build_rows
 from .incheon import IncheonClient
 from .kac import KacClient
+from .projection import mark_unconfirmed
 
 log = logging.getLogger(__name__)
 # httpx는 INFO 레벨에서 요청 URL 전체를 찍는데 URL에 serviceKey가 들어 있다 → 서버 로그에 키가 남지 않도록 차단
@@ -29,7 +30,8 @@ _lock = threading.Lock()
 last_result: dict = {"status": "never"}
 
 # 재수집 때 갱신하는 컬럼 (운임·좌석은 예약에 영향을 주니 처음 값 유지)
-_UPDATE_COLS = ("airline", "depart_time", "arrival_time", "duration", "status",
+# source도 갱신 → 예정편(SCHED)이 실데이터 범위로 들어오면 같은 행이 실데이터(KAC/ICN)로 바뀐다
+_UPDATE_COLS = ("source", "airline", "depart_time", "arrival_time", "duration", "status",
                 "is_cancelled", "depart_estimated", "synced_at")
 _CHUNK = 500
 
@@ -88,8 +90,12 @@ def run_sync(session_factory) -> dict:
     try:
         deps, arrs, errors, calls = collect_movements(settings.DATA_GO_KR_SERVICE_KEY)
         rows, stats = build_rows(deps, arrs)
+        unconfirmed = 0
         with session_factory() as db:
             upserted = upsert_rows(db, rows) if rows else 0
+            # 두 기관 모두 정상 수집됐을 때만: 실데이터에 끝내 안 나온 예정편 판매 중지
+            if not errors and rows:
+                unconfirmed = mark_unconfirmed(db)
 
         top_unknown = sorted(stats.unknown_routes.items(), key=lambda x: -x[1])[:10]
         last_result = {
@@ -99,6 +105,7 @@ def run_sync(session_factory) -> dict:
             "api_calls": calls,
             "movements": {"departures": len(deps), "arrivals": len(arrs)},
             "flights_upserted": upserted,
+            "projected_unconfirmed": unconfirmed,
             "real_arrival_times": stats.real_arrival,
             "skipped_no_route": stats.skipped_no_route,
             "skipped_out_of_window": stats.skipped_out_of_window,
