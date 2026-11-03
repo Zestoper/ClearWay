@@ -12,8 +12,9 @@ export const FROM_AIRPORTS = [
     { code: 'CJU', city: '제주', name: '제주국제공항' },
 ];
 
-// 공공 API 운항 데이터는 오늘 ~ 6일 후까지만 제공된다
-export const BOOKABLE_DAYS = 6;
+// 예약 가능 범위: 오늘 ~ 1년 뒤
+// (오늘 ~ 6일 후는 공공 API 실데이터 / 그 뒤는 같은 요일 실제 운항편으로 만든 예정 스케줄)
+export const BOOKABLE_DAYS = 365;
 
 export const DOMESTIC = [
     { code: 'GMP', city: '서울', name: '김포국제공항' },

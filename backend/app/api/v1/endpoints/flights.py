@@ -7,7 +7,8 @@ from app.db.database import get_db
 from app.models.flight import Flight
 from app.models.booking import Booking, BookingStatus
 from app.schemas.flight import FlightOut
-from app.services.flight_sync.builder import KST, WINDOW_DAYS, today_kst
+from app.services.flight_sync.builder import BOOKABLE_DAYS, KST, REAL_WINDOW_DAYS, today_kst
+from app.services.flight_sync.projection import ensure_projected
 from app.services.fares import apply_live_fares
 
 router = APIRouter()
@@ -21,14 +22,17 @@ def list_flights(
     offset: int = Query(default=0, ge=0),
     db: Session = Depends(get_db),
 ):
-    # 실데이터(공공 API) 항공편만 판매한다. 범위는 수집 가능한 오늘 ~ D+6 (한국 시간)
+    # 판매 범위: 오늘 ~ 1년 뒤 (한국 시간)
+    # - D+0 ~ D+6: 공공 API 실데이터 / D+7 이후: 같은 요일 실제 편으로 만든 예정 스케줄 (projection.py)
+    # 날짜 없이 조회하면 실데이터 범위만 보여준다 (예정편은 노선·날짜 검색 때만 만들어진다)
     today = today_kst()
-    last_day = today + timedelta(days=WINDOW_DAYS)
+    last_day = today + timedelta(days=BOOKABLE_DAYS if date else REAL_WINDOW_DAYS)
     if date and not (today <= date <= last_day):
         return []
 
-    # 노선·날짜가 정해진 검색이면 실시세를 먼저 반영 (캐시·월 예산 안에서만 호출 / 실패 시 산정가 유지)
     if from_code and to_code and date:
+        ensure_projected(db, from_code.upper(), to_code.upper(), date, today)
+        # 실시세를 먼저 반영 (캐시·월 예산 안에서만 호출 / 실패 시 산정가 유지)
         apply_live_fares(db, from_code.upper(), to_code.upper(), date)
 
     q = db.query(Flight).filter(

@@ -1,6 +1,9 @@
 # ✈️ CLEARWAY — 항공권 예약 플랫폼
 
-> AI 리뷰 분석과 실시간 채팅 상담을 갖춘 풀스택 항공권 예약 서비스
+> 공공데이터 실제 운항 스케줄과 구글 항공권 시세로 동작하는 풀스택 항공권 예약 서비스
+
+**서비스**: https://clear-way-drab.vercel.app
+> 백엔드는 Render 무료 플랜이라 처음 접속 시 서버가 깨어나는 데 최대 1분 정도 걸립니다.
 
 ---
 
@@ -9,6 +12,7 @@
 - [프로젝트 한눈에 보기](#-프로젝트-한눈에-보기)
 - [CLEARWAY 소개](#-clearway-소개)
 - [핵심 기능](#-핵심-기능)
+- [실데이터 항공편](#-실데이터-항공편)
 - [기술 스펙](#-기술-스펙)
 - [개발 구조](#-개발-구조)
 - [트러블슈팅](#-트러블슈팅)
@@ -21,13 +25,15 @@
 | 항목 | 내용 |
 |------|------|
 | 서비스명 | CLEARWAY · 클리어웨이 |
-| 한 줄 소개 | AI 기반 리뷰 분석과 실시간 상담을 제공하는 항공권 예약 플랫폼 |
+| 한 줄 소개 | 실제 운항 스케줄 기반 항공권 검색·예약과 AI 리뷰 분석·실시간 상담을 제공하는 플랫폼 |
 | 핵심 스택 | Python · FastAPI · PostgreSQL · React 19 · TypeScript · Vite |
-| 배포 | Render (Backend + Frontend Static) · Docker · Nginx |
+| 배포 | Vercel (Frontend) · Render (Backend) · Neon (PostgreSQL) |
+| 데이터 | 한국공항공사·인천국제공항공사 운항 API (스케줄) · SerpApi Google Flights (운임 시세) |
 
 ### 서비스 키워드
 
-- ✈️ **항공권 검색 & 예약**
+- ✈️ **항공권 검색 & 예약** — 1년 뒤까지 예약 가능 / 오늘~6일 후는 공공데이터 실제 운항 스케줄 약 11,500편
+- 💸 **실시세 운임** — 구글 항공권 시세를 편명 단위로 매칭
 - 🧳 **온라인 체크인**
 - 📊 **NEXTRIP — 가격 트렌드 분석**
 - 🤖 **AI 리뷰 분석** (Groq / Gemini / Anthropic)
@@ -61,7 +67,7 @@
 
 | # | 기능 | 설명 |
 |---|------|------|
-| 1 | **항공권 검색 & 예약** | 출발지·도착지·날짜 기반 항공편 검색 및 좌석 예약 |
+| 1 | **항공권 검색 & 예약** | 인천·김포·김해·제주 출발 실제 운항편 검색 및 좌석 예약 (실시세 / 산정가 배지 표시) |
 | 2 | **온라인 체크인** | 예약 완료 후 웹에서 바로 체크인 처리 |
 | 3 | **NEXTRIP** | 가격 트렌드 분석으로 최적 예약 시점 안내 |
 | 4 | **AI 리뷰 분석** | Groq / Gemini / Anthropic 기반 리뷰 요약 및 분석 |
@@ -92,6 +98,64 @@ Home (메인)
 
 ---
 
+## ✈️ 실데이터 항공편
+
+> 면접에서 "실제 데이터가 아니라 아쉽다"는 피드백을 받고 목업 항공편을 공공데이터 실제 운항 스케줄로 교체했습니다.
+
+### 어디까지 실제 데이터인가
+
+| 항목 | 출처 | 비고 |
+|------|------|------|
+| 편명 · 항공사 · 출발 시각 · 지연 · 결항 | **실제** — 한국공항공사 / 인천국제공항공사 운항 API | 오늘 ~ 6일 후 / 하루 4회 갱신 |
+| 국내선 도착 시각 | **실제** — 같은 편명의 도착 기록과 매칭 | |
+| 7일 이후 ~ 1년 뒤 항공편 | **예정 스케줄** — 같은 요일 실제 운항편을 그대로 옮김 | 출발 7일 전부터 실데이터로 확정 |
+| 일반석 운임 | **실시세** — SerpApi Google Flights 편명 매칭 | 매칭 안 되면 같은 노선 실시세 중앙값으로 산정 |
+| 국제선 해외 공항 시각 | 추정 — 노선별 평균 비행시간 + 현지 시차 | |
+| 비즈니스석 운임 | 산정 — 일반석 운임 × 노선 배수 | |
+| 잔여 좌석 | CLEARWAY 자체 판매 좌석 | 항공사 실재고는 GDS 계약 필요 |
+
+화면에는 운임마다 `실시세` / `산정가` 배지를 붙여 어떤 값이 실제인지 구분합니다.
+
+### 1년 예약 — 7일치 API로 1년치를 파는 방법
+
+공공 API는 오늘 ~ 6일 후만 줍니다. 그런데 항공사 정기편은 시즌(하계 3월 말 ~ 10월 말 / 동계) 동안 **요일 단위로 똑같이 반복**됩니다. 그래서 최근 7일 실제 편을 요일별 운항 패턴으로 보고 7일 이후 날짜에 옮겨 `예정 스케줄`로 판매합니다.
+
+- **검색할 때만 생성**: 1년치를 미리 만들면 약 60만 행 → 사용자가 검색한 노선·날짜만 그때 만듭니다 (SerpApi 실시세도 같은 시점에 반영)
+- **실데이터로 자동 확정**: 예정편의 `sync_key`(편명|운항일|출발|도착)가 실데이터와 같은 형식이라 그 날짜가 7일 안으로 들어오면 수집이 **같은 행을 덮어씁니다** → 예약은 그대로 유지되고 시각·상태만 실제 값으로 바뀜
+- **운항 변경 처리**: 실데이터 범위로 들어왔는데 끝내 나오지 않은 예정편은 `SCHEDULE_CHANGED`로 판매 중지 (두 기관 수집이 모두 성공했을 때만 → 수집 실패를 운항 변경으로 오해하지 않음)
+- **한계**: 시즌이 바뀌는 3월 말 이후 날짜는 현재 동계 패턴 기준이라 실제 스케줄과 다를 수 있음 → 화면에 `예정 스케줄` 배지와 안내 문구 표시
+
+### 수집 흐름
+
+```
+GitHub Actions (하루 4회 cron)
+   │  ① Render 서버 깨우기 (/health)  ② POST /api/v1/admin/flight-sync (토큰 인증)
+   ▼
+FastAPI 백그라운드 수집
+   ├── 한국공항공사 API  (14개 공항 / 100건씩 6개 동시 호출 / 약 160회)
+   └── 인천국제공항공사 API (한 번에 7일치 / 2회)
+   ▼
+출발·도착 기록 → 편명으로 짝짓기 → 코드쉐어 중복 제거 → 노선 기준표로 시차·운임 보정
+   ▼
+PostgreSQL upsert (sync_key = 편명|운항일|출발|도착)
+
+사용자 검색 (출발지·도착지·날짜)
+   └── 같은 노선·날짜를 12시간 안에 조회한 적 없으면 SerpApi 1회 호출 → 일반석 실시세 DB 반영
+```
+
+### 운영 수치
+
+| 지표 | 값 |
+|------|------|
+| 실데이터 항공편 | 약 11,500편 (오늘 ~ 6일 후) |
+| 예약 가능 기간 | 오늘 ~ 1년 뒤 (7일 이후는 예정 스케줄) |
+| 수집 시간 | 470초 → **114초** (동시 호출) |
+| 공공 API 호출 | 수집 1회 약 162회 (일 한도 5,000 / 500 이내) |
+| 실시세 매칭률 | 김포→제주 테스트 기준 구글 시세 72편 중 71편 매칭 |
+| SerpApi 사용량 | 월 230회 예산 (무료 250회) / 노선·날짜별 12시간 캐싱 |
+
+---
+
 ## 🧩 기술 스펙
 
 ### 기술 스택
@@ -102,27 +166,29 @@ Home (메인)
 | Backend | FastAPI · SQLAlchemy · Uvicorn | REST API, 비즈니스 로직, JWT 인증 |
 | Database | PostgreSQL (Neon) | 사용자·항공편·예약·채팅 데이터 저장 (서버리스 PostgreSQL) |
 | AI | Groq (기본) / Gemini / Anthropic | 리뷰 요약·분석, 챗봇 응답 생성 |
-| Infra | Docker Compose · Nginx | 컨테이너 오케스트레이션, 리버스 프록시 |
-| Deploy | Render | 백엔드(Web Service) + 프론트엔드(Static Site) |
+| 외부 데이터 | 공공데이터포털 운항 API · SerpApi Google Flights | 실제 운항 스케줄 / 일반석 실시세 |
+| Scheduler | GitHub Actions (cron) | Render 무료 서버가 잠들어도 하루 4회 수집 트리거 |
+| Deploy | Vercel · Render · Neon | 프론트엔드 / 백엔드 / 서버리스 PostgreSQL |
 
 ### 시스템 아키텍처
 
 ```
 Client (Browser)
-      │
-      ▼
-  Nginx (Port 80)
-  ├── /api/*  →  FastAPI Backend (Port 8000)
-  │               ├── Auth (JWT / OAuth)
-  │               ├── Flights & Bookings
-  │               ├── Reviews (AI 연동)
-  │               ├── Chat (고객센터)
-  │               ├── Nextrip (가격 분석)
-  │               └── Admin
-  └── /*      →  React Frontend (Port 3000)
+   │
+   ├── React SPA ─────────────── Vercel (정적 호스팅)
+   │
+   └── /api/v1/*  ───────────── FastAPI Backend (Render)
+                                  ├── Auth (JWT / OAuth)
+                                  ├── Flights & Bookings  ← 실시세 운임 반영 (SerpApi)
+                                  ├── Flight Sync          ← 공공데이터 운항 API 수집
+                                  ├── Reviews (AI 연동)
+                                  ├── Chat (고객센터)
+                                  ├── Nextrip (가격 분석)
+                                  └── Admin
+                                          │
+                                 PostgreSQL (Neon Serverless DB)
 
-                       │
-              PostgreSQL (Neon Serverless DB)
+GitHub Actions (cron 하루 4회) ──▶ POST /api/v1/admin/flight-sync
 ```
 
 ---
@@ -134,11 +200,10 @@ Client (Browser)
 
 ```
 CLEARWAY/
-├── docker-compose.yml
-├── nginx/
-│   └── nginx.conf
+├── .github/workflows/
+│   └── sync-flights.yml           # 하루 4회 실데이터 수집 트리거
+├── render.yaml                    # Render 백엔드 배포 설정
 ├── backend/
-│   ├── Dockerfile
 │   ├── requirements.txt
 │   ├── alembic/
 │   └── app/
@@ -165,6 +230,8 @@ CLEARWAY/
 │       │       ├── nextrip.py
 │       │       └── admin.py
 │       └── services/              # 비즈니스 로직
+│           ├── flight_sync/       # 공공데이터 운항 수집 (kac · incheon · builder · reference · sync)
+│           └── fares/             # SerpApi 실시세 (캐싱 · 월 예산 · 산정가 폴백)
 └── frontend/
     └── src/
         ├── components/
@@ -194,7 +261,9 @@ CLEARWAY/
 |--------|----------|------|
 | POST | `/api/v1/auth/register` | 회원가입 |
 | POST | `/api/v1/auth/login` | 로그인 (JWT 발급) |
-| GET | `/api/v1/flights` | 항공편 목록 조회 |
+| GET | `/api/v1/flights` | 항공편 검색 (오늘~1년 뒤 / 7일 이후는 예정편 생성 / 노선·날짜 지정 시 실시세 반영) |
+| POST | `/api/v1/admin/flight-sync` | 실데이터 수집 시작 (`X-Sync-Token` 헤더) |
+| GET | `/api/v1/admin/flight-sync/status` | 마지막 수집 결과 |
 | POST | `/api/v1/bookings` | 예약 생성 |
 | GET | `/api/v1/bookings/me` | 내 예약 목록 |
 | POST | `/api/v1/chat` | 채팅 메시지 전송 |
@@ -208,26 +277,16 @@ CLEARWAY/
 
 ### 사전 요구 사항
 
-- Docker & Docker Compose
 - Node.js 20+
 - Python 3.11+
 
-### Docker로 실행 (권장)
+### 로컬 개발 환경
 
 ```bash
 git clone https://github.com/Zestoper/CLEARWAY.git
 cd CLEARWAY
-
-# 환경변수 설정
-cp backend/.env.example backend/.env
-# backend/.env 파일 열어 값 입력
-
-docker-compose up --build
+cp backend/.env.example backend/.env   # 값 입력
 ```
-
-브라우저에서 [http://localhost](http://localhost) 접속
-
-### 로컬 개발 환경
 
 **Backend**
 ```bash
@@ -259,7 +318,23 @@ GROQ_API_KEY=your-groq-api-key
 
 ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173
 ALLOW_ALL_ORIGINS=false
-FRONTEND_URL=https://your-frontend.onrender.com
+FRONTEND_URL=https://your-frontend.vercel.app
+
+# 실데이터 항공편 — 공공데이터포털 일반 인증키
+#   (한국공항공사_실시간 항공기 운항정보 조회_GW / 인천국제공항공사_여객편 주간 운항 현황)
+DATA_GO_KR_SERVICE_KEY=
+# 수집 API 보호 토큰 (GitHub Actions secret 과 같은 값)
+FLIGHT_SYNC_TOKEN=
+# 일반석 실시세 (비워두면 산정가만 사용)
+SERPAPI_KEY=
+```
+
+**실데이터 수집 (처음 한 번)**
+```bash
+cd backend
+python migrate_real_flights.py --apply              # flights 테이블 컬럼 추가 (기존 데이터 유지)
+DATABASE_URL=sqlite:///./sync_test.db python sync_flights.py   # 운영 DB 대신 임시 DB로 먼저 확인
+python sync_flights.py                               # 실제 DB 수집
 ```
 
 > API 문서: 서버 실행 후 [http://localhost:8000/docs](http://localhost:8000/docs)
@@ -267,6 +342,64 @@ FRONTEND_URL=https://your-frontend.onrender.com
 ---
 
 ## 🧯 트러블슈팅
+
+<details>
+<summary>📡 공공데이터 API가 공식 가이드와 다르게 동작</summary>
+
+- **문제 1**: 가이드대로 `searchday`(조회일) 파라미터를 넣으면 결과가 **0건**
+- **문제 2**: `numOfRows=500`으로 요청하면 정상 응답(JSON)이 오지 않음
+- **확인 방법**: 가이드를 믿지 않고 실제 응답을 직접 찍어봄 → 날짜 필터 없이 부르면 D-3 ~ D+6 전체가 옴
+- **해결**: 날짜 필터 없이 전체를 100건씩 받고 **코드에서 오늘 ~ 6일 후만 거름**
+- **교훈**: 외부 API는 문서보다 실제 응답을 먼저 확인
+
+</details>
+
+<details>
+<summary>🔁 코드쉐어 편명 중복 — 같은 비행기가 두 번 검색됨</summary>
+
+- **문제**: 한 비행기를 여러 항공사가 판매하면 편명이 따로 내려와 검색 결과가 중복 (인천 데이터는 절반 이상이 판매용 편명)
+- **함정**: 한국공항공사는 실제 운항편과 판매용 편명이 **둘 다** `codeshare=Y`로 옴 → Y를 전부 빼면 실제 운항편까지 사라짐
+- **해결**: `마스터 편명이 있고 내 편명과 다르면 제외` (인천은 `Slave` 값으로 제외)
+
+</details>
+
+<details>
+<summary>⏱️ 수집 470초 → 114초</summary>
+
+- **문제**: 한국공항공사 데이터를 100건씩 160번 **순서대로** 불러 수집 1회에 약 8분
+- **해결**: 첫 페이지로 전체 건수를 확인한 뒤 나머지 페이지를 **6개씩 동시 호출** (ThreadPoolExecutor)
+- **결과**: 470초 → 114초 / GitHub Actions 대기 시간 안에 안정적으로 완료
+
+</details>
+
+<details>
+<summary>🔑 서버 로그에 공공데이터 인증키 노출</summary>
+
+- **문제**: httpx가 INFO 로그로 요청 URL 전체를 찍는데 URL에 `serviceKey`가 포함됨 → 배포 서버 로그에 키가 남음
+- **해결**: httpx 요청 로그 레벨을 WARNING으로 올리고 에러 메시지 안의 키도 `***`로 치환
+
+</details>
+
+<details>
+<summary>💸 무료 월 250회로 실시세 운영하기</summary>
+
+- **문제**: 검색할 때마다 SerpApi를 부르면 무료 한도가 금방 소진
+- **해결**
+  - 노선·날짜별 조회 기록을 DB에 남겨 **12시간 캐싱**
+  - 월 230회 **예산**에 닿으면 호출 중단
+  - 판매할 편이 없는 노선은 호출하지 않음
+  - 호출 실패 시 기존 가격 유지 후 1시간 뒤 재시도 (**산정가 폴백**)
+- **실시세를 DB에 저장한 이유**: 화면에만 덮어쓰면 결제 시 다른 가격이 청구됨 → 검색 가격 = 결제 가격 보장
+
+</details>
+
+<details>
+<summary>📉 산정가가 실제보다 싸서 가격순 정렬 맨 위로</summary>
+
+- **문제**: 노선 기준표 산정가(김포→제주 5~8만 원)가 실시세(10~17만 원)보다 훨씬 낮아 실시세가 없는 편이 가장 싸게 보임
+- **해결**: 실시세가 없는 편은 **같은 노선·같은 날 실시세 중앙값**으로 산정 + 국내선 기준표 범위 보정
+
+</details>
 
 <details>
 <summary>📱 모바일 반응형 — 헤더·컴포넌트 겹침 현상</summary>
@@ -326,6 +459,7 @@ FRONTEND_URL=https://your-frontend.onrender.com
 - **예약 편의성**: 검색·예약·체크인을 한 플랫폼에서 처리해 사용자 이탈 최소화
 - **가격 최적화**: NEXTRIP 트렌드 분석으로 사용자가 최적 시점에 예약 가능
 - **AI 활용**: 리뷰 요약과 챗봇 상담으로 의사결정 시간 단축
+- **실데이터**: 목업 대신 실제 운항 스케줄과 구글 항공권 시세로 동작
 - **확장성**: AI 제공자를 환경변수 하나로 교체 가능한 유연한 구조
 
 ### 개선 방향
@@ -333,6 +467,8 @@ FRONTEND_URL=https://your-frontend.onrender.com
 - AI 리뷰 분석 정확도 고도화
 - WebSocket 기반 실시간 채팅 확장
 - 항공편 가격 알림 고도화 (목표가 달성 시 Push / 이메일 알림)
+- 기준표에 없는 노선(상하이 훙차오·선전·치앙마이 등) 확대
+- 실시세를 비즈니스석까지 확장 (현재는 일반석 × 노선 배수)
 
 ---
 

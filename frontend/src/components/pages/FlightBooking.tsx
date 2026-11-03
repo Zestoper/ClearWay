@@ -3,6 +3,7 @@ import './FlightBooking.css'
 import { FlightSkeleton } from '../common/Skeleton'
 import type { BookingFlight, SearchParams } from '../../types'
 import { fetchFlights } from '../../services/flights'
+import { BOOKABLE_DAYS } from '../common/SearchBar'
 import type { Flight } from '../../services/flights'
 import type { User } from '../../services/auth'
 import { api } from '../../services/api'
@@ -248,9 +249,9 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
 
   const activeList = bookingStep === 'return' ? returnFlights : flights
   const filtered = applyFilters(activeList)
-  // 실데이터 예약 가능 범위: 오늘 ~ 6일 후
+  // 예약 가능 범위: 오늘 ~ 1년 뒤 (6일 후까지는 실데이터 / 그 뒤는 예정 스케줄)
   const bookableMin = new Date().toLocaleDateString('sv-SE')
-  const bookableMax = new Date(Date.now() + 6 * 86400000).toLocaleDateString('sv-SE')
+  const bookableMax = new Date(Date.now() + BOOKABLE_DAYS * 86400000).toLocaleDateString('sv-SE')
 
   const TIME_FILTERS = [
     { key: 'dawn',      label: '새벽', sub: '00 – 06시' },
@@ -520,7 +521,7 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
           </div>
 
           <p className="data-source-note">
-            운항 스케줄은 한국공항공사·인천국제공항공사 실시간 데이터 (오늘부터 7일) · 일반석 운임은 구글 항공권 시세 참고 (없으면 노선 기준 산정가)
+            운항 스케줄은 한국공항공사·인천국제공항공사 실시간 데이터 (오늘부터 7일) · 그 뒤 날짜는 같은 요일 실제 운항편 기준 예정 스케줄 · 일반석 운임은 구글 항공권 시세 참고 (없으면 노선 기준 산정가)
           </p>
 
           {(loading || returnLoading) && <FlightSkeleton />}
@@ -541,6 +542,14 @@ export default function FlightBooking({ onBook, searchParams, user: _user, onGoL
                   <div>
                     <p className="brand-name">{flight.airline ?? 'CLEARWAY'}</p>
                     <p className="flight-no">{flight.flight_no}</p>
+                    {flight.source === 'SCHED' && (
+                      <span
+                        className="schedule-badge"
+                        title="현재 요일별 정기 운항 기준 예정편입니다. 출발 7일 전부터 실제 운항 데이터로 확정되며 운항 시각이 바뀔 수 있습니다."
+                      >
+                        예정 스케줄
+                      </span>
+                    )}
                   </div>
                 </div>
 

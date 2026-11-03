@@ -1289,6 +1289,20 @@
   background: #f1f3f6;
 }
 
+/* 예정 스케줄 배지 (출발 7일 전 실데이터로 확정) */
+.schedule-badge {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #9a5b00;
+  background: #fff4e0;
+  cursor: help;
+  white-space: nowrap;
+}
+
 /* 정렬 버튼 글자가 세로로 쪼개지지 않게 */
 .sort-options button {
   white-space: nowrap;
