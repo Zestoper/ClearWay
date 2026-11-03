@@ -163,21 +163,19 @@ PostgreSQL upsert (sync_key = 편명|운항일|출발|도착)
 
 ```
 Client (Browser)
-      │
-      ▼
-  Nginx (Port 80)
-  ├── /api/*  →  FastAPI Backend (Port 8000)
-  │               ├── Auth (JWT / OAuth)
-  │               ├── Flights & Bookings  ← 실시세 운임 반영 (SerpApi)
-  │               ├── Flight Sync          ← 공공데이터 운항 API 수집
-  │               ├── Reviews (AI 연동)
-  │               ├── Chat (고객센터)
-  │               ├── Nextrip (가격 분석)
-  │               └── Admin
-  └── /*      →  React Frontend (Port 3000)
-
-                       │
-              PostgreSQL (Neon Serverless DB)
+   │
+   ├── React SPA ─────────────── Vercel (정적 호스팅)
+   │
+   └── /api/v1/*  ───────────── FastAPI Backend (Render)
+                                  ├── Auth (JWT / OAuth)
+                                  ├── Flights & Bookings  ← 실시세 운임 반영 (SerpApi)
+                                  ├── Flight Sync          ← 공공데이터 운항 API 수집
+                                  ├── Reviews (AI 연동)
+                                  ├── Chat (고객센터)
+                                  ├── Nextrip (가격 분석)
+                                  └── Admin
+                                          │
+                                 PostgreSQL (Neon Serverless DB)
 
 GitHub Actions (cron 하루 4회) ──▶ POST /api/v1/admin/flight-sync
 ```
@@ -193,11 +191,8 @@ GitHub Actions (cron 하루 4회) ──▶ POST /api/v1/admin/flight-sync
 CLEARWAY/
 ├── .github/workflows/
 │   └── sync-flights.yml           # 하루 4회 실데이터 수집 트리거
-├── docker-compose.yml
-├── nginx/
-│   └── nginx.conf
+├── render.yaml                    # Render 백엔드 배포 설정
 ├── backend/
-│   ├── Dockerfile
 │   ├── requirements.txt
 │   ├── alembic/
 │   └── app/
@@ -271,26 +266,16 @@ CLEARWAY/
 
 ### 사전 요구 사항
 
-- Docker & Docker Compose
 - Node.js 20+
 - Python 3.11+
 
-### Docker로 실행 (권장)
+### 로컬 개발 환경
 
 ```bash
 git clone https://github.com/Zestoper/CLEARWAY.git
 cd CLEARWAY
-
-# 환경변수 설정
-cp backend/.env.example backend/.env
-# backend/.env 파일 열어 값 입력
-
-docker-compose up --build
+cp backend/.env.example backend/.env   # 값 입력
 ```
-
-브라우저에서 [http://localhost](http://localhost) 접속
-
-### 로컬 개발 환경
 
 **Backend**
 ```bash
