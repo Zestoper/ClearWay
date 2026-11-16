@@ -1,9 +1,10 @@
 from fastapi import APIRouter
-from app.api.v1.endpoints import health, auth, flights, bookings, admin, notices, csevice, users, nextrip, chat, reviews, flight_status, flight_sync
+from app.api.v1.endpoints import health, auth, oauth, flights, bookings, admin, notices, csevice, users, nextrip, chat, reviews, flight_status, flight_sync
 
 api_router = APIRouter()
 api_router.include_router(health.router,        prefix="/health",        tags=["health"])
 api_router.include_router(auth.router,          prefix="/auth",          tags=["auth"])
+api_router.include_router(oauth.router,         prefix="/auth",          tags=["oauth"])
 api_router.include_router(users.router,         prefix="/users",         tags=["users"])
 api_router.include_router(flights.router,       prefix="/flights",       tags=["flights"])
 api_router.include_router(bookings.router,      prefix="/bookings",      tags=["bookings"])

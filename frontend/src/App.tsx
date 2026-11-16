@@ -39,9 +39,25 @@ function App() {
   const [checkinInitial, setCheckinInitial] = useState<{ ref: string; lastName: string } | null>(null)
 
   useEffect(() => {
+    // 구글/카카오 로그인 후 백엔드가 /#oauth_token=... 으로 돌려보낸다
+    const oauthToken = new URLSearchParams(window.location.hash.slice(1)).get('oauth_token')
+    if (oauthToken) {
+      // 주소창에서 토큰을 지운다 (뒤로가기·복사로 새지 않게)
+      window.history.replaceState(null, '', window.location.pathname)
+      localStorage.setItem('token', oauthToken)
+      fetchMe()
+        .then(me => handleLogin(oauthToken, me))
+        .catch(() => {
+          localStorage.removeItem('token')
+          window.history.replaceState({ page: 'login' }, '', `?p=login&oauth_error=${encodeURIComponent('로그인에 실패했습니다. 다시 시도해주세요')}`)
+          setPage('login')
+        })
+      return
+    }
     const token = localStorage.getItem('token')
     if (!token) return
     fetchMe().then(setUser).catch(() => localStorage.removeItem('token'))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
