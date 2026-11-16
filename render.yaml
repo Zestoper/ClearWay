@@ -38,6 +38,17 @@ services:
         sync: false
       - key: SERPAPI_KEY
         sync: false
+      # 소셜 로그인 (구글 · 카카오)
+      - key: FRONTEND_URL
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: KAKAO_REST_API_KEY
+        sync: false
+      - key: KAKAO_CLIENT_SECRET
+        sync: false
 
   - type: web
     name: clearway-frontend
