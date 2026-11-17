@@ -79,6 +79,7 @@ https://github.com/user-attachments/assets/49607a6b-1db7-49d1-aab9-4dccae5d4247
 | 7 | **가격 알림** | 목표 가격 등록 시 달성 여부 즉시 확인, 이메일 알림 수신 설정 가능 |
 | 8 | **공지 & 이벤트** | 항공사 공지사항 및 프로모션 안내 |
 | 9 | **관리자 대시보드** | 항공편·예약·사용자·인기 노선 통합 관리 |
+| 10 | **소셜 로그인** | 카카오 · 구글 계정으로 바로 가입·로그인 / 인증된 같은 이메일의 기존 계정과 자동 연결 |
 
 ### 화면 흐름도
 
@@ -166,7 +167,7 @@ PostgreSQL upsert (sync_key = 편명|운항일|출발|도착)
 | 영역 | 사용 기술 | 역할 |
 |------|----------|------|
 | Frontend | React 19 · TypeScript · Vite | SPA UI, 예약 흐름, 반응형 레이아웃 |
-| Backend | FastAPI · SQLAlchemy · Uvicorn | REST API, 비즈니스 로직, JWT 인증 |
+| Backend | FastAPI · SQLAlchemy · Uvicorn | REST API, 비즈니스 로직, JWT 인증 · 카카오/구글 OAuth2 소셜 로그인 |
 | Database | PostgreSQL (Neon) | 사용자·항공편·예약·채팅 데이터 저장 (서버리스 PostgreSQL) |
 | AI | Groq (기본) / Gemini / Anthropic | 리뷰 요약·분석, 챗봇 응답 생성 |
 | 외부 데이터 | 공공데이터포털 운항 API · SerpApi Google Flights | 실제 운항 스케줄 / 일반석 실시세 |
@@ -264,6 +265,8 @@ CLEARWAY/
 |--------|----------|------|
 | POST | `/api/v1/auth/register` | 회원가입 |
 | POST | `/api/v1/auth/login` | 로그인 (JWT 발급) |
+| GET | `/api/v1/auth/{provider}/login` | 소셜 로그인 시작 (`kakao` · `google`) |
+| GET | `/api/v1/auth/{provider}/callback` | 소셜 로그인 콜백 → JWT 발급 후 프론트로 이동 |
 | GET | `/api/v1/flights` | 항공편 검색 (오늘~1년 뒤 / 7일 이후는 예정편 생성 / 노선·날짜 지정 시 실시세 반영) |
 | POST | `/api/v1/admin/flight-sync` | 실데이터 수집 시작 (`X-Sync-Token` 헤더) |
 | GET | `/api/v1/admin/flight-sync/status` | 마지막 수집 결과 |
@@ -330,6 +333,15 @@ DATA_GO_KR_SERVICE_KEY=
 FLIGHT_SYNC_TOKEN=
 # 일반석 실시세 (비워두면 산정가만 사용)
 SERPAPI_KEY=
+
+# 소셜 로그인 (선택 — 비워두면 해당 버튼만 비활성화)
+#   콜백 주소는 {BACKEND_URL}/api/v1/auth/{kakao|google}/callback 로 서버가 만든다
+#   → 카카오 · 구글 콘솔의 Redirect URI 에 이 주소를 등록
+BACKEND_URL=http://localhost:8000
+KAKAO_REST_API_KEY=
+KAKAO_CLIENT_SECRET=          # 카카오 콘솔에서 Client Secret 을 켰을 때만
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
 ```
 
 **실데이터 수집 (처음 한 번)**
